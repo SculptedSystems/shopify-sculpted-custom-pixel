@@ -24,6 +24,7 @@ const config = {
       pageView: true,
       viewItemList: true,
       viewItem: true,
+      addToCart: true,
       purchase: true,
     },
   },
@@ -75,7 +76,7 @@ function getCouponAsCommaSeperatedSTring(discountAllocations) {
   return discountCodes.join(",") || undefined;
 }
 
-function prepareItems(lineItems) {
+function prepareItemsFromLineItems(lineItems) {
   const items = [];
 
   lineItems.forEach((item, index_) => {
@@ -135,19 +136,19 @@ function prepareItems(lineItems) {
   return items;
 }
 
-function prepareItemsFromVariants(productVariants) {
+function prepareLineItemsFromProductObjects(productVariantObjects) {
   const lineItems = [];
 
-  productVariants.forEach((productVariant, index_) => {
+  productVariantObjects.forEach((obj, index_) => {
     lineItems.push({
-      variant: productVariant,
-      discountAllocations: [],
-      finalLinePrice: productVariant.price,
-      quantity: 1,
+      variant: obj.productVariant,
+      finalLinePrice: obj.productVariant.price,
+      quantity: obj.quantity,
+      discountAllocations: obj.discountAllocations,
     });
   });
 
-  return prepareItems(lineItems);
+  return lineItems;
 }
 
 // ============================
@@ -193,7 +194,17 @@ if (config.gtm.track.viewItemList) {
     const currency = productVariants[0].price.currencyCode;
 
     // parameter: items
-    const items = prepareItemsFromVariants(productVariants);
+    const productObjects = [];
+    productVariants.forEach((productVariant, index_) => {
+      productObjects.push({
+        productVariant: productVariant,
+        quantity: 1,
+        discountAllocations: [],
+      });
+    });
+
+    const lineItems = prepareLineItemsFromProductObjects(productObjects);
+    const items = prepareItemsFromLineItems(lineItems);
 
     dlPush({
       event: "view_item_list",
@@ -217,11 +228,53 @@ if (config.gtm.track.viewItem) {
     const value = productVariant.price.amount;
 
     // parameter: items
-    const productVariants = [productVariant];
-    const items = prepareItemsFromVariants(productVariants);
+    const productObjects = [
+      {
+        productVariant: productVariant,
+        quantity: 1,
+        discountAllocations: [],
+      },
+    ];
+    const lineItems = prepareLineItemsFromProductObjects(productObjects);
+    const items = prepareItemsFromLineItems(lineItems);
 
     dlPush({
       event: "view_item",
+      currency: currency,
+      value: value,
+      items: items,
+    });
+  });
+}
+
+if (config.gtm.track.addToCart) {
+  // https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#add_to_cart
+  // https://shopify.dev/docs/api/web-pixels-api/standard-events/product_added_to_cart
+  analytics.subscribe("product_added_to_cart", (event) => {
+    const eventData = event.data;
+    const cartLine = eventData.cartLine;
+
+    // parameter: currency
+    const currency = cartLine.cost.totalAmount.currencyCode;
+
+    // parameter: value
+    const value = cartLine.cost.totalAmount.amount;
+
+    // parameter: items
+    const productVariant = cartLine.merchandise;
+    const quantity = cartLine.quantity;
+    const productObjects = [
+      {
+        productVariant: productVariant,
+        quantity: quantity,
+        discountAllocations: [],
+      },
+    ];
+    const lineItems = prepareLineItemsFromProductObjects(productObjects);
+    const items = prepareItemsFromLineItems(lineItems);
+
+    dlPush({
+      event: "add_to_cart",
       currency: currency,
       value: value,
       items: items,
@@ -262,7 +315,7 @@ if (config.gtm.track.purchase) {
 
     // parameter: items
     const lineItems = checkout.lineItems;
-    const items = prepareItems(lineItems);
+    const items = prepareItemsFromLineItems(lineItems);
 
     dlPush({
       event: "purchase",

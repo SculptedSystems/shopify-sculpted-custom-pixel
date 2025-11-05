@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "test": "vitest run --config ./vitest.config.ts",
     "test:watch": "vitest --config ./vitest.config.ts",
     "test:coverage": "vitest run --config ./vitest.config.ts --coverage"
@@ -24,7 +24,9 @@
   "devDependencies": {
     "@vitest/coverage-v8": "^4.0.7",
     "jsdom": "^27.1.0",
+    "tsup": "^8.5.0",
     "typescript": "^5.9.3",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.7"
   }
 }

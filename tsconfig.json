@@ -4,6 +4,21 @@
     // === File Layout === \\
     "rootDir": "./src",
     "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@core/*": [
+        "core/*"
+      ],
+      "@helpers/*": [
+        "helpers/*"
+      ],
+      "@events/*": [
+        "events/*"
+      ],
+      "@types/*": [
+        "types/*"
+      ]
+    },
     // === Environment Settings === \\
     // (... See also https://aka.ms/tsconfig/module ... ) \\
     "module": "none",
@@ -34,7 +49,6 @@
     "exactOptionalPropertyTypes": false, // TODO: convert to true
     // ==== Recommended Options ==== \\
     "strict": false, // TODO: convert to true
-    "verbatimModuleSyntax": true,
     "noUncheckedSideEffectImports": true,
     "skipLibCheck": true
   },

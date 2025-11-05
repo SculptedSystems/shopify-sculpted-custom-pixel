@@ -26,6 +26,7 @@ const config = {
       viewItem: true,
       addToCart: true,
       viewCart: true,
+      beginCheckout: true,
       purchase: true,
     },
   },
@@ -67,14 +68,46 @@ function dlPush(message) {
   window.dataLayer.push(message);
 }
 
-function getCouponAsCommaSeperatedSTring(discountAllocations) {
-  const discountCodes =
-    discountAllocations
-      ?.filter((d) => d.discountApplication.type === "DISCOUNT_CODE") // keep only discount codes
-      .map((d) => d.discountApplication.title) // get the codes
-      .sort((a, b) => a.localeCompare(b)) || // sort alphabetically
-    []; // defaults to none
-  return discountCodes.join(",") || undefined;
+function getCouponFromDiscountApplications(
+  discountApplications,
+  appliesToWholeCart,
+) {
+  const discountCodeApplications = discountApplications?.filter(
+    (dApp) => dApp.type === "DISCOUNT_CODE",
+  );
+
+  let filteredApplications;
+  if (appliesToWholeCart) {
+    filteredApplications = discountCodeApplications.filter(
+      (dApp) => dApp.targetSelection === "ALL",
+    ); // discount for all lines
+  } else {
+    filteredApplications = discountCodeApplications.filter((dApp) =>
+      ["ENTITLED", "EXPLICIT"].includes(dApp.targetSelection),
+    ); // discount for some lines
+  }
+
+  return (
+    filteredApplications
+      .map((dApp) => dApp.title) // get the codes
+      .sort((a, b) => a.localeCompare(b)) // sort alphabetically
+      .join(",") || // comma separated string
+    undefined
+  );
+}
+
+function getCouponFromDiscountAllocations(
+  discountAllocations,
+  appliesToWholeCart,
+) {
+  const discountApplications = discountAllocations?.map(
+    (dAllo) => dAllo.discountApplication,
+  );
+
+  return getCouponFromDiscountApplications(
+    discountApplications,
+    appliesToWholeCart,
+  );
 }
 
 function prepareItemsFromLineItems(lineItems) {
@@ -93,10 +126,13 @@ function prepareItemsFromLineItems(lineItems) {
     const affiliation = config.shopify.storeName;
 
     // parameter: coupon
-    const coupon = getCouponAsCommaSeperatedSTring(item.discountAllocations);
+    const coupon = getCouponFromDiscountAllocations(
+      item.discountAllocations,
+      (appliesToWholeCart = false),
+    );
 
     // parameter: discount
-    let discount = 0;
+    let discount = 0; // TODO: ensure this only applies for non-wholeCart discounts
     item.discountAllocations.forEach((da, m) => {
       discount += da.amount.amount;
     });
@@ -114,7 +150,7 @@ function prepareItemsFromLineItems(lineItems) {
     const item_variant = item.variant.title;
 
     // parameter: price
-    const price = item.finalLinePrice.amount;
+    const price = item.variant.price.amount;
 
     // parameter: quantity
     const quantity = item.quantity;
@@ -297,7 +333,7 @@ if (config.gtm.track.viewCart) {
     // parameter: currency
     const currency = cart.cost.totalAmount.currencyCode;
 
-    // parameter: currency
+    // parameter: value
     const value = cart.cost.totalAmount.amount;
 
     // parameter: items
@@ -317,6 +353,38 @@ if (config.gtm.track.viewCart) {
       event: "view_cart",
       currency: currency,
       value: value,
+      items: items,
+    });
+  });
+}
+
+if (config.gtm.track.beginCheckout) {
+  // https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#begin_checkout
+  // https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_started
+  analytics.subscribe("checkout_started", (event) => {
+    const eventData = event.data;
+    const checkout = eventData.checkout;
+
+    // parameter: currency
+    const currency = checkout.subtotalPrice.currencyCode;
+
+    // parameter: value
+    const value = checkout.subtotalPrice.amount;
+
+    // parameter: coupon
+    const coupon = getCouponFromDiscountApplications(
+      checkout.discountApplications,
+      (appliesToWholeCart = true),
+    );
+
+    // parameter: items
+    const items = prepareItemsFromLineItems(checkout.lineItems);
+
+    dlPush({
+      event: "begin_checkout",
+      currency: currency,
+      value: value,
+      coupon: coupon,
       items: items,
     });
   });
@@ -343,8 +411,9 @@ if (config.gtm.track.purchase) {
     const transaction_id = event.id;
 
     // parameter: coupon
-    const coupon = getCouponAsCommaSeperatedSTring(
-      checkout.discountAllocations,
+    const coupon = getCouponFromDiscountApplications(
+      checkout.discountApplications,
+      (appliesToWholeCart = true),
     );
 
     // parameter: shipping

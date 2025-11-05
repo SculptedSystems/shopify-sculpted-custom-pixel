@@ -6,9 +6,9 @@ import prettierConfig from "eslint-config-prettier";
 import tseslint from "typescript-eslint";
 
 export default defineConfig(
-  prettierConfig,
-  eslint.configs.recommended,
-  //tseslint.configs.strict, // TODO: enalbe
-  tseslint.configs.stylistic,
   [globalIgnores(["./dist/*", "./coverage/*"])],
+  eslint.configs.recommended,
+  tseslint.configs.stylistic,
+  //tseslint.configs.strict, // TODO: enalbe
+  prettierConfig,
 );

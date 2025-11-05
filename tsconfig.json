@@ -3,25 +3,25 @@
     // === File Layout ===
     "rootDir": "./src",
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "paths": {
       "@core/*": [
-        "core/*"
+        "src/core/*"
       ],
       "@helpers/*": [
-        "helpers/*"
+        "src/helpers/*"
       ],
       "@events/*": [
-        "events/*"
+        "src/events/*"
       ],
-      "@types/*": [
+      "@src/types/*": [
         "types/*"
       ]
     },
     // === Environment Settings ===
     "target": "ES2020",
     "module": "ESNext",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "ESNext",
     "lib": [
       "DOM",
       "ES2020"

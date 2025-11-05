@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/SculptedSystems/shopify-custom-pixels/issues"
   },
-  "homepage": "https://github.com/SculptedSystems/shopify-custom-pixels#readme"
+  "homepage": "https://github.com/SculptedSystems/shopify-custom-pixels#readme",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
 }

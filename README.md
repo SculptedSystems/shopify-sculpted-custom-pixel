@@ -9,7 +9,7 @@
 5. name it
 6. set "Permission" to "Not required"
 7. set "Data sale" to "Data collected does not qualify as data sale"
-8. copy the code from `custom-pixel.js`
+8. copy the code from `dist/index.js`
 9. paste the code in "Code"
 10. update the configuration
 11. click "save" at the top of the page

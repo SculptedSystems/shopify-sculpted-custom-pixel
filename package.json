@@ -2,7 +2,7 @@
   "name": "shopify-custom-pixels",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/pixel.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "build": "tsc",

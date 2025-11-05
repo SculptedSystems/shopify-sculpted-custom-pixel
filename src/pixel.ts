@@ -143,7 +143,7 @@ function prepareItemsFromLineItems(lineItems) {
 
     // parameter: discount
     let discount = 0; // TODO: ensure this only applies for non-wholeCart discounts
-    item.discountAllocations.forEach((da, m) => {
+    item.discountAllocations.forEach((da) => {
       discount += da.amount.amount;
     });
 
@@ -186,7 +186,7 @@ function prepareItemsFromLineItems(lineItems) {
 function prepareLineItemsFromProductObjects(productVariantObjects) {
   const lineItems = [];
 
-  productVariantObjects.forEach((obj, index_) => {
+  productVariantObjects.forEach((obj) => {
     lineItems.push({
       variant: obj.productVariant,
       finalLinePrice: obj.productVariant.price,
@@ -242,7 +242,7 @@ if (config.gtm.track.viewItemList) {
 
     // parameter: items
     const productObjects = [];
-    productVariants.forEach((productVariant, index_) => {
+    productVariants.forEach((productVariant) => {
       productObjects.push({
         productVariant: productVariant,
         quantity: 1,
@@ -348,7 +348,7 @@ if (config.gtm.track.viewCart) {
 
     // parameter: items
     const productObjects = [];
-    cart.lines.forEach((line, index_) => {
+    cart.lines.forEach((line) => {
       productObjects.push({
         productVariant: line.merchandise,
         quantity: line.quantity,

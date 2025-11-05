@@ -21,12 +21,12 @@
     "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
     "noPropertyAccessFromIndexSignature": true,
-    //"noUnusedParameters": true,
+    "noUnusedParameters": true,
     // === Stricter Typechecking Options === \\
-    //"noUncheckedIndexedAccess": true,
-    //"exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": false, // TODO: convert to true
     // ==== Recommended Options ==== \\
-    "strict": false,
+    "strict": false, // TODO: convert to true
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,

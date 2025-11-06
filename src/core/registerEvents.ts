@@ -11,39 +11,39 @@ import { registerAddPaymentInfo } from "@events/addPaymentInfo";
 import { registerPurchase } from "@events/purchase";
 
 export function registerEvents() {
-  if (config.gtm.track.pageView) {
+  if (config.push.pageView) {
     registerPageView();
   }
 
-  if (config.gtm.track.viewItemList) {
+  if (config.push.viewItemList) {
     registerViewItemList();
   }
 
-  if (config.gtm.track.viewItem) {
+  if (config.push.viewItem) {
     registerViewItem();
   }
 
-  if (config.gtm.track.addToCart) {
+  if (config.push.addToCart) {
     registerAddToCart();
   }
 
-  if (config.gtm.track.viewCart) {
+  if (config.push.viewCart) {
     registerViewCart();
   }
 
-  if (config.gtm.track.beginCheckout) {
+  if (config.push.beginCheckout) {
     registerBeginCheckout();
   }
 
-  if (config.gtm.track.addShippingInfo) {
+  if (config.push.addShippingInfo) {
     registerAddShippingInfo();
   }
 
-  if (config.gtm.track.addPaymentInfo) {
+  if (config.push.addPaymentInfo) {
     registerAddPaymentInfo();
   }
 
-  if (config.gtm.track.purchase) {
+  if (config.push.purchase) {
     registerPurchase();
   }
 }

@@ -2,6 +2,9 @@
 //   Local Type Definitions
 // ================================================
 
-export interface PixelConfig {}
+export interface DataLayerMessage {
+  event: string;
+  [key: string]: unknown;
+}
 
-export interface GTMMessage {}
+export type DataLayer = DataLayerMessage[];

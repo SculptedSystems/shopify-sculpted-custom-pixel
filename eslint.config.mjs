@@ -9,6 +9,6 @@ export default defineConfig(
   [globalIgnores(["./dist/*", "./coverage/*"])],
   eslint.configs.recommended,
   tseslint.configs.stylistic,
-  //tseslint.configs.strict, // TODO: enalbe
+  tseslint.configs.strict,
   prettierConfig,
 );

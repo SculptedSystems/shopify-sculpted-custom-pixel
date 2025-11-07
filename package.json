@@ -6,15 +6,16 @@
   "type": "module",
   "scripts": {
     "start": "npm-run-series check",
-    "build": "tsup",
-    "check": "npm-run-series lint:check format:check test build",
-    "test": "vitest run --config ./vitest.config.ts",
-    "test:watch": "vitest --config ./vitest.config.ts",
-    "test:coverage": "vitest run --config ./vitest.config.ts --coverage",
+    "check": "npm-run-series lint:check format:check type:check test build",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix .",
     "format:check": "prettier . --check",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "type:check": "tsc --noEmit",
+    "test": "vitest run --config ./vitest.config.ts",
+    "test:watch": "vitest --config ./vitest.config.ts",
+    "test:coverage": "vitest run --config ./vitest.config.ts --coverage",
+    "build": "tsup"
   },
   "repository": {
     "type": "git",

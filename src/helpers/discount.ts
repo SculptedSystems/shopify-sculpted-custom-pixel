@@ -1,7 +1,4 @@
-import { consoleLog } from "@core/log";
-
 function discountApplicationIsWholeCart(discountApplication) {
-  consoleLog(JSON.stringify(discountApplication, null, 2));
   return discountApplication.targetSelection === "ALL";
 }
 

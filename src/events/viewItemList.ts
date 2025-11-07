@@ -3,34 +3,40 @@
 
 import { prepareItemsFromLineItems } from "@helpers/items";
 import { prepareLineItemsFromProductObjects } from "@helpers/items";
-
 import { dataLayerPush } from "@helpers/dataLayer";
 
-export function registerViewItemList() {
-  analytics.subscribe("collection_viewed", (event) => {
-    const eventData = event.data;
-    const productVariants = eventData.collection.productVariants;
+import { buildEventHandler } from "@utils/handleEvent";
 
-    // parameter: currency
-    const currency = productVariants[0].price.currencyCode;
+function handleViewItemList(event) {
+  const eventData = event.data;
+  const productVariants = eventData.collection.productVariants;
 
-    // parameter: items
-    const productObjects = [];
-    productVariants.forEach((productVariant) => {
-      productObjects.push({
-        productVariant: productVariant,
-        quantity: 1,
-        discountAllocations: [],
-      });
-    });
+  // parameter: currency
+  const currency = productVariants[0].price.currencyCode;
 
-    const lineItems = prepareLineItemsFromProductObjects(productObjects);
-    const items = prepareItemsFromLineItems(lineItems);
-
-    dataLayerPush({
-      event: "view_item_list",
-      currency: currency,
-      items: items,
+  // parameter: items
+  const productObjects = [];
+  productVariants.forEach((productVariant) => {
+    productObjects.push({
+      productVariant: productVariant,
+      quantity: 1,
+      discountAllocations: [],
     });
   });
+
+  const lineItems = prepareLineItemsFromProductObjects(productObjects);
+  const items = prepareItemsFromLineItems(lineItems);
+
+  dataLayerPush({
+    event: "view_item_list",
+    currency: currency,
+    items: items,
+  });
+}
+
+export function registerViewItemList() {
+  analytics.subscribe(
+    "collection_viewed",
+    buildEventHandler(handleViewItemList),
+  );
 }

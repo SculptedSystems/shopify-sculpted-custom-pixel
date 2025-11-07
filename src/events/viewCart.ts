@@ -3,42 +3,45 @@
 
 import { prepareItemsFromLineItems } from "@helpers/items";
 import { prepareLineItemsFromProductObjects } from "@helpers/items";
-
 import { dataLayerPush } from "@helpers/dataLayer";
 
-export function registerViewCart() {
-  analytics.subscribe("cart_viewed", (event) => {
-    const eventData = event.data;
-    const cart = eventData.cart;
+import { buildEventHandler } from "@utils/handleEvent";
 
-    if (!cart) {
-      return;
-    }
+function handleViewCart(event) {
+  const eventData = event.data;
+  const cart = eventData.cart;
 
-    // parameter: currency
-    const currency = cart.cost.totalAmount.currencyCode;
+  if (!cart) {
+    return;
+  }
 
-    // parameter: value
-    const value = cart.cost.totalAmount.amount;
+  // parameter: currency
+  const currency = cart.cost.totalAmount.currencyCode;
 
-    // parameter: items
-    const productObjects = [];
-    cart.lines.forEach((line) => {
-      productObjects.push({
-        productVariant: line.merchandise,
-        quantity: line.quantity,
-        discountAllocations: [],
-      });
-    });
+  // parameter: value
+  const value = cart.cost.totalAmount.amount;
 
-    const lineItems = prepareLineItemsFromProductObjects(productObjects);
-    const items = prepareItemsFromLineItems(lineItems);
-
-    dataLayerPush({
-      event: "view_cart",
-      currency: currency,
-      value: value,
-      items: items,
+  // parameter: items
+  const productObjects = [];
+  cart.lines.forEach((line) => {
+    productObjects.push({
+      productVariant: line.merchandise,
+      quantity: line.quantity,
+      discountAllocations: [],
     });
   });
+
+  const lineItems = prepareLineItemsFromProductObjects(productObjects);
+  const items = prepareItemsFromLineItems(lineItems);
+
+  dataLayerPush({
+    event: "view_cart",
+    currency: currency,
+    value: value,
+    items: items,
+  });
+}
+
+export function registerViewCart() {
+  analytics.subscribe("cart_viewed", buildEventHandler(handleViewCart));
 }

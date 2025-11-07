@@ -3,34 +3,40 @@
 
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 import { prepareItemsFromLineItems } from "@helpers/items";
-
 import { dataLayerPush } from "@helpers/dataLayer";
 
-export function registerBeginCheckout() {
-  analytics.subscribe("checkout_started", (event) => {
-    const eventData = event.data;
-    const checkout = eventData.checkout;
+import { buildEventHandler } from "@utils/handleEvent";
 
-    // parameter: currency
-    const currency = checkout.subtotalPrice.currencyCode;
+function handleBeginCheckout(event) {
+  const eventData = event.data;
+  const checkout = eventData.checkout;
 
-    // parameter: value
-    const value = checkout.subtotalPrice.amount;
+  // parameter: currency
+  const currency = checkout.subtotalPrice.currencyCode;
 
-    // parameter: coupon
-    const coupon = getWholeCartCouponFromDiscountApplications(
-      checkout.discountApplications,
-    );
+  // parameter: value
+  const value = checkout.subtotalPrice.amount;
 
-    // parameter: items
-    const items = prepareItemsFromLineItems(checkout.lineItems);
+  // parameter: coupon
+  const coupon = getWholeCartCouponFromDiscountApplications(
+    checkout.discountApplications,
+  );
 
-    dataLayerPush({
-      event: "begin_checkout",
-      currency: currency,
-      value: value,
-      coupon: coupon,
-      items: items,
-    });
+  // parameter: items
+  const items = prepareItemsFromLineItems(checkout.lineItems);
+
+  dataLayerPush({
+    event: "begin_checkout",
+    currency: currency,
+    value: value,
+    coupon: coupon,
+    items: items,
   });
+}
+
+export function registerBeginCheckout() {
+  analytics.subscribe(
+    "checkout_started",
+    buildEventHandler(handleBeginCheckout),
+  );
 }

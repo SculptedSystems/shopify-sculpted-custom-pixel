@@ -3,24 +3,28 @@
 
 import { dataLayerPush } from "@helpers/dataLayer";
 
-export function registerPageView() {
-  analytics.subscribe("page_viewed", (event) => {
-    const eventContext = event.context?.document;
+import { buildEventHandler } from "@utils/handleEvent";
 
-    // parameter: page_location
-    const page_location = eventContext?.location?.href;
+function handlePageView(event) {
+  const eventContext = event.context?.document;
 
-    // parameter: page_referrer
-    const page_referrer = eventContext?.referrer;
+  // parameter: page_location
+  const page_location = eventContext?.location?.href;
 
-    // parameter: page_title
-    const page_title = eventContext?.title;
+  // parameter: page_referrer
+  const page_referrer = eventContext?.referrer;
 
-    dataLayerPush({
-      event: "page_view",
-      page_location: page_location,
-      page_referrer: page_referrer,
-      page_title: page_title,
-    });
+  // parameter: page_title
+  const page_title = eventContext?.title;
+
+  dataLayerPush({
+    event: "page_view",
+    page_location: page_location,
+    page_referrer: page_referrer,
+    page_title: page_title,
   });
+}
+
+export function registerPageView() {
+  analytics.subscribe("page_viewed", buildEventHandler(handlePageView));
 }

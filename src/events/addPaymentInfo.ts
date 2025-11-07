@@ -3,39 +3,45 @@
 
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 import { prepareItemsFromLineItems } from "@helpers/items";
-
 import { dataLayerPush } from "@helpers/dataLayer";
 
-export function registerAddPaymentInfo() {
-  analytics.subscribe("payment_info_submitted", (event) => {
-    const eventData = event.data;
-    const checkout = eventData.checkout;
+import { buildEventHandler } from "@utils/handleEvent";
 
-    // parameter: currency
-    const currency = checkout.subtotalPrice?.currencyCode;
+function handleAddPaymentInfo(event) {
+  const eventData = event.data;
+  const checkout = eventData.checkout;
 
-    // parameter: value
-    const value = checkout.subtotalPrice?.amount || 0;
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
 
-    // parameter: coupon
-    const coupon = getWholeCartCouponFromDiscountApplications(
-      checkout.discountApplications,
-    );
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount || 0;
 
-    // parameter: payment_type
-    const payment_type =
-      checkout.transactions?.[0]?.paymentMethod.type || undefined;
+  // parameter: coupon
+  const coupon = getWholeCartCouponFromDiscountApplications(
+    checkout.discountApplications,
+  );
 
-    // parameter: items
-    const items = prepareItemsFromLineItems(checkout.lineItems);
+  // parameter: payment_type
+  const payment_type =
+    checkout.transactions?.[0]?.paymentMethod.type || undefined;
 
-    dataLayerPush({
-      event: "add_payment_info",
-      currency: currency,
-      value: value,
-      coupon: coupon,
-      payment_type: payment_type,
-      items: items,
-    });
+  // parameter: items
+  const items = prepareItemsFromLineItems(checkout.lineItems);
+
+  dataLayerPush({
+    event: "add_payment_info",
+    currency: currency,
+    value: value,
+    coupon: coupon,
+    payment_type: payment_type,
+    items: items,
   });
+}
+
+export function registerAddPaymentInfo() {
+  analytics.subscribe(
+    "payment_info_submitted",
+    buildEventHandler(handleAddPaymentInfo),
+  );
 }

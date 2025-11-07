@@ -3,38 +3,44 @@
 
 import { prepareLineItemsFromProductObjects } from "@helpers/items";
 import { prepareItemsFromLineItems } from "@helpers/items";
-
 import { dataLayerPush } from "@helpers/dataLayer";
 
-export function registerAddToCart() {
-  analytics.subscribe("product_added_to_cart", (event) => {
-    const eventData = event.data;
-    const cartLine = eventData.cartLine;
+import { buildEventHandler } from "@utils/handleEvent";
 
-    // parameter: currency
-    const currency = cartLine.cost.totalAmount.currencyCode;
+function handleAddToCart(event) {
+  const eventData = event.data;
+  const cartLine = eventData.cartLine;
 
-    // parameter: value
-    const value = cartLine.cost.totalAmount.amount;
+  // parameter: currency
+  const currency = cartLine.cost.totalAmount.currencyCode;
 
-    // parameter: items
-    const productVariant = cartLine.merchandise;
-    const quantity = cartLine.quantity;
-    const productObjects = [
-      {
-        productVariant: productVariant,
-        quantity: quantity,
-        discountAllocations: [],
-      },
-    ];
-    const lineItems = prepareLineItemsFromProductObjects(productObjects);
-    const items = prepareItemsFromLineItems(lineItems);
+  // parameter: value
+  const value = cartLine.cost.totalAmount.amount;
 
-    dataLayerPush({
-      event: "add_to_cart",
-      currency: currency,
-      value: value,
-      items: items,
-    });
+  // parameter: items
+  const productVariant = cartLine.merchandise;
+  const quantity = cartLine.quantity;
+  const productObjects = [
+    {
+      productVariant: productVariant,
+      quantity: quantity,
+      discountAllocations: [],
+    },
+  ];
+  const lineItems = prepareLineItemsFromProductObjects(productObjects);
+  const items = prepareItemsFromLineItems(lineItems);
+
+  dataLayerPush({
+    event: "add_to_cart",
+    currency: currency,
+    value: value,
+    items: items,
   });
+}
+
+export function registerAddToCart() {
+  analytics.subscribe(
+    "product_added_to_cart",
+    buildEventHandler(handleAddToCart),
+  );
 }

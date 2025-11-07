@@ -6,13 +6,13 @@ import {
 } from "@models/shopify";
 
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
-import { prepareItemsFromLineItems } from "@helpers/items";
+import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { logger } from "@utils/logger";
 
-function handleAddToCart(event: EventProductAddedToCart) {
+function handleAddToCart(event: EventProductAddedToCart): void {
   const eventData = event.data;
   const cartLine = eventData.cartLine;
 
@@ -41,7 +41,7 @@ function handleAddToCart(event: EventProductAddedToCart) {
   const lineItems = addFinalLinePriceToPartialLineItems(
     partialCheckoutLineItems,
   );
-  const items = prepareItemsFromLineItems(lineItems);
+  const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
 
   dataLayerPush({
     event: "add_to_cart",
@@ -51,7 +51,7 @@ function handleAddToCart(event: EventProductAddedToCart) {
   });
 }
 
-export function registerAddToCart() {
+export function registerAddToCart(): void {
   analytics.subscribe(
     "product_added_to_cart",
     buildEventHandler(handleAddToCart),

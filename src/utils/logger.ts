@@ -43,19 +43,19 @@ class Logger {
     }
   }
 
-  error(msg: string) {
+  error(msg: string): void {
     this.log("error", msg);
   }
 
-  warn(msg: string) {
+  warn(msg: string): void {
     this.log("warn", msg);
   }
 
-  info(msg: string) {
+  info(msg: string): void {
     this.log("info", msg);
   }
 
-  debug(msg: string) {
+  debug(msg: string): void {
     this.log("debug", msg);
   }
 }

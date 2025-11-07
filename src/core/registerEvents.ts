@@ -10,7 +10,7 @@ import { registerAddShippingInfo } from "@events/addShippingInfo";
 import { registerAddPaymentInfo } from "@events/addPaymentInfo";
 import { registerPurchase } from "@events/purchase";
 
-export function registerEvents() {
+export function registerEvents(): void {
   if (config.gtm.track.pageView) {
     registerPageView();
   }

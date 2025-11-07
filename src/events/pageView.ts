@@ -6,7 +6,7 @@ import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handlePageView(event: EventPageViewed) {
+function handlePageView(event: EventPageViewed): void {
   const eventContext = event.context?.document;
 
   // parameter: page_location
@@ -26,6 +26,6 @@ function handlePageView(event: EventPageViewed) {
   });
 }
 
-export function registerPageView() {
+export function registerPageView(): void {
   analytics.subscribe("page_viewed", buildEventHandler(handlePageView));
 }

@@ -3,12 +3,12 @@
 import { EventProductViewed, PartialCheckoutLineItem } from "@models/shopify";
 
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
-import { prepareItemsFromLineItems } from "@helpers/items";
+import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handleViewItem(event: EventProductViewed) {
+function handleViewItem(event: EventProductViewed): void {
   const eventData = event.data;
   const productVariant = eventData.productVariant;
 
@@ -28,7 +28,7 @@ function handleViewItem(event: EventProductViewed) {
     },
   ];
   const lineItems = addFinalLinePriceToPartialLineItems(partialLineItems);
-  const items = prepareItemsFromLineItems(lineItems);
+  const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
 
   dataLayerPush({
     event: "view_item",
@@ -38,6 +38,6 @@ function handleViewItem(event: EventProductViewed) {
   });
 }
 
-export function registerViewItem() {
+export function registerViewItem(): void {
   analytics.subscribe("product_viewed", buildEventHandler(handleViewItem));
 }

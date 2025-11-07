@@ -3,12 +3,12 @@
 import { EventPaymentInfoSubmitted } from "@models/shopify";
 
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
-import { prepareItemsFromLineItems } from "@helpers/items";
+import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handleAddPaymentInfo(event: EventPaymentInfoSubmitted) {
+function handleAddPaymentInfo(event: EventPaymentInfoSubmitted): void {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -28,7 +28,7 @@ function handleAddPaymentInfo(event: EventPaymentInfoSubmitted) {
     checkout.transactions?.[0]?.paymentMethod.type || undefined;
 
   // parameter: items
-  const items = prepareItemsFromLineItems(checkout.lineItems);
+  const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   dataLayerPush({
     event: "add_payment_info",
@@ -40,7 +40,7 @@ function handleAddPaymentInfo(event: EventPaymentInfoSubmitted) {
   });
 }
 
-export function registerAddPaymentInfo() {
+export function registerAddPaymentInfo(): void {
   analytics.subscribe(
     "payment_info_submitted",
     buildEventHandler(handleAddPaymentInfo),

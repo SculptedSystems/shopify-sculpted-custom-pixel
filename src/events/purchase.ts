@@ -3,12 +3,12 @@
 import { EventCheckoutCompleted } from "@models/shopify";
 
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
-import { prepareItemsFromLineItems } from "@helpers/items";
+import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handlePurchase(event: EventCheckoutCompleted) {
+function handlePurchase(event: EventCheckoutCompleted): void {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -43,7 +43,7 @@ function handlePurchase(event: EventCheckoutCompleted) {
   const payment_gateway = checkout.transactions[0]?.gateway || null;
 
   // parameter: items
-  const items = prepareItemsFromLineItems(checkout.lineItems);
+  const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   dataLayerPush({
     event: "purchase",
@@ -60,6 +60,6 @@ function handlePurchase(event: EventCheckoutCompleted) {
   });
 }
 
-export function registerPurchase() {
+export function registerPurchase(): void {
   analytics.subscribe("checkout_completed", buildEventHandler(handlePurchase));
 }

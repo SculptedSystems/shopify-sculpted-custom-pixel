@@ -8,9 +8,9 @@ import { PartialCheckoutLineItem } from "@models/shopify";
 import { logger } from "@utils/logger";
 import { stringifyObject } from "@utils/stringify";
 
-export function prepareItemsFromLineItems(
+export function createGA4ItemsFromShopifyCheckoutLineItems(
   lineItems: PartialCheckoutLineItem[],
-) {
+): Item[] {
   const items: Item[] = [];
 
   lineItems.forEach((item, index_: number) => {
@@ -99,7 +99,7 @@ export function prepareItemsFromLineItems(
 
 export function addFinalLinePriceToPartialLineItems(
   partialLineItems: PartialCheckoutLineItem[],
-) {
+): PartialCheckoutLineItem[] {
   const lineItems: PartialCheckoutLineItem[] = [];
 
   partialLineItems.forEach((obj) => {

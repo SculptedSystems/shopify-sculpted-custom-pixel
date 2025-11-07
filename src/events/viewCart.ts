@@ -2,13 +2,13 @@
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/cart_viewed
 import { EventCartViewed, PartialCheckoutLineItem } from "@models/shopify";
 
-import { prepareItemsFromLineItems } from "@helpers/items";
+import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
 import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handleViewCart(event: EventCartViewed) {
+function handleViewCart(event: EventCartViewed): void {
   const eventData = event.data;
   const cart = eventData.cart;
 
@@ -34,7 +34,7 @@ function handleViewCart(event: EventCartViewed) {
   });
 
   const lineItems = addFinalLinePriceToPartialLineItems(partialLineItems);
-  const items = prepareItemsFromLineItems(lineItems);
+  const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
 
   dataLayerPush({
     event: "view_cart",
@@ -44,6 +44,6 @@ function handleViewCart(event: EventCartViewed) {
   });
 }
 
-export function registerViewCart() {
+export function registerViewCart(): void {
   analytics.subscribe("cart_viewed", buildEventHandler(handleViewCart));
 }

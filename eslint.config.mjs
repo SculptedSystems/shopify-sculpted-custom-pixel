@@ -11,4 +11,9 @@ export default defineConfig(
   tseslint.configs.stylistic,
   tseslint.configs.strict,
   prettierConfig,
+  {
+    rules: {
+      "@typescript-eslint/explicit-function-return-type": ["error"],
+    },
+  },
 );

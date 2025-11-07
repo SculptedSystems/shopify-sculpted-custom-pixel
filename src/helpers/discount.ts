@@ -2,25 +2,25 @@ import { DiscountAllocation, DiscountApplication } from "@models/shopify";
 
 function discountApplicationIsWholeCart(
   discountApplication: DiscountApplication,
-) {
+): boolean {
   return discountApplication.targetSelection === "ALL";
 }
 
 function discountApplicationIsLineItem(
   discountApplication: DiscountApplication,
-) {
+): boolean {
   return ["ENTITLED", "EXPLICIT"].includes(discountApplication.targetSelection);
 }
 
 function discountApplicationIsCouponCode(
   discountApplication: DiscountApplication,
-) {
+): boolean {
   return discountApplication.type === "DISCOUNT_CODE";
 }
 
 function getCombinedCouponFromDiscountApplications(
   discountApplications: DiscountApplication[],
-) {
+): string | null {
   return (
     discountApplications
       .filter((dApp) => discountApplicationIsCouponCode(dApp)) // filter for type is discount code
@@ -33,7 +33,7 @@ function getCombinedCouponFromDiscountApplications(
 
 export function getLineItemDiscountFromDiscountAllocations(
   discountAllocations: DiscountAllocation[],
-) {
+): number | null {
   const lineItemdDiscountAllocations = discountAllocations.filter((dAllo) =>
     discountApplicationIsLineItem(dAllo.discountApplication),
   );
@@ -52,7 +52,7 @@ export function getLineItemDiscountFromDiscountAllocations(
 
 export function getLineItemCouponFromDiscountAllocations(
   discountAllocations: DiscountAllocation[],
-) {
+): string | null {
   const discountApplications = discountAllocations.map(
     (dAllo) => dAllo.discountApplication,
   );
@@ -66,7 +66,7 @@ export function getLineItemCouponFromDiscountAllocations(
 
 export function getWholeCartCouponFromDiscountApplications(
   discountApplications: DiscountApplication[],
-) {
+): string | null {
   const wholeCartDiscountApplications = discountApplications.filter((dApp) =>
     discountApplicationIsWholeCart(dApp),
   );

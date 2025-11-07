@@ -3,12 +3,12 @@
 import { EventCheckoutStarted } from "@models/shopify";
 
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
-import { prepareItemsFromLineItems } from "@helpers/items";
+import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handleBeginCheckout(event: EventCheckoutStarted) {
+function handleBeginCheckout(event: EventCheckoutStarted): void {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -24,7 +24,7 @@ function handleBeginCheckout(event: EventCheckoutStarted) {
   );
 
   // parameter: items
-  const items = prepareItemsFromLineItems(checkout.lineItems);
+  const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   dataLayerPush({
     event: "begin_checkout",
@@ -35,7 +35,7 @@ function handleBeginCheckout(event: EventCheckoutStarted) {
   });
 }
 
-export function registerBeginCheckout() {
+export function registerBeginCheckout(): void {
   analytics.subscribe(
     "checkout_started",
     buildEventHandler(handleBeginCheckout),

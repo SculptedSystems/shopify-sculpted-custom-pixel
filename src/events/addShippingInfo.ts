@@ -3,12 +3,12 @@
 import { EventCheckoutAddressInfoSubmitted } from "@models/shopify";
 
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
-import { prepareItemsFromLineItems } from "@helpers/items";
+import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handleAddShippingInfo(event: EventCheckoutAddressInfoSubmitted) {
+function handleAddShippingInfo(event: EventCheckoutAddressInfoSubmitted): void {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -28,7 +28,7 @@ function handleAddShippingInfo(event: EventCheckoutAddressInfoSubmitted) {
     checkout.delivery?.selectedDeliveryOptions?.[0]?.title || undefined;
 
   // parameter: items
-  const items = prepareItemsFromLineItems(checkout.lineItems);
+  const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   dataLayerPush({
     event: "add_shipping_info",
@@ -40,7 +40,7 @@ function handleAddShippingInfo(event: EventCheckoutAddressInfoSubmitted) {
   });
 }
 
-export function registerAddShippingInfo() {
+export function registerAddShippingInfo(): void {
   analytics.subscribe(
     "checkout_address_info_submitted",
     buildEventHandler(handleAddShippingInfo),

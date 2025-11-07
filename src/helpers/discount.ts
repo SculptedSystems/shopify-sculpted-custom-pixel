@@ -17,7 +17,7 @@ function getCombinedCouponFromDiscountApplications(discountApplications) {
       .map((dApp) => dApp.title) // get the codes
       .sort((a: string, b: string) => a.localeCompare(b)) // sort alphabetically
       .join(",") || // comma separated string
-    undefined
+    null
   );
 }
 
@@ -34,7 +34,7 @@ export function getLineItemDiscountFromDiscountAllocations(
   });
 
   if (discount === 0) {
-    return undefined;
+    return null;
   } else {
     return discount;
   }

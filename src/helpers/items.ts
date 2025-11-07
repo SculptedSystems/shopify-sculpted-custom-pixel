@@ -3,16 +3,31 @@ import {
   getLineItemCouponFromDiscountAllocations,
   getLineItemDiscountFromDiscountAllocations,
 } from "@helpers/discount";
+import { Item } from "@models/ga4";
 import { PartialCheckoutLineItem } from "@models/shopify";
+import { logger } from "@utils/logger";
+import { stringifyObject } from "@utils/stringify";
 
-export function prepareItemsFromLineItems(lineItems) {
-  const items = [];
+export function prepareItemsFromLineItems(
+  lineItems: PartialCheckoutLineItem[],
+) {
+  const items: Item[] = [];
 
   lineItems.forEach((item, index_: number) => {
+    if (!item.variant) {
+      logger.debug(`item ${stringifyObject(item)} has no variant`);
+      return;
+    }
     // parameter: item_id
     const productId = item.variant.id;
     const productSku = item.variant.sku;
     const item_id = config.shopify.useSku ? productSku : productId;
+    if (!item_id) {
+      logger.debug(
+        `item ${stringifyObject(item)} has neither variant.id nor variant.sku`,
+      );
+      return;
+    }
 
     // parameter: item_name
     const item_name = item.variant.product.title;
@@ -51,13 +66,29 @@ export function prepareItemsFromLineItems(lineItems) {
     items.push({
       item_id: item_id,
       item_name: item_name,
+
       affiliation: affiliation,
+
       coupon: coupon,
       discount: discount,
+
       index: index,
+
       item_brand: item_brand,
+
       item_category: item_category,
+      item_category2: null,
+      item_category3: null,
+      item_category4: null,
+      item_category5: null,
+
+      item_list_id: null,
+      item_list_name: null,
+
       item_variant: item_variant,
+
+      location_id: null,
+
       price: price,
       quantity: quantity,
     });

@@ -5,7 +5,7 @@
 export const config = {
   pixel: {
     name: "demo",
-    logging: true,
+    loglevel: "debug",
   },
 
   shopify: {

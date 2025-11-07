@@ -5,8 +5,14 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
+      "@config": [
+        "src/config.ts"
+      ],
       "@core/*": [
         "src/core/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
       ],
       "@helpers/*": [
         "src/helpers/*"
@@ -14,8 +20,8 @@
       "@events/*": [
         "src/events/*"
       ],
-      "@src/types/*": [
-        "types/*"
+      "@types/*": [
+        "src/types/*"
       ]
     },
     // === Environment Settings ===

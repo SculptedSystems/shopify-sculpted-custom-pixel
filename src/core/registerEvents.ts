@@ -1,4 +1,4 @@
-import { config } from "@core/config";
+import { config } from "@config";
 
 import { registerPageView } from "@events/pageView";
 import { registerViewItemList } from "@events/viewItemList";

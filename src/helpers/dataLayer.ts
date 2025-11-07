@@ -1,8 +1,8 @@
-import { consoleLog } from "@core/log";
+import { logger } from "@utils/logger";
+import { stringifyObject } from "@utils/stringify";
 
 export function dataLayerPush(message: object) {
-  consoleLog(
-    `Pushing Message to Data Layer -> ${JSON.stringify(message, null, 2)}`,
-  );
+  logger.info(`Pushing Message to Data Layer -> ${stringifyObject(message)}`);
+
   window.dataLayer.push(message);
 }

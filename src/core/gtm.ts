@@ -2,7 +2,7 @@
 // Initialize Tracking
 // ============================
 
-import { config } from "@core/config";
+import { config } from "@config";
 
 export function initializeGTM(): void {
   // Initialize Data Layer

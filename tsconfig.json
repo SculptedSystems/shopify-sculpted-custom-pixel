@@ -11,6 +11,9 @@
       "@models/*": [
         "src/models/*"
       ],
+      "@models/shopify": [
+        "src/models/shopify"
+      ],
       "@core/*": [
         "src/core/*"
       ],

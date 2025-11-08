@@ -2,7 +2,7 @@
  * Shopify Web Pixels API - Analytics
  * Source: https://shopify.dev/docs/api/web-pixels-api/standard-api/analytics
  */
-import { Context } from "./context";
+import { Context } from "@models/shopify";
 
 export interface Analytics {
   subscribe(

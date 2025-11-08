@@ -1,4 +1,2 @@
-export * from "./analytics";
-export * from "./browser";
-export * from "./context";
-export * from "./init";
+export * from "./common";
+export * from "./standard-api";

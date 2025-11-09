@@ -1,9 +1,8 @@
 // https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#view_item_list
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/collection_viewed
-import {
-  PartialCheckoutLineItem,
-  EventCollectionViewed,
-} from "@models/shopify";
+
+import { PixelEventsCollectionViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
+import { PartialCheckoutLineItem } from "@models";
 
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
@@ -11,7 +10,7 @@ import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handleViewItemList(event: EventCollectionViewed): void {
+function handleViewItemList(event: PixelEventsCollectionViewed): void {
   const eventData = event.data;
   const productVariants = eventData.collection.productVariants;
 
@@ -23,7 +22,6 @@ function handleViewItemList(event: EventCollectionViewed): void {
   productVariants.forEach((productVariant) => {
     partialCheckoutLineItems.push({
       discountAllocations: [],
-      finalLinePrice: null,
       quantity: 1,
       variant: productVariant,
     });

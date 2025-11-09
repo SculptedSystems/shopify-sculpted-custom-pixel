@@ -1,10 +1,16 @@
+import {
+  Item,
+  PartialCheckoutLineItem,
+  PartialCheckoutLineItemWithFinalLinePrice,
+} from "@models";
+
 import { config } from "@config";
+
 import {
   getLineItemCouponFromDiscountAllocations,
   getLineItemDiscountFromDiscountAllocations,
 } from "@helpers/discount";
-import { Item } from "@models/ga4";
-import { PartialCheckoutLineItem } from "@models/shopify";
+
 import { logger } from "@utils/logger";
 import { stringifyObject } from "@utils/stringify";
 
@@ -100,7 +106,7 @@ export function createGA4ItemsFromShopifyCheckoutLineItems(
 export function addFinalLinePriceToPartialLineItems(
   partialLineItems: PartialCheckoutLineItem[],
 ): PartialCheckoutLineItem[] {
-  const lineItems: PartialCheckoutLineItem[] = [];
+  const lineItems: PartialCheckoutLineItemWithFinalLinePrice[] = [];
 
   partialLineItems.forEach((obj) => {
     lineItems.push({

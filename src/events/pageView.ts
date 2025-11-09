@@ -1,12 +1,13 @@
 // https://support.google.com/analytics/answer/9216061#page_view
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/page_viewed
-import { EventPageViewed } from "@models/shopify";
+
+import { PixelEventsPageViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handlePageView(event: EventPageViewed): void {
+function handlePageView(event: PixelEventsPageViewed): void {
   const eventContext = event.context?.document;
 
   // parameter: page_location

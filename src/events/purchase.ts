@@ -1,6 +1,7 @@
 // https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#purchase
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_completed
-import { EventCheckoutCompleted } from "@models/shopify";
+
+import { PixelEventsCheckoutCompleted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
@@ -8,7 +9,7 @@ import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handlePurchase(event: EventCheckoutCompleted): void {
+function handlePurchase(event: PixelEventsCheckoutCompleted): void {
   const eventData = event.data;
   const checkout = eventData.checkout;
 

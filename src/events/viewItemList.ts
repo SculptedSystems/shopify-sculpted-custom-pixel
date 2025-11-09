@@ -1,6 +1,7 @@
 // https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#view_item_list
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/collection_viewed
-import { EventCollectionViewed } from "@models/shopify";
+
+import { PixelEventsCollectionViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
 import { PartialCheckoutLineItem } from "@models/helpers";
 
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
@@ -9,7 +10,7 @@ import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handleViewItemList(event: EventCollectionViewed): void {
+function handleViewItemList(event: PixelEventsCollectionViewed): void {
   const eventData = event.data;
   const productVariants = eventData.collection.productVariants;
 

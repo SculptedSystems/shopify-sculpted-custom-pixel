@@ -1,6 +1,7 @@
 // https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#view_cart
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/cart_viewed
-import { EventCartViewed } from "@models/shopify";
+
+import { PixelEventsCartViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
 import { PartialCheckoutLineItem } from "@models/helpers";
 
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
@@ -9,7 +10,7 @@ import { dataLayerPush } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handleViewCart(event: EventCartViewed): void {
+function handleViewCart(event: PixelEventsCartViewed): void {
   const eventData = event.data;
   const cart = eventData.cart;
 

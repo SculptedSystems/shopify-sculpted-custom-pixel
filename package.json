@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@sculptedsystems/shopify-web-pixels-api-types": "^0.0.3",
     "@vitest/coverage-v8": "^4.0.7",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",

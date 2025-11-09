@@ -1,6 +1,7 @@
 // https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#add_to_cart
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/product_added_to_cart
-import { EventProductAddedToCart } from "@models/shopify";
+
+import { PixelEventsProductAddedToCart } from "@sculptedsystems/shopify-web-pixels-api-types";
 import { PartialCheckoutLineItem } from "@models/helpers";
 
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
@@ -10,7 +11,7 @@ import { dataLayerPush } from "@helpers/dataLayer";
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { logger } from "@utils/logger";
 
-function handleAddToCart(event: EventProductAddedToCart): void {
+function handleAddToCart(event: PixelEventsProductAddedToCart): void {
   const eventData = event.data;
   const cartLine = eventData.cartLine;
 

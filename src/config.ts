@@ -4,7 +4,6 @@
 
 export const config = {
   pixel: {
-    name: "demo",
     loglevel: "debug",
   },
 
@@ -14,10 +13,11 @@ export const config = {
   },
 
   gtm: {
-    id: "GTM-PJKTL9FK",
+    id: "GTM-TLM894NG",
 
     track: {
       pageView: true,
+      search: true,
       viewItemList: true,
       viewItem: true,
       addToCart: true,

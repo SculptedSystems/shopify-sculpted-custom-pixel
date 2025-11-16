@@ -1,18 +1,23 @@
 import { config } from "@config";
 
-import { registerPageView } from "@events/pageView";
-import { registerViewItemList } from "@events/viewItemList";
-import { registerViewItem } from "@events/viewItem";
-import { registerAddToCart } from "@events/addToCart";
-import { registerViewCart } from "@events/viewCart";
-import { registerBeginCheckout } from "@events/beginCheckout";
-import { registerAddShippingInfo } from "@events/addShippingInfo";
 import { registerAddPaymentInfo } from "@events/addPaymentInfo";
+import { registerAddShippingInfo } from "@events/addShippingInfo";
+import { registerAddToCart } from "@events/addToCart";
+import { registerBeginCheckout } from "@events/beginCheckout";
+import { registerPageView } from "@events/pageView";
 import { registerPurchase } from "@events/purchase";
+import { registerSearch } from "@events/search";
+import { registerViewCart } from "@events/viewCart";
+import { registerViewItem } from "@events/viewItem";
+import { registerViewItemList } from "@events/viewItemList";
 
 export function registerEvents(): void {
   if (config.gtm.track.pageView) {
     registerPageView();
+  }
+
+  if (config.gtm.track.search) {
+    registerSearch();
   }
 
   if (config.gtm.track.viewItemList) {

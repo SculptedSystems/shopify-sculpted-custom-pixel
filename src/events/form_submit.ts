@@ -4,6 +4,7 @@
 import { PixelEventsFormSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { dataLayerPush } from "@helpers/dataLayer";
+import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
@@ -14,6 +15,7 @@ function handleFormSubmit(event: PixelEventsFormSubmitted): void {
   const form_id = eventData.element.id;
 
   dataLayerPush({
+    customer: getCustomer(),
     event: "form_submit",
     form_id: form_id,
   });

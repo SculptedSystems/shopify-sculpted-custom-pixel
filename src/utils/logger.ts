@@ -25,7 +25,7 @@ class Logger {
   }
 
   private formatMessage(level: LogLevel, message: string): string {
-    return `GTM Pixel" [${level.toUpperCase()}]: ${message}`;
+    return `[${level.toUpperCase()}] GTM Pixel: ${message}`;
   }
 
   log(level: LogLevel, message: string): void {

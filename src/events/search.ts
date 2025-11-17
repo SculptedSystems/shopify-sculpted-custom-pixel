@@ -4,6 +4,7 @@
 import { PixelEventsSearchSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { dataLayerPush } from "@helpers/dataLayer";
+import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
@@ -14,6 +15,7 @@ function handleSearch(event: PixelEventsSearchSubmitted): void {
   const search_term = eventData.searchResult.query;
 
   dataLayerPush({
+    customer: getCustomer(),
     event: "search",
     search_term: search_term,
   });

@@ -7,6 +7,7 @@ import { PartialCheckoutLineItem } from "@models";
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { dataLayerPush } from "@helpers/dataLayer";
+import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { logger } from "@utils/logger";
@@ -42,6 +43,7 @@ function handleAddToCart(event: PixelEventsProductAddedToCart): void {
   const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
 
   dataLayerPush({
+    customer: getCustomer(),
     event: "add_to_cart",
     ecommerce: {
       currency: currency,

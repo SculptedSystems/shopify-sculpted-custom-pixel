@@ -1,4 +1,7 @@
-name: CI & Publish
+name: CI & Release
+
+permissions:
+  contents: write
 
 on:
   pull_request:
@@ -17,14 +20,13 @@ jobs:
     name: Run Checks
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
+          cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -32,24 +34,60 @@ jobs:
       - name: Run checks
         run: npm run check
 
-  # 🔍 Validate version bump when merging into release branches
   validate-version:
     name: Validate Version on release/*
     if: startsWith(github.ref, 'refs/heads/release/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate version in package.json
+
+      # Ensure version exists & is not placeholder
+      - name: Validate version exists
         run: |
           VERSION=$(jq -r '.version' package.json)
-          echo "Detected version: $VERSION"
-          if [[ "$VERSION" == "0.0.0" || -z "$VERSION" ]]; then
+          if [[ -z "$VERSION" || "$VERSION" == "0.0.0" ]]; then
             echo "❌ Invalid version detected in package.json"
             exit 1
           fi
-          echo "✅ Version check passed"
 
-  # 🏗️ Build job (runs for release/* and main)
+      # Ensure package.json & package-lock.json versions match
+      - name: Validate package.json and package-lock.json versions match
+        run: |
+          PKG_VERSION=$(jq -r '.version' package.json)
+          LOCK_VERSION=$(jq -r '.version' package-lock.json)
+
+          echo "package.json version: $PKG_VERSION"
+          echo "package-lock.json version: $LOCK_VERSION"
+
+          if [[ "$PKG_VERSION" != "$LOCK_VERSION" ]]; then
+            echo "❌ Version mismatch between package.json and package-lock.json"
+            exit 1
+          fi
+
+      # Ensure version is different from main's version
+      - name: Compare version against main
+        run: |
+          git fetch origin main
+          MAIN_VERSION=$(git show origin/main:package.json | jq -r '.version')
+          THIS_VERSION=$(jq -r '.version' package.json)
+
+          echo "Main version: $MAIN_VERSION"
+          echo "This version: $THIS_VERSION"
+
+          if [[ "$MAIN_VERSION" == "$THIS_VERSION" ]]; then
+            echo "❌ Version has not changed compared to main"
+            exit 1
+          fi
+
+      # Ensure SemVer formatting
+      - name: Validate SemVer format
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Version '$VERSION' is not valid SemVer (X.Y.Z)"
+            exit 1
+          fi
+
   build:
     name: Build Package
     needs: [checks]
@@ -57,10 +95,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
+          cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -68,8 +108,56 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload build artifacts
+      - name: Upload dist artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: [build]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download dist
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Read version
+        id: get_version
+        run: echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+
+      - name: Create tag
+        run: |
+          VERSION=${{ steps.get_version.outputs.version }}
+          TAG="v$VERSION"
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "⚠️ Tag $TAG already exists"
+          else
+            git tag "$TAG"
+            git push origin "$TAG"
+          fi
+
+      # ⭐ COMBINED RELEASE + ASSET UPLOAD
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          generate_release_notes: true
+          files: |
+            dist/index.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

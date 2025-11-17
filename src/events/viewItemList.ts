@@ -4,9 +4,10 @@
 import { PixelEventsCollectionViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
 import { PartialCheckoutLineItem } from "@models";
 
-import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
+import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { dataLayerPush } from "@helpers/dataLayer";
+import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
@@ -16,6 +17,12 @@ function handleViewItemList(event: PixelEventsCollectionViewed): void {
 
   // parameter: currency
   const currency = productVariants[0]?.price.currencyCode || null;
+
+  // parameter: item_list_id
+  const item_list_id = eventData.collection.id;
+
+  // parameter: item_list_name
+  const item_list_name = eventData.collection.title;
 
   // parameter: items
   const partialCheckoutLineItems: PartialCheckoutLineItem[] = [];
@@ -33,9 +40,12 @@ function handleViewItemList(event: PixelEventsCollectionViewed): void {
   const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
 
   dataLayerPush({
+    customer: getCustomer(),
     event: "view_item_list",
     ecommerce: {
       currency: currency,
+      item_list_id: item_list_id,
+      item_list_name: item_list_name,
       items: items,
     },
   });

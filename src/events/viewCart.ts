@@ -4,9 +4,10 @@
 import { PixelEventsCartViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
 import { PartialCheckoutLineItem } from "@models";
 
-import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
+import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { dataLayerPush } from "@helpers/dataLayer";
+import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
@@ -38,6 +39,7 @@ function handleViewCart(event: PixelEventsCartViewed): void {
   const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
 
   dataLayerPush({
+    customer: getCustomer(),
     event: "view_cart",
     ecommerce: {
       currency: currency,

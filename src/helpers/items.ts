@@ -58,7 +58,8 @@ export function createGA4ItemsFromShopifyCheckoutLineItems(
     const item_brand = item.variant.product.vendor;
 
     // parameter: item_category
-    const item_category = item.variant.product.type;
+    const productType = item.variant.product.type;
+    const item_category = productType === "" ? null : productType;
 
     // parameter: item_variant
     const item_variant = item.variant.title;

@@ -25,7 +25,7 @@ class Logger {
   }
 
   private formatMessage(level: LogLevel, message: string): string {
-    return `Custom Pixel "${config.pixel.name}" [${level.toUpperCase()}]: ${message}`;
+    return `[${level.toUpperCase()}] GTM Pixel: ${message}`;
   }
 
   log(level: LogLevel, message: string): void {

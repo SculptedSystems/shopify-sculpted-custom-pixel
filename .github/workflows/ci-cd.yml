@@ -161,4 +161,3 @@ jobs:
             dist/index.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

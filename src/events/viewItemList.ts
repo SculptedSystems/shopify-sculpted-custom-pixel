@@ -17,6 +17,12 @@ function handleViewItemList(event: PixelEventsCollectionViewed): void {
   // parameter: currency
   const currency = productVariants[0]?.price.currencyCode || null;
 
+  // parameter: item_list_id
+  const item_list_id = eventData.collection.id;
+
+  // parameter: item_list_name
+  const item_list_name = eventData.collection.title;
+
   // parameter: items
   const partialCheckoutLineItems: PartialCheckoutLineItem[] = [];
   productVariants.forEach((productVariant) => {
@@ -36,6 +42,8 @@ function handleViewItemList(event: PixelEventsCollectionViewed): void {
     event: "view_item_list",
     ecommerce: {
       currency: currency,
+      item_list_id: item_list_id,
+      item_list_name: item_list_name,
       items: items,
     },
   });

@@ -4,6 +4,7 @@
 import { PixelEventsPageViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { dataLayerPush } from "@helpers/dataLayer";
+import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
@@ -20,6 +21,7 @@ function handlePageView(event: PixelEventsPageViewed): void {
   const page_title = eventContext?.title;
 
   dataLayerPush({
+    customer: getCustomer(),
     event: "page_view",
     page_location: page_location,
     page_referrer: page_referrer,

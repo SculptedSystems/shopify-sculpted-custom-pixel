@@ -1,7 +1,9 @@
 // ================================================
 //   Global Declarations
 // ================================================
-import { Analytics, Init, DataLayer } from "@models";
+import { Init, Analytics } from "@sculptedsystems/shopify-web-pixels-api-types";
+
+import { DataLayer } from "@models";
 
 export {};
 

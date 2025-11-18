@@ -13,6 +13,17 @@ import {
 
 import { logger } from "@utils/logger";
 import { stringifyObject } from "@utils/stringify";
+import { ProductVariant } from "@sculptedsystems/shopify-web-pixels-api-types";
+
+export function getItemIdFromShopifyProductVariant(
+  productVariant: ProductVariant,
+): string | null {
+  const productId = productVariant.id;
+  const productSku = productVariant.sku;
+  const item_id = config.shopify.useSku ? productSku : productId;
+
+  return item_id;
+}
 
 export function createGA4ItemsFromShopifyCheckoutLineItems(
   lineItems: PartialCheckoutLineItem[],
@@ -25,9 +36,7 @@ export function createGA4ItemsFromShopifyCheckoutLineItems(
       return;
     }
     // parameter: item_id
-    const productId = item.variant.id;
-    const productSku = item.variant.sku;
-    const item_id = config.shopify.useSku ? productSku : productId;
+    const item_id = getItemIdFromShopifyProductVariant(item.variant);
     if (!item_id) {
       logger.debug(
         `item ${stringifyObject(item)} has neither variant.id nor variant.sku`,

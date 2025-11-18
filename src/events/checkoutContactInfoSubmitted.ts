@@ -6,7 +6,6 @@ import { DataLayerMessage } from "@models";
 import { config } from "@config";
 
 import { getGoogleItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { getCustomer } from "@helpers/customer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -42,7 +41,6 @@ function prepareGoogleCheckoutContactInfoSubmitted(
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   message.google = {
-    user_data: getCustomer(),
     event: "add_contact_info",
     ecommerce: {
       currency: currency,

@@ -1,4 +1,3 @@
-// https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#add_payment_info
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/payment_info_submitted
 
 import { DataLayerMessage } from "@models";
@@ -7,7 +6,6 @@ import { PixelEventsPaymentInfoSubmitted } from "@sculptedsystems/shopify-web-pi
 import { config } from "@config";
 
 import { getGoogleItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { getCustomer } from "@helpers/customer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -43,7 +41,6 @@ function prepareGooglePaymentInfoSubmitted(
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   message.google = {
-    user_data: getCustomer(),
     event: "add_payment_info",
     ecommerce: {
       currency: currency,

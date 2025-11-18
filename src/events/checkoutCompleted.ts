@@ -1,4 +1,3 @@
-// https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#purchase
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_completed
 
 import { DataLayerMessage } from "@models";
@@ -7,7 +6,6 @@ import { PixelEventsCheckoutCompleted } from "@sculptedsystems/shopify-web-pixel
 import { config } from "@config";
 
 import { getGoogleItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { getCustomer } from "@helpers/customer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -58,7 +56,6 @@ function prepareGoogleCheckoutCompleted(
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   message.google = {
-    user_data: getCustomer(),
     event: "purchase",
     ecommerce: {
       currency: currency,

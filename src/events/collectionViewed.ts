@@ -1,4 +1,3 @@
-// https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#view_item_list
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/collection_viewed
 
 import { PartialCheckoutLineItem, DataLayerMessage } from "@models";
@@ -8,7 +7,6 @@ import { config } from "@config";
 
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
 import { getGoogleItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
@@ -49,7 +47,6 @@ function prepareGoogleCollectionViewed(
   const items = getGoogleItemsFromShopifyCheckoutLineItems(lineItems);
 
   message.google = {
-    user_data: getCustomer(),
     event: "view_item_list",
     ecommerce: {
       currency: currency,

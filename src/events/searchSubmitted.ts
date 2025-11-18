@@ -1,12 +1,9 @@
-// https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#search
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/search_submitted
 
 import { DataLayerMessage } from "@models";
 import { PixelEventsSearchSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { config } from "@config";
-
-import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
@@ -25,7 +22,6 @@ function prepareGoogleSearchSubmitted(
   const search_term = eventData.searchResult.query;
 
   message.google = {
-    user_data: getCustomer(),
     event: "search",
     search_term: search_term,
   };

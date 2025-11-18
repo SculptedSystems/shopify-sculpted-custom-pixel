@@ -7,7 +7,7 @@ import { config } from "@config";
 
 import {
   addFinalLinePriceToPartialLineItems,
-  createGA4ItemsFromShopifyCheckoutLineItems,
+  getGoogleItemsFromShopifyCheckoutLineItems,
   getItemIdFromShopifyProductVariant,
 } from "@helpers/items";
 
@@ -40,7 +40,7 @@ function prepareGoogleProductViewed(
     },
   ];
   const lineItems = addFinalLinePriceToPartialLineItems(partialLineItems);
-  const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
+  const items = getGoogleItemsFromShopifyCheckoutLineItems(lineItems);
 
   message.google = {
     event: "view_item",

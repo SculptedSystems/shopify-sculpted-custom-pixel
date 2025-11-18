@@ -7,7 +7,7 @@ import { PixelEventsCollectionViewed } from "@sculptedsystems/shopify-web-pixels
 import { config } from "@config";
 
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
-import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
+import { getGoogleItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -46,7 +46,7 @@ function prepareGoogleCollectionViewed(
   const lineItems = addFinalLinePriceToPartialLineItems(
     partialCheckoutLineItems,
   );
-  const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
+  const items = getGoogleItemsFromShopifyCheckoutLineItems(lineItems);
 
   message.google = {
     user_data: getCustomer(),

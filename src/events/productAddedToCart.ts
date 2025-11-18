@@ -7,7 +7,7 @@ import { config } from "@config";
 
 import {
   addFinalLinePriceToPartialLineItems,
-  createGA4ItemsFromShopifyCheckoutLineItems,
+  getGoogleItemsFromShopifyCheckoutLineItems,
   getItemIdFromShopifyProductVariant,
 } from "@helpers/items";
 
@@ -50,7 +50,7 @@ function prepareGoogleProductAddedToCart(
   const lineItems = addFinalLinePriceToPartialLineItems(
     partialCheckoutLineItems,
   );
-  const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
+  const items = getGoogleItemsFromShopifyCheckoutLineItems(lineItems);
 
   message.google = {
     event: "add_to_cart",

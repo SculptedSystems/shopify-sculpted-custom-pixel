@@ -6,7 +6,7 @@ import { PixelEventsCheckoutCompleted } from "@sculptedsystems/shopify-web-pixel
 
 import { config } from "@config";
 
-import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
+import { getGoogleItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { getCustomer } from "@helpers/customer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
@@ -55,7 +55,7 @@ function prepareGoogleCheckoutCompleted(
   const payment_gateway = checkout.transactions[0]?.gateway || null;
 
   // parameter: items
-  const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+  const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   message.google = {
     user_data: getCustomer(),

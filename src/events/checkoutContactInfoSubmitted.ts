@@ -5,7 +5,7 @@ import { DataLayerMessage } from "@models";
 
 import { config } from "@config";
 
-import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
+import { getGoogleItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { getCustomer } from "@helpers/customer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
@@ -39,7 +39,7 @@ function prepareGoogleCheckoutContactInfoSubmitted(
     checkout.delivery?.selectedDeliveryOptions?.[0]?.title || undefined;
 
   // parameter: items
-  const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+  const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   message.google = {
     user_data: getCustomer(),

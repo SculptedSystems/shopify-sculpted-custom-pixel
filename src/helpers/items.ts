@@ -1,5 +1,5 @@
 import {
-  Item,
+  GoogleItem,
   MetaContent,
   PartialCheckoutLineItem,
   PartialCheckoutLineItemWithFinalLinePrice,
@@ -29,10 +29,10 @@ export function getItemIdFromShopifyProductVariant(
   return item_id;
 }
 
-export function createGA4ItemsFromShopifyCheckoutLineItems(
+export function getGoogleItemsFromShopifyCheckoutLineItems(
   lineItems: PartialCheckoutLineItem[],
-): Item[] {
-  const items: Item[] = [];
+): GoogleItem[] {
+  const items: GoogleItem[] = [];
 
   lineItems.forEach((item, index_: number) => {
     if (!item.variant) {

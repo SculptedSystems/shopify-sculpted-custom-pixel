@@ -6,7 +6,7 @@ import { PixelEventsCheckoutStarted } from "@sculptedsystems/shopify-web-pixels-
 import { config } from "@config";
 
 import {
-  createGA4ItemsFromShopifyCheckoutLineItems,
+  getGoogleItemsFromShopifyCheckoutLineItems,
   getMetaContentIdsFromShopifyCheckoutLineItems,
   getMetaContentsFromShopifyCheckoutLineItems,
   getMetaNumItemsFromShopifyCheckoutLineItems,
@@ -39,7 +39,7 @@ function prepareGoogleCheckoutStarted(
   );
 
   // parameter: items
-  const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+  const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   message.google = {
     event: "begin_checkout",

@@ -1,4 +1,3 @@
-import { registerCartViewed } from "@events/cartViewed";
 import { registerCheckoutCompleted } from "@events/checkoutCompleted";
 import { registerCheckoutShippingInfoSubmitted } from "@events/checkoutShippingInfoSubmitted";
 import { registerCheckoutStarted } from "@events/checkoutStarted";
@@ -11,7 +10,6 @@ import { registerProductViewed } from "@events/productViewed";
 import { registerSearchSubmitted } from "@events/searchSubmitted";
 
 export function registerEvents(): void {
-  registerCartViewed();
   registerCheckoutCompleted();
   registerCheckoutShippingInfoSubmitted();
   registerCheckoutStarted();

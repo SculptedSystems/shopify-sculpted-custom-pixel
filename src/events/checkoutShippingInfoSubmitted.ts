@@ -1,16 +1,18 @@
-// https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#add_payment_info
-// https://shopify.dev/docs/api/web-pixels-api/standard-events/payment_info_submitted
+// https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#add_shipping_info
+// https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_shipping_info_submitted
 
 import { PixelEventsPaymentInfoSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { dataLayerPush } from "@helpers/dataLayer";
 import { getCustomer } from "@helpers/customer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
+import { dataLayerPush } from "@utils/dataLayer";
 
-function handleAddPaymentInfo(event: PixelEventsPaymentInfoSubmitted): void {
+function handleCheckoutShippingInfoSubmitted(
+  event: PixelEventsPaymentInfoSubmitted,
+): void {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -25,29 +27,29 @@ function handleAddPaymentInfo(event: PixelEventsPaymentInfoSubmitted): void {
     checkout.discountApplications,
   );
 
-  // parameter: payment_type
-  const payment_type =
-    checkout.transactions?.[0]?.paymentMethod.type || undefined;
+  // parameter: shipping_tier
+  const shipping_tier =
+    checkout.delivery?.selectedDeliveryOptions?.[0]?.title || undefined;
 
   // parameter: items
   const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   dataLayerPush({
-    customer: getCustomer(),
-    event: "add_payment_info",
+    user_data: getCustomer(),
+    event: "add_shipping_info",
     ecommerce: {
       currency: currency,
       value: value,
       coupon: coupon,
-      payment_type: payment_type,
+      shipping_tier: shipping_tier,
       items: items,
     },
   });
 }
 
-export function registerAddPaymentInfo(): void {
+export function registerCheckoutShippingInfoSubmitted(): void {
   analytics.subscribe(
-    "payment_info_submitted",
-    buildEventHandler(handleAddPaymentInfo),
+    "checkout_shipping_info_submitted",
+    buildEventHandler(handleCheckoutShippingInfoSubmitted),
   );
 }

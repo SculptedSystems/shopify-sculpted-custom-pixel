@@ -4,13 +4,13 @@
 import { PixelEventsCheckoutStarted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { dataLayerPush } from "@helpers/dataLayer";
 import { getCustomer } from "@helpers/customer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
+import { dataLayerPush } from "@utils/dataLayer";
 
-function handleBeginCheckout(event: PixelEventsCheckoutStarted): void {
+function handleCheckoutStarted(event: PixelEventsCheckoutStarted): void {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -29,7 +29,7 @@ function handleBeginCheckout(event: PixelEventsCheckoutStarted): void {
   const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   dataLayerPush({
-    customer: getCustomer(),
+    user_data: getCustomer(),
     event: "begin_checkout",
     ecommerce: {
       currency: currency,
@@ -40,9 +40,9 @@ function handleBeginCheckout(event: PixelEventsCheckoutStarted): void {
   });
 }
 
-export function registerBeginCheckout(): void {
+export function registerCheckoutStarted(): void {
   analytics.subscribe(
     "checkout_started",
-    buildEventHandler(handleBeginCheckout),
+    buildEventHandler(handleCheckoutStarted),
   );
 }

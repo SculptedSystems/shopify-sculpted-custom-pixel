@@ -6,12 +6,12 @@ import { PartialCheckoutLineItem } from "@models";
 
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { dataLayerPush } from "@helpers/dataLayer";
+import { dataLayerPush } from "@utils/dataLayer";
 import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 
-function handleViewItem(event: PixelEventsProductViewed): void {
+function handleProductViewed(event: PixelEventsProductViewed): void {
   const eventData = event.data;
   const productVariant = eventData.productVariant;
 
@@ -43,6 +43,6 @@ function handleViewItem(event: PixelEventsProductViewed): void {
   });
 }
 
-export function registerViewItem(): void {
-  analytics.subscribe("product_viewed", buildEventHandler(handleViewItem));
+export function registerProductViewed(): void {
+  analytics.subscribe("product_viewed", buildEventHandler(handleProductViewed));
 }

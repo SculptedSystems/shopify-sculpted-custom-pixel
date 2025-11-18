@@ -6,12 +6,12 @@ import { PartialCheckoutLineItem } from "@models";
 
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { dataLayerPush } from "@helpers/dataLayer";
 import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
+import { dataLayerPush } from "@utils/dataLayer";
 
-function handleViewCart(event: PixelEventsCartViewed): void {
+function handleCartViewed(event: PixelEventsCartViewed): void {
   const eventData = event.data;
   const cart = eventData.cart;
 
@@ -39,7 +39,7 @@ function handleViewCart(event: PixelEventsCartViewed): void {
   const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
 
   dataLayerPush({
-    customer: getCustomer(),
+    user_data: getCustomer(),
     event: "view_cart",
     ecommerce: {
       currency: currency,
@@ -49,6 +49,6 @@ function handleViewCart(event: PixelEventsCartViewed): void {
   });
 }
 
-export function registerViewCart(): void {
-  analytics.subscribe("cart_viewed", buildEventHandler(handleViewCart));
+export function registerCartViewed(): void {
+  analytics.subscribe("cart_viewed", buildEventHandler(handleCartViewed));
 }

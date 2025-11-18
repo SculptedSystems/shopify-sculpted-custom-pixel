@@ -1,7 +1,10 @@
 // https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#purchase
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_completed
 
+import { DataLayerMessage } from "@models";
 import { PixelEventsCheckoutCompleted } from "@sculptedsystems/shopify-web-pixels-api-types";
+
+import { config } from "@config";
 
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { getCustomer } from "@helpers/customer";
@@ -10,7 +13,14 @@ import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 
-function handleCheckoutCompleted(event: PixelEventsCheckoutCompleted): void {
+function prepareGoogleCheckoutCompleted(
+  event: PixelEventsCheckoutCompleted,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.google) {
+    return;
+  }
+
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -47,7 +57,7 @@ function handleCheckoutCompleted(event: PixelEventsCheckoutCompleted): void {
   // parameter: items
   const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
-  dataLayerPush({
+  message.google = {
     user_data: getCustomer(),
     event: "purchase",
     ecommerce: {
@@ -62,7 +72,15 @@ function handleCheckoutCompleted(event: PixelEventsCheckoutCompleted): void {
       payment_gateway: payment_gateway,
       items: items,
     },
-  });
+  };
+}
+
+function handleCheckoutCompleted(event: PixelEventsCheckoutCompleted): void {
+  const message: DataLayerMessage = { event: "shopify_checkout_completed" };
+
+  prepareGoogleCheckoutCompleted(event, message);
+
+  dataLayerPush(message);
 }
 
 export function registerCheckoutCompleted(): void {

@@ -1,14 +1,24 @@
 // https://support.google.com/analytics/answer/9216061#page_view
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/page_viewed
 
+import { DataLayerMessage } from "@models";
 import { PixelEventsPageViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
+
+import { config } from "@config";
 
 import { getCustomer } from "@helpers/customer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 
-function handlePageViewed(event: PixelEventsPageViewed): void {
+function prepareGooglePageViewed(
+  event: PixelEventsPageViewed,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.google) {
+    return;
+  }
+
   const eventContext = event.context?.document;
 
   // parameter: page_location
@@ -20,13 +30,21 @@ function handlePageViewed(event: PixelEventsPageViewed): void {
   // parameter: page_title
   const page_title = eventContext?.title;
 
-  dataLayerPush({
+  message.google = {
     user_data: getCustomer(),
     event: "page_view",
     page_location: page_location,
     page_referrer: page_referrer,
     page_title: page_title,
-  });
+  };
+}
+
+function handlePageViewed(event: PixelEventsPageViewed): void {
+  const message: DataLayerMessage = { event: "shopify_page_viewed" };
+
+  prepareGooglePageViewed(event, message);
+
+  dataLayerPush(message);
 }
 
 export function registerPageViewed(): void {

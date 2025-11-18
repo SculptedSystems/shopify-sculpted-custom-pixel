@@ -15,4 +15,10 @@ export const config = {
   gtm: {
     id: "GTM-????????",
   },
+
+  platform: {
+    google: true,
+    meta: true,
+    tiktok: true,
+  },
 } as const;

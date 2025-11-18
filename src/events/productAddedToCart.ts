@@ -1,8 +1,10 @@
 // https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#add_to_cart
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/product_added_to_cart
 
+import { PartialCheckoutLineItem, DataLayerMessage } from "@models";
 import { PixelEventsProductAddedToCart } from "@sculptedsystems/shopify-web-pixels-api-types";
-import { PartialCheckoutLineItem } from "@models";
+
+import { config } from "@config";
 
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
@@ -12,7 +14,14 @@ import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 import { logger } from "@utils/logger";
 
-function handleProductAddedToCart(event: PixelEventsProductAddedToCart): void {
+function prepareGoogleProductAddedToCart(
+  event: PixelEventsProductAddedToCart,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.google) {
+    return;
+  }
+
   const eventData = event.data;
   const cartLine = eventData.cartLine;
 
@@ -42,7 +51,7 @@ function handleProductAddedToCart(event: PixelEventsProductAddedToCart): void {
   );
   const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
 
-  dataLayerPush({
+  message.google = {
     user_data: getCustomer(),
     event: "add_to_cart",
     ecommerce: {
@@ -50,7 +59,15 @@ function handleProductAddedToCart(event: PixelEventsProductAddedToCart): void {
       value: value,
       items: items,
     },
-  });
+  };
+}
+
+function handleProductAddedToCart(event: PixelEventsProductAddedToCart): void {
+  const message: DataLayerMessage = { event: "shopify_product_added_to_cart" };
+
+  prepareGoogleProductAddedToCart(event, message);
+
+  dataLayerPush(message);
 }
 
 export function registerProductAddedToCart(): void {

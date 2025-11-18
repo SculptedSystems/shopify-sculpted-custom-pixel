@@ -1,8 +1,10 @@
 // https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#view_item_list
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/collection_viewed
 
+import { PartialCheckoutLineItem, DataLayerMessage } from "@models";
 import { PixelEventsCollectionViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
-import { PartialCheckoutLineItem } from "@models";
+
+import { config } from "@config";
 
 import { addFinalLinePriceToPartialLineItems } from "@helpers/items";
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
@@ -11,7 +13,14 @@ import { getCustomer } from "@helpers/customer";
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 
-function handleCollectionViewed(event: PixelEventsCollectionViewed): void {
+function prepareGoogleCollectionViewed(
+  event: PixelEventsCollectionViewed,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.google) {
+    return;
+  }
+
   const eventData = event.data;
   const productVariants = eventData.collection.productVariants;
 
@@ -39,7 +48,7 @@ function handleCollectionViewed(event: PixelEventsCollectionViewed): void {
   );
   const items = createGA4ItemsFromShopifyCheckoutLineItems(lineItems);
 
-  dataLayerPush({
+  message.google = {
     user_data: getCustomer(),
     event: "view_item_list",
     ecommerce: {
@@ -48,7 +57,15 @@ function handleCollectionViewed(event: PixelEventsCollectionViewed): void {
       item_list_name: item_list_name,
       items: items,
     },
-  });
+  };
+}
+
+function handleCollectionViewed(event: PixelEventsCollectionViewed): void {
+  const message: DataLayerMessage = { event: "shopify_collection_viewed" };
+
+  prepareGoogleCollectionViewed(event, message);
+
+  dataLayerPush(message);
 }
 
 export function registerCollectionViewed(): void {

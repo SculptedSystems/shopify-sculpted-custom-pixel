@@ -1,6 +1,9 @@
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_contact_info_submitted
 
 import { PixelEventsCheckoutContactInfoSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
+import { DataLayerMessage } from "@models";
+
+import { config } from "@config";
 
 import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 import { getCustomer } from "@helpers/customer";
@@ -9,9 +12,14 @@ import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 
-function handleCheckoutContactInfoSubmitted(
+function prepareGoogleCheckoutContactInfoSubmitted(
   event: PixelEventsCheckoutContactInfoSubmitted,
+  message: DataLayerMessage,
 ): void {
+  if (!config.platform.google) {
+    return;
+  }
+
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -33,7 +41,7 @@ function handleCheckoutContactInfoSubmitted(
   // parameter: items
   const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
-  dataLayerPush({
+  message.google = {
     user_data: getCustomer(),
     event: "add_contact_info",
     ecommerce: {
@@ -43,7 +51,19 @@ function handleCheckoutContactInfoSubmitted(
       shipping_tier: shipping_tier,
       items: items,
     },
-  });
+  };
+}
+
+function handleCheckoutContactInfoSubmitted(
+  event: PixelEventsCheckoutContactInfoSubmitted,
+): void {
+  const message: DataLayerMessage = {
+    event: "shopify_checkout_contact_info_submitted",
+  };
+
+  prepareGoogleCheckoutContactInfoSubmitted(event, message);
+
+  dataLayerPush(message);
 }
 
 export function registerCheckoutContactInfoSubmitted(): void {

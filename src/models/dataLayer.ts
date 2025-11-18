@@ -4,6 +4,9 @@
 
 export interface DataLayerMessage {
   event: string;
+  google?: Record<string, unknown>;
+  meta?: Record<string, unknown>;
+  tiktok?: Record<string, unknown>;
   [key: string]: unknown;
 }
 

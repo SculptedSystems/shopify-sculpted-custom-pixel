@@ -1,8 +1,13 @@
 import {
   Item,
+  MetaContent,
   PartialCheckoutLineItem,
   PartialCheckoutLineItemWithFinalLinePrice,
 } from "@models";
+import {
+  CheckoutLineItem,
+  ProductVariant,
+} from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { config } from "@config";
 
@@ -13,7 +18,6 @@ import {
 
 import { logger } from "@utils/logger";
 import { stringifyObject } from "@utils/stringify";
-import { ProductVariant } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 export function getItemIdFromShopifyProductVariant(
   productVariant: ProductVariant,
@@ -128,4 +132,72 @@ export function addFinalLinePriceToPartialLineItems(
   });
 
   return lineItems;
+}
+
+export function getMetaContentIdsFromShopifyCheckoutLineItems(
+  lineItems: CheckoutLineItem[],
+): string[] {
+  const ids: string[] = [];
+
+  lineItems.forEach((item) => {
+    if (!item.variant) {
+      return;
+    }
+
+    const id = getItemIdFromShopifyProductVariant(item.variant);
+    if (!id) {
+      logger.debug(
+        `item ${stringifyObject(item)} has neither variant.id nor variant.sku`,
+      );
+      return;
+    }
+
+    ids.push(id);
+  });
+
+  return ids;
+}
+
+export function getMetaContentsFromShopifyCheckoutLineItems(
+  lineItems: CheckoutLineItem[],
+): MetaContent[] {
+  const contents: MetaContent[] = [];
+
+  lineItems.forEach((item) => {
+    if (!item.variant) {
+      logger.debug(`item ${stringifyObject(item)} has no variant`);
+      return;
+    }
+
+    // parameter: item_id
+    const id = getItemIdFromShopifyProductVariant(item.variant);
+    if (!id) {
+      logger.debug(
+        `item ${stringifyObject(item)} has neither variant.id nor variant.sku`,
+      );
+      return;
+    }
+
+    // parameter: quantity
+    const quantity = item.quantity;
+
+    contents.push({
+      id: id,
+      quantity: quantity,
+    });
+  });
+
+  return contents;
+}
+
+export function getMetaNumItemsFromShopifyCheckoutLineItems(
+  lineItems: CheckoutLineItem[],
+): number {
+  let quantity = 0;
+
+  lineItems.forEach((item) => {
+    quantity += item.quantity;
+  });
+
+  return quantity;
 }

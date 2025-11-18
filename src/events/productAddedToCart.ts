@@ -7,9 +7,9 @@ import { config } from "@config";
 
 import {
   addFinalLinePriceToPartialLineItems,
+  createGA4ItemsFromShopifyCheckoutLineItems,
   getItemIdFromShopifyProductVariant,
 } from "@helpers/items";
-import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";

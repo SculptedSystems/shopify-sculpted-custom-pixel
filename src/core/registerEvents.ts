@@ -1,8 +1,8 @@
-import { registerCartViewed } from "@events/cartViewed";
+import { registerCheckoutAddressInfoSubmitted } from "@events/checkoutAddressInfoSubmitted";
 import { registerCheckoutCompleted } from "@events/checkoutCompleted";
+import { registerCheckoutContactInfoSubmitted } from "@events/checkoutContactInfoSubmitted";
 import { registerCheckoutShippingInfoSubmitted } from "@events/checkoutShippingInfoSubmitted";
 import { registerCheckoutStarted } from "@events/checkoutStarted";
-import { registerCollectionViewed } from "@events/collectionViewed";
 import { registerFormSubmitted } from "@events/formSubmitted";
 import { registerPageViewed } from "@events/pageViewed";
 import { registerPaymentInfoSubmitted } from "@events/paymentInfoSubmitted";
@@ -11,11 +11,11 @@ import { registerProductViewed } from "@events/productViewed";
 import { registerSearchSubmitted } from "@events/searchSubmitted";
 
 export function registerEvents(): void {
-  registerCartViewed();
+  registerCheckoutAddressInfoSubmitted();
   registerCheckoutCompleted();
+  registerCheckoutContactInfoSubmitted();
   registerCheckoutShippingInfoSubmitted();
   registerCheckoutStarted();
-  registerCollectionViewed();
   registerFormSubmitted();
   registerPageViewed();
   registerPaymentInfoSubmitted();

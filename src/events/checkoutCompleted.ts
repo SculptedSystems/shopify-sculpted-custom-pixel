@@ -1,16 +1,29 @@
-// https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#purchase
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_completed
 
+import { DataLayerMessage } from "@models";
 import { PixelEventsCheckoutCompleted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
-import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { getCustomer } from "@helpers/customer";
+import { config } from "@config";
+
+import {
+  getContentIdsFromShopifyCheckoutLineItems,
+  getGoogleItemsFromShopifyCheckoutLineItems,
+  getMetaContentsFromShopifyCheckoutLineItems,
+  getNumItemsFromShopifyCheckoutLineItems,
+} from "@helpers/items";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 
-function handleCheckoutCompleted(event: PixelEventsCheckoutCompleted): void {
+function prepareGoogleCheckoutCompleted(
+  event: PixelEventsCheckoutCompleted,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.google) {
+    return;
+  }
+
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -45,10 +58,9 @@ function handleCheckoutCompleted(event: PixelEventsCheckoutCompleted): void {
   const payment_gateway = checkout.transactions[0]?.gateway || null;
 
   // parameter: items
-  const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+  const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
-  dataLayerPush({
-    user_data: getCustomer(),
+  message.google = {
     event: "purchase",
     ecommerce: {
       currency: currency,
@@ -62,7 +74,103 @@ function handleCheckoutCompleted(event: PixelEventsCheckoutCompleted): void {
       payment_gateway: payment_gateway,
       items: items,
     },
-  });
+  };
+}
+
+function prepareMetaCheckoutCompleted(
+  event: PixelEventsCheckoutCompleted,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.meta) {
+    return;
+  }
+
+  const eventData = event.data;
+  const checkout = eventData.checkout;
+
+  // parameter: content_ids
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: content_type
+  const content_type = "product";
+
+  // parameter: contents
+  const contents = getMetaContentsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
+
+  // parameter: num_items
+  const num_items = getNumItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount || 0;
+
+  message.meta = {
+    event: "Purchase",
+    content_ids: content_ids,
+    content_type: content_type,
+    contents: contents,
+    currency: currency,
+    num_items: num_items,
+    value: value,
+  };
+}
+
+function prepareTikTokCheckoutCompleted(
+  event: PixelEventsCheckoutCompleted,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.tiktok) {
+    return;
+  }
+
+  const eventData = event.data;
+  const checkout = eventData.checkout;
+
+  // parameter: content_type
+  const content_type = "product";
+
+  // parameter: quantity
+  const quantity = getNumItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+
+  // parameter: description
+  const description = "Completed Purchase";
+
+  // parameter: content_ids
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
+
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount || 0;
+
+  message.tiktok = {
+    event: "Purchase",
+    content_type: content_type,
+    quantity: quantity,
+    description: description,
+    content_ids: content_ids,
+    currency: currency,
+    value: value,
+  };
+}
+
+function handleCheckoutCompleted(event: PixelEventsCheckoutCompleted): void {
+  const message: DataLayerMessage = { event: "shopify_checkout_completed" };
+
+  prepareGoogleCheckoutCompleted(event, message);
+  prepareMetaCheckoutCompleted(event, message);
+  prepareTikTokCheckoutCompleted(event, message);
+
+  dataLayerPush(message);
 }
 
 export function registerCheckoutCompleted(): void {

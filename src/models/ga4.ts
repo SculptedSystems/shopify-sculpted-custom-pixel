@@ -3,7 +3,7 @@
  * Source: https://developers.google.com/analytics/devguides/collection/ga4/reference/events
  */
 
-export interface Item {
+export interface GoogleItem {
   item_id: string;
   item_name: string;
 

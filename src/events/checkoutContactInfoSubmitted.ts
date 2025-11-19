@@ -1,17 +1,28 @@
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_contact_info_submitted
 
 import { PixelEventsCheckoutContactInfoSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
+import { DataLayerMessage } from "@models";
 
-import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { getCustomer } from "@helpers/customer";
+import { config } from "@config";
+
+import {
+  getContentIdsFromShopifyCheckoutLineItems,
+  getGoogleItemsFromShopifyCheckoutLineItems,
+  getMetaContentsFromShopifyCheckoutLineItems,
+} from "@helpers/items";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 
-function handleCheckoutContactInfoSubmitted(
+function prepareGoogleCheckoutContactInfoSubmitted(
   event: PixelEventsCheckoutContactInfoSubmitted,
+  message: DataLayerMessage,
 ): void {
+  if (!config.platform.google) {
+    return;
+  }
+
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -26,24 +37,80 @@ function handleCheckoutContactInfoSubmitted(
     checkout.discountApplications,
   );
 
-  // parameter: shipping_tier
-  const shipping_tier =
-    checkout.delivery?.selectedDeliveryOptions?.[0]?.title || undefined;
-
   // parameter: items
-  const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+  const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
-  dataLayerPush({
-    user_data: getCustomer(),
+  message.google = {
     event: "add_contact_info",
     ecommerce: {
       currency: currency,
       value: value,
       coupon: coupon,
-      shipping_tier: shipping_tier,
       items: items,
     },
-  });
+  };
+}
+
+function prepareMetaCheckoutContactInfoSubmitted(
+  event: PixelEventsCheckoutContactInfoSubmitted,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.meta) {
+    return;
+  }
+
+  const eventData = event.data;
+  const checkout = eventData.checkout;
+
+  // parameter: content_ids
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: contents
+  const contents = getMetaContentsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
+
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount;
+
+  message.meta = {
+    event: "AddContactInfo",
+    content_ids: content_ids,
+    contents: contents,
+    currency: currency,
+    value: value,
+  };
+}
+
+function prepareTikTokCheckoutContactInfoSubmitted(
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.tiktok) {
+    return;
+  }
+
+  message.tiktok = {
+    event: "AddContactInfo",
+  };
+}
+
+function handleCheckoutContactInfoSubmitted(
+  event: PixelEventsCheckoutContactInfoSubmitted,
+): void {
+  const message: DataLayerMessage = {
+    event: "shopify_checkout_contact_info_submitted",
+  };
+
+  prepareGoogleCheckoutContactInfoSubmitted(event, message);
+  prepareMetaCheckoutContactInfoSubmitted(event, message);
+  prepareTikTokCheckoutContactInfoSubmitted(message);
+
+  dataLayerPush(message);
 }
 
 export function registerCheckoutContactInfoSubmitted(): void {

@@ -1,18 +1,28 @@
-// https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#add_payment_info
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/payment_info_submitted
 
+import { DataLayerMessage } from "@models";
 import { PixelEventsPaymentInfoSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
-import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { getCustomer } from "@helpers/customer";
+import { config } from "@config";
+
+import {
+  getContentIdsFromShopifyCheckoutLineItems,
+  getGoogleItemsFromShopifyCheckoutLineItems,
+  getMetaContentsFromShopifyCheckoutLineItems,
+} from "@helpers/items";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 
-function handlePaymentInfoSubmitted(
+function prepareGooglePaymentInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
+  message: DataLayerMessage,
 ): void {
+  if (!config.platform.google) {
+    return;
+  }
+
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -32,10 +42,9 @@ function handlePaymentInfoSubmitted(
     checkout.transactions?.[0]?.paymentMethod.type || undefined;
 
   // parameter: items
-  const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+  const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
-  dataLayerPush({
-    user_data: getCustomer(),
+  message.google = {
     event: "add_payment_info",
     ecommerce: {
       currency: currency,
@@ -44,7 +53,65 @@ function handlePaymentInfoSubmitted(
       payment_type: payment_type,
       items: items,
     },
-  });
+  };
+}
+
+function prepareMetaPaymentInfoSubmitted(
+  event: PixelEventsPaymentInfoSubmitted,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.meta) {
+    return;
+  }
+
+  const eventData = event.data;
+  const checkout = eventData.checkout;
+
+  // parameter: content_ids
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: contents
+  const contents = getMetaContentsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
+
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount;
+
+  message.meta = {
+    event: "AddPaymentInfo",
+    content_ids: content_ids,
+    contents: contents,
+    currency: currency,
+    value: value,
+  };
+}
+
+function prepareTikTokPaymentInfoSubmitted(message: DataLayerMessage): void {
+  if (!config.platform.tiktok) {
+    return;
+  }
+
+  message.tiktok = {
+    event: "AddPaymentInfo",
+  };
+}
+
+function handlePaymentInfoSubmitted(
+  event: PixelEventsPaymentInfoSubmitted,
+): void {
+  const message: DataLayerMessage = { event: "shopify_payment_info_submitted" };
+
+  prepareGooglePaymentInfoSubmitted(event, message);
+  prepareMetaPaymentInfoSubmitted(event, message);
+  prepareTikTokPaymentInfoSubmitted(message);
+
+  dataLayerPush(message);
 }
 
 export function registerPaymentInfoSubmitted(): void {

@@ -1,18 +1,28 @@
-// https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#add_shipping_info
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_shipping_info_submitted
 
+import { DataLayerMessage } from "@models";
 import { PixelEventsPaymentInfoSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
-import { createGA4ItemsFromShopifyCheckoutLineItems } from "@helpers/items";
-import { getCustomer } from "@helpers/customer";
+import { config } from "@config";
+
+import {
+  getContentIdsFromShopifyCheckoutLineItems,
+  getGoogleItemsFromShopifyCheckoutLineItems,
+  getMetaContentsFromShopifyCheckoutLineItems,
+} from "@helpers/items";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 
-function handleCheckoutShippingInfoSubmitted(
+function prepareGoogleCheckoutShippingInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
+  message: DataLayerMessage,
 ): void {
+  if (!config.platform.google) {
+    return;
+  }
+
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -32,10 +42,9 @@ function handleCheckoutShippingInfoSubmitted(
     checkout.delivery?.selectedDeliveryOptions?.[0]?.title || undefined;
 
   // parameter: items
-  const items = createGA4ItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+  const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
-  dataLayerPush({
-    user_data: getCustomer(),
+  message.google = {
     event: "add_shipping_info",
     ecommerce: {
       currency: currency,
@@ -44,7 +53,69 @@ function handleCheckoutShippingInfoSubmitted(
       shipping_tier: shipping_tier,
       items: items,
     },
-  });
+  };
+}
+
+function prepareMetaCheckoutShippingInfoSubmitted(
+  event: PixelEventsPaymentInfoSubmitted,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.meta) {
+    return;
+  }
+
+  const eventData = event.data;
+  const checkout = eventData.checkout;
+
+  // parameter: content_ids
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: contents
+  const contents = getMetaContentsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
+
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount;
+
+  message.meta = {
+    event: "AddShippingInfo",
+    content_ids: content_ids,
+    contents: contents,
+    currency: currency,
+    value: value,
+  };
+}
+
+function prepareTikTokCheckoutShippingInfoSubmitted(
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.tiktok) {
+    return;
+  }
+
+  message.tiktok = {
+    event: "AddShippingInfo",
+  };
+}
+
+function handleCheckoutShippingInfoSubmitted(
+  event: PixelEventsPaymentInfoSubmitted,
+): void {
+  const message: DataLayerMessage = {
+    event: "shopify_checkout_shipping_info_submitted",
+  };
+
+  prepareGoogleCheckoutShippingInfoSubmitted(event, message);
+  prepareMetaCheckoutShippingInfoSubmitted(event, message);
+  prepareTikTokCheckoutShippingInfoSubmitted(message);
+
+  dataLayerPush(message);
 }
 
 export function registerCheckoutShippingInfoSubmitted(): void {

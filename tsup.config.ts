@@ -6,7 +6,7 @@ export default defineConfig({
   outExtension: () => ({ js: ".js" }),
   outDir: "dist",
   target: "es2020",
-  minify: false,
+  minify: true,
   sourcemap: false,
   clean: true,
   treeshake: true,

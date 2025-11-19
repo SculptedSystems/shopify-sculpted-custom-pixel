@@ -5,6 +5,12 @@ import { PixelEventsSearchSubmitted } from "@sculptedsystems/shopify-web-pixels-
 
 import { config } from "@config";
 
+import {
+  getGoogleUserDataFromGenericEvent,
+  getMetaUserDataFromGenericEvent,
+  getTikTokUserDataFromGenericEvent,
+} from "@helpers/userData";
+
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 import { getContentIdsFromShopifyCheckoutLineItems } from "@helpers/items";
@@ -22,9 +28,13 @@ function prepareGoogleSearchSubmitted(
   // parameter: search_term
   const search_term = eventData.searchResult.query;
 
+  // parameter: user_data
+  const user_data = getGoogleUserDataFromGenericEvent();
+
   message.google = {
     event: "search",
     search_term: search_term,
+    user_data: user_data,
   };
 }
 
@@ -59,11 +69,15 @@ function prepareMetaSearchSubmitted(
   // parameter: search_term
   const search_string = searchResult.query;
 
+  // parameter: user_data
+  const user_data = getMetaUserDataFromGenericEvent(event);
+
   message.meta = {
     event: "Search",
     content_ids: content_ids,
     content_type: content_type,
     search_term: search_string,
+    user_data: user_data,
   };
 }
 
@@ -80,9 +94,13 @@ function prepareTikTokSearchSubmitted(
   // parameter: search_term
   const search_term = eventData.searchResult.query;
 
+  // parameter: user_data
+  const user_data = getTikTokUserDataFromGenericEvent();
+
   message.tiktok = {
     event: "Search",
     search_term: search_term,
+    user_data: user_data,
   };
 }
 

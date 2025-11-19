@@ -10,6 +10,11 @@ import {
   getGoogleItemsFromShopifyCheckoutLineItems,
   getMetaContentsFromShopifyCheckoutLineItems,
 } from "@helpers/items";
+import {
+  getGoogleUserDataFromCheckoutEvents,
+  getMetaUserDataFromCheckoutEvents,
+  getTikTokUserDataFromCheckoutEvents,
+} from "@helpers/userData";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -44,6 +49,9 @@ function prepareGooglePaymentInfoSubmitted(
   // parameter: items
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
+  // parameter: user_data
+  const user_data = getGoogleUserDataFromCheckoutEvents(event);
+
   message.google = {
     event: "add_payment_info",
     ecommerce: {
@@ -53,6 +61,7 @@ function prepareGooglePaymentInfoSubmitted(
       payment_type: payment_type,
       items: items,
     },
+    user_data: user_data,
   };
 }
 
@@ -83,22 +92,33 @@ function prepareMetaPaymentInfoSubmitted(
   // parameter: value
   const value = checkout.subtotalPrice?.amount;
 
+  // parameter: user_data
+  const user_data = getMetaUserDataFromCheckoutEvents(event);
+
   message.meta = {
     event: "AddPaymentInfo",
     content_ids: content_ids,
     contents: contents,
     currency: currency,
     value: value,
+    user_data: user_data,
   };
 }
 
-function prepareTikTokPaymentInfoSubmitted(message: DataLayerMessage): void {
+function prepareTikTokPaymentInfoSubmitted(
+  event: PixelEventsPaymentInfoSubmitted,
+  message: DataLayerMessage,
+): void {
   if (!config.platform.tiktok) {
     return;
   }
 
+  // parameter: user_data
+  const user_data = getTikTokUserDataFromCheckoutEvents(event);
+
   message.tiktok = {
     event: "AddPaymentInfo",
+    user_data: user_data,
   };
 }
 
@@ -109,7 +129,7 @@ function handlePaymentInfoSubmitted(
 
   prepareGooglePaymentInfoSubmitted(event, message);
   prepareMetaPaymentInfoSubmitted(event, message);
-  prepareTikTokPaymentInfoSubmitted(message);
+  prepareTikTokPaymentInfoSubmitted(event, message);
 
   dataLayerPush(message);
 }

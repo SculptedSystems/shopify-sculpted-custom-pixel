@@ -94,7 +94,7 @@ function prepareMetaCheckoutCompleted(
   );
 
   // parameter: content_type
-  const content_type = "product_group";
+  const content_type = "product";
 
   // parameter: contents
   const contents = getMetaContentsFromShopifyCheckoutLineItems(
@@ -133,7 +133,7 @@ function prepareTikTokCheckoutCompleted(
   const checkout = eventData.checkout;
 
   // parameter: content_type
-  const content_type = "product_group";
+  const content_type = "product";
 
   // parameter: quantity
   const quantity = getNumItemsFromShopifyCheckoutLineItems(checkout.lineItems);

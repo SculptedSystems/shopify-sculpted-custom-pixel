@@ -5,7 +5,11 @@ import { PixelEventsCheckoutAddressInfoSubmitted } from "@sculptedsystems/shopif
 
 import { config } from "@config";
 
-import { getGoogleItemsFromShopifyCheckoutLineItems } from "@helpers/items";
+import {
+  getContentIdsFromShopifyCheckoutLineItems,
+  getGoogleItemsFromShopifyCheckoutLineItems,
+  getMetaContentsFromShopifyCheckoutLineItems,
+} from "@helpers/items";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -33,10 +37,6 @@ function prepareGoogleCheckoutAddressInfoSubmitted(
     checkout.discountApplications,
   );
 
-  // parameter: shipping_tier
-  const shipping_tier =
-    checkout.delivery?.selectedDeliveryOptions?.[0]?.title || undefined;
-
   // parameter: items
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
@@ -46,9 +46,56 @@ function prepareGoogleCheckoutAddressInfoSubmitted(
       currency: currency,
       value: value,
       coupon: coupon,
-      shipping_tier: shipping_tier,
       items: items,
     },
+  };
+}
+
+function prepareMetaCheckoutAddressInfoSubmitted(
+  event: PixelEventsCheckoutAddressInfoSubmitted,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.meta) {
+    return;
+  }
+
+  const eventData = event.data;
+  const checkout = eventData.checkout;
+
+  // parameter: content_ids
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: contents
+  const contents = getMetaContentsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
+
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount;
+
+  message.meta = {
+    event: "AddAddressInfo",
+    content_ids: content_ids,
+    contents: contents,
+    currency: currency,
+    value: value,
+  };
+}
+
+function prepareTikTokCheckoutAddressInfoSubmitted(
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.tiktok) {
+    return;
+  }
+
+  message.tiktok = {
+    event: "AddAddressInfo",
   };
 }
 
@@ -60,6 +107,8 @@ function handleCheckoutAddressInfoSubmitted(
   };
 
   prepareGoogleCheckoutAddressInfoSubmitted(event, message);
+  prepareMetaCheckoutAddressInfoSubmitted(event, message);
+  prepareTikTokCheckoutAddressInfoSubmitted(message);
 
   dataLayerPush(message);
 }

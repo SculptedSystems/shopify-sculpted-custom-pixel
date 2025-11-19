@@ -7,10 +7,7 @@ import { config } from "@config";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
-import {
-  getContentIdsFromShopifyCheckoutLineItems,
-  getMetaContentsFromShopifyCheckoutLineItems,
-} from "@helpers/items";
+import { getContentIdsFromShopifyCheckoutLineItems } from "@helpers/items";
 
 function prepareGoogleSearchSubmitted(
   event: PixelEventsSearchSubmitted,

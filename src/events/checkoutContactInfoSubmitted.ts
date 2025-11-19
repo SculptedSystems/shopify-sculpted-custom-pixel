@@ -5,7 +5,11 @@ import { DataLayerMessage } from "@models";
 
 import { config } from "@config";
 
-import { getGoogleItemsFromShopifyCheckoutLineItems } from "@helpers/items";
+import {
+  getContentIdsFromShopifyCheckoutLineItems,
+  getGoogleItemsFromShopifyCheckoutLineItems,
+  getMetaContentsFromShopifyCheckoutLineItems,
+} from "@helpers/items";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -33,10 +37,6 @@ function prepareGoogleCheckoutContactInfoSubmitted(
     checkout.discountApplications,
   );
 
-  // parameter: shipping_tier
-  const shipping_tier =
-    checkout.delivery?.selectedDeliveryOptions?.[0]?.title || undefined;
-
   // parameter: items
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
@@ -46,9 +46,56 @@ function prepareGoogleCheckoutContactInfoSubmitted(
       currency: currency,
       value: value,
       coupon: coupon,
-      shipping_tier: shipping_tier,
       items: items,
     },
+  };
+}
+
+function prepareMetaCheckoutContactInfoSubmitted(
+  event: PixelEventsCheckoutContactInfoSubmitted,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.meta) {
+    return;
+  }
+
+  const eventData = event.data;
+  const checkout = eventData.checkout;
+
+  // parameter: content_ids
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: contents
+  const contents = getMetaContentsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
+
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount;
+
+  message.meta = {
+    event: "AddContactInfo",
+    content_ids: content_ids,
+    contents: contents,
+    currency: currency,
+    value: value,
+  };
+}
+
+function prepareTikTokCheckoutContactInfoSubmitted(
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.tiktok) {
+    return;
+  }
+
+  message.tiktok = {
+    event: "AddContactInfo",
   };
 }
 
@@ -60,6 +107,8 @@ function handleCheckoutContactInfoSubmitted(
   };
 
   prepareGoogleCheckoutContactInfoSubmitted(event, message);
+  prepareMetaCheckoutContactInfoSubmitted(event, message);
+  prepareTikTokCheckoutContactInfoSubmitted(message);
 
   dataLayerPush(message);
 }

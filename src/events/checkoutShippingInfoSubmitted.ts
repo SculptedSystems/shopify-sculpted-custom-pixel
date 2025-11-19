@@ -10,6 +10,11 @@ import {
   getGoogleItemsFromShopifyCheckoutLineItems,
   getMetaContentsFromShopifyCheckoutLineItems,
 } from "@helpers/items";
+import {
+  getGoogleUserDataFromCheckoutEvents,
+  getMetaUserDataFromCheckoutEvents,
+  getTikTokUserDataFromCheckoutEvents,
+} from "@helpers/userData";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -44,6 +49,9 @@ function prepareGoogleCheckoutShippingInfoSubmitted(
   // parameter: items
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
+  // parameter: user_data
+  const user_data = getGoogleUserDataFromCheckoutEvents(event);
+
   message.google = {
     event: "add_shipping_info",
     ecommerce: {
@@ -53,6 +61,7 @@ function prepareGoogleCheckoutShippingInfoSubmitted(
       shipping_tier: shipping_tier,
       items: items,
     },
+    user_data: user_data,
   };
 }
 
@@ -83,24 +92,33 @@ function prepareMetaCheckoutShippingInfoSubmitted(
   // parameter: value
   const value = checkout.subtotalPrice?.amount;
 
+  // parameter: user_data
+  const user_data = getMetaUserDataFromCheckoutEvents(event);
+
   message.meta = {
     event: "AddShippingInfo",
     content_ids: content_ids,
     contents: contents,
     currency: currency,
     value: value,
+    user_data: user_data,
   };
 }
 
 function prepareTikTokCheckoutShippingInfoSubmitted(
+  event: PixelEventsPaymentInfoSubmitted,
   message: DataLayerMessage,
 ): void {
   if (!config.platform.tiktok) {
     return;
   }
 
+  // parameter: user_data
+  const user_data = getTikTokUserDataFromCheckoutEvents(event);
+
   message.tiktok = {
     event: "AddShippingInfo",
+    user_data: user_data,
   };
 }
 
@@ -113,7 +131,7 @@ function handleCheckoutShippingInfoSubmitted(
 
   prepareGoogleCheckoutShippingInfoSubmitted(event, message);
   prepareMetaCheckoutShippingInfoSubmitted(event, message);
-  prepareTikTokCheckoutShippingInfoSubmitted(message);
+  prepareTikTokCheckoutShippingInfoSubmitted(event, message);
 
   dataLayerPush(message);
 }

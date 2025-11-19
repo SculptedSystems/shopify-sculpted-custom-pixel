@@ -10,6 +10,11 @@ import {
   getGoogleItemsFromShopifyCheckoutLineItems,
   getMetaContentsFromShopifyCheckoutLineItems,
 } from "@helpers/items";
+import {
+  getGoogleUserDataFromCheckoutEvents,
+  getMetaUserDataFromCheckoutEvents,
+  getTikTokUserDataFromCheckoutEvents,
+} from "@helpers/userData";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -40,6 +45,9 @@ function prepareGoogleCheckoutAddressInfoSubmitted(
   // parameter: items
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
+  // parameter: user_data
+  const user_data = getGoogleUserDataFromCheckoutEvents(event);
+
   message.google = {
     event: "add_address_info",
     ecommerce: {
@@ -48,6 +56,7 @@ function prepareGoogleCheckoutAddressInfoSubmitted(
       coupon: coupon,
       items: items,
     },
+    user_data: user_data,
   };
 }
 
@@ -78,24 +87,33 @@ function prepareMetaCheckoutAddressInfoSubmitted(
   // parameter: value
   const value = checkout.subtotalPrice?.amount;
 
+  // parameter: user_data
+  const user_data = getMetaUserDataFromCheckoutEvents(event);
+
   message.meta = {
     event: "AddAddressInfo",
     content_ids: content_ids,
     contents: contents,
     currency: currency,
     value: value,
+    user_data: user_data,
   };
 }
 
 function prepareTikTokCheckoutAddressInfoSubmitted(
+  event: PixelEventsCheckoutAddressInfoSubmitted,
   message: DataLayerMessage,
 ): void {
   if (!config.platform.tiktok) {
     return;
   }
 
+  // parameter: user_data
+  const user_data = getTikTokUserDataFromCheckoutEvents(event);
+
   message.tiktok = {
     event: "AddAddressInfo",
+    user_data: user_data,
   };
 }
 
@@ -108,7 +126,7 @@ function handleCheckoutAddressInfoSubmitted(
 
   prepareGoogleCheckoutAddressInfoSubmitted(event, message);
   prepareMetaCheckoutAddressInfoSubmitted(event, message);
-  prepareTikTokCheckoutAddressInfoSubmitted(message);
+  prepareTikTokCheckoutAddressInfoSubmitted(event, message);
 
   dataLayerPush(message);
 }

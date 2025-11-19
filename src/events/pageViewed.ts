@@ -5,6 +5,12 @@ import { PixelEventsPageViewed } from "@sculptedsystems/shopify-web-pixels-api-t
 
 import { config } from "@config";
 
+import {
+  getGoogleUserDataFromGenericEvent,
+  getMetaUserDataFromGenericEvent,
+  getTikTokUserDataFromGenericEvent,
+} from "@helpers/userData";
+
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 
@@ -27,11 +33,46 @@ function prepareGooglePageViewed(
   // parameter: page_title
   const page_title = eventContext?.title;
 
+  // parameter: user_data
+  const user_data = getGoogleUserDataFromGenericEvent();
+
   message.google = {
     event: "page_view",
     page_location: page_location,
     page_referrer: page_referrer,
     page_title: page_title,
+    user_data: user_data,
+  };
+}
+
+function prepareMetaPageViewed(
+  event: PixelEventsPageViewed,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.meta) {
+    return;
+  }
+
+  // parameter: user_data
+  const user_data = getMetaUserDataFromGenericEvent(event);
+
+  message.meta = {
+    event: "PageView",
+    user_data: user_data,
+  };
+}
+
+function prepareTikTokPageViewed(message: DataLayerMessage): void {
+  if (!config.platform.tiktok) {
+    return;
+  }
+
+  // parameter: user_data
+  const user_data = getTikTokUserDataFromGenericEvent();
+
+  message.tiktok = {
+    event: "PageView",
+    user_data: user_data,
   };
 }
 
@@ -39,6 +80,8 @@ function handlePageViewed(event: PixelEventsPageViewed): void {
   const message: DataLayerMessage = { event: "shopify_page_viewed" };
 
   prepareGooglePageViewed(event, message);
+  prepareMetaPageViewed(event, message);
+  prepareTikTokPageViewed(message);
 
   dataLayerPush(message);
 }

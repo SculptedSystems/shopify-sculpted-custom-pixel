@@ -13,6 +13,11 @@ import {
   getGoogleItemsFromShopifyCheckoutLineItems,
   getItemIdFromShopifyProductVariant,
 } from "@helpers/items";
+import {
+  getGoogleUserDataFromGenericEvent,
+  getMetaUserDataFromGenericEvent,
+  getTikTokUserDataFromGenericEvent,
+} from "@helpers/userData";
 
 import { dataLayerPush } from "@utils/dataLayer";
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -48,6 +53,9 @@ function prepareGoogleProductViewed(
     );
   const items = getGoogleItemsFromShopifyCheckoutLineItems(lineItems);
 
+  // parameter: user_data
+  const user_data = getGoogleUserDataFromGenericEvent();
+
   message.google = {
     event: "view_item",
     ecommerce: {
@@ -55,6 +63,7 @@ function prepareGoogleProductViewed(
       value: value,
       items: items,
     },
+    user_data: user_data,
   };
 }
 
@@ -91,6 +100,9 @@ function prepareMetaProductViewed(
   // parameter: value
   const value = productVariant.price.amount;
 
+  // parameter: user_data
+  const user_data = getMetaUserDataFromGenericEvent(event);
+
   message.meta = {
     event: "ViewContent",
     content_ids: content_ids,
@@ -98,6 +110,7 @@ function prepareMetaProductViewed(
     contents: contents,
     currency: currency,
     value: value,
+    user_data: user_data,
   };
 }
 
@@ -130,6 +143,9 @@ function prepareTikTokProductViewed(
   // parameter: value
   const value = productVariant.price.amount;
 
+  // parameter: user_data
+  const user_data = getTikTokUserDataFromGenericEvent();
+
   message.tiktok = {
     event: "ViewContent",
     content_type: content_type,
@@ -138,6 +154,7 @@ function prepareTikTokProductViewed(
     content_ids: content_ids,
     currency: currency,
     value: value,
+    user_data: user_data,
   };
 }
 

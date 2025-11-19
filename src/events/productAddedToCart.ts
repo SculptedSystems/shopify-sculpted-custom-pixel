@@ -13,6 +13,11 @@ import {
   getGoogleItemsFromShopifyCheckoutLineItems,
   getItemIdFromShopifyProductVariant,
 } from "@helpers/items";
+import {
+  getGoogleUserDataFromGenericEvent,
+  getMetaUserDataFromGenericEvent,
+  getTikTokUserDataFromGenericEvent,
+} from "@helpers/userData";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
@@ -56,6 +61,9 @@ function prepareGoogleProductAddedToCart(
   );
   const items = getGoogleItemsFromShopifyCheckoutLineItems(lineItems);
 
+  // parameter: user_data
+  const user_data = getGoogleUserDataFromGenericEvent();
+
   message.google = {
     event: "add_to_cart",
     ecommerce: {
@@ -63,6 +71,7 @@ function prepareGoogleProductAddedToCart(
       value: value,
       items: items,
     },
+    user_data: user_data,
   };
 }
 
@@ -104,6 +113,9 @@ function prepareMetaProductAddedToCart(
   // paramater: value
   const value = cartLine.cost.totalAmount.amount;
 
+  // parameter: user_data
+  const user_data = getMetaUserDataFromGenericEvent(event);
+
   message.meta = {
     event: "AddToCart",
     content_ids: content_ids,
@@ -111,6 +123,7 @@ function prepareMetaProductAddedToCart(
     contents: contents,
     currency: currency,
     value: value,
+    user_data: user_data,
   };
 }
 
@@ -150,6 +163,9 @@ function prepareTikTokProductAddedToCart(
   // parameter: value
   const value = cartLine.cost.totalAmount.amount;
 
+  // parameter: user_data
+  const user_data = getTikTokUserDataFromGenericEvent();
+
   message.tiktok = {
     event: "AddToCart",
     content_type: content_type,
@@ -158,6 +174,7 @@ function prepareTikTokProductAddedToCart(
     content_ids: content_ids,
     currency: currency,
     value: value,
+    user_data: user_data,
   };
 }
 

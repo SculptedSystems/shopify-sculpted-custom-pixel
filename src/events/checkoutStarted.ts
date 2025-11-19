@@ -11,6 +11,11 @@ import {
   getMetaContentsFromShopifyCheckoutLineItems,
   getNumItemsFromShopifyCheckoutLineItems,
 } from "@helpers/items";
+import {
+  getGoogleUserDataFromCheckoutEvents,
+  getMetaUserDataFromCheckoutEvents,
+  getTikTokUserDataFromCheckoutEvents,
+} from "@helpers/userData";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -41,6 +46,9 @@ function prepareGoogleCheckoutStarted(
   // parameter: items
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
+  // parameter: user_data
+  const user_data = getGoogleUserDataFromCheckoutEvents(event);
+
   message.google = {
     event: "begin_checkout",
     ecommerce: {
@@ -49,6 +57,7 @@ function prepareGoogleCheckoutStarted(
       coupon: coupon,
       items: items,
     },
+    user_data: user_data,
   };
 }
 
@@ -82,6 +91,9 @@ function prepareMetaCheckoutStarted(
   // parameter: value
   const value = checkout.subtotalPrice?.amount;
 
+  // parameter: user_data
+  const user_data = getMetaUserDataFromCheckoutEvents(event);
+
   message.meta = {
     event: "InitiateCheckout",
     content_ids: content_ids,
@@ -89,16 +101,24 @@ function prepareMetaCheckoutStarted(
     currency: currency,
     num_items: num_items,
     value: value,
+    user_data: user_data,
   };
 }
 
-function prepareTikTokCheckoutStarted(message: DataLayerMessage): void {
+function prepareTikTokCheckoutStarted(
+  event: PixelEventsCheckoutStarted,
+  message: DataLayerMessage,
+): void {
   if (!config.platform.tiktok) {
     return;
   }
 
+  // parameter: user_data
+  const user_data = getTikTokUserDataFromCheckoutEvents(event);
+
   message.tiktok = {
     event: "InitiateCheckout",
+    user_data: user_data,
   };
 }
 
@@ -107,7 +127,7 @@ function handleCheckoutStarted(event: PixelEventsCheckoutStarted): void {
 
   prepareGoogleCheckoutStarted(event, message);
   prepareMetaCheckoutStarted(event, message);
-  prepareTikTokCheckoutStarted(message);
+  prepareTikTokCheckoutStarted(event, message);
 
   dataLayerPush(message);
 }

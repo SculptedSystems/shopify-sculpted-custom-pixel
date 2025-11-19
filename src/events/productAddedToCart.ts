@@ -1,12 +1,15 @@
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/product_added_to_cart
 
-import { PartialCheckoutLineItem, DataLayerMessage } from "@models";
+import {
+  DataLayerMessage,
+  PartialCheckoutLineItemWithDiscountAllocations,
+} from "@models";
 import { PixelEventsProductAddedToCart } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { config } from "@config";
 
 import {
-  addFinalLinePriceToPartialLineItems,
+  addFinalLinePriceToPartialLineItemsWithDiscountAllocations,
   getGoogleItemsFromShopifyCheckoutLineItems,
   getItemIdFromShopifyProductVariant,
 } from "@helpers/items";
@@ -40,14 +43,15 @@ function prepareGoogleProductAddedToCart(
   // parameter: items
   const productVariant = cartLine.merchandise;
   const quantity = cartLine?.quantity || 0;
-  const partialCheckoutLineItems: PartialCheckoutLineItem[] = [
-    {
-      discountAllocations: [],
-      quantity: quantity,
-      variant: productVariant,
-    },
-  ];
-  const lineItems = addFinalLinePriceToPartialLineItems(
+  const partialCheckoutLineItems: PartialCheckoutLineItemWithDiscountAllocations[] =
+    [
+      {
+        discountAllocations: [],
+        quantity: quantity,
+        variant: productVariant,
+      },
+    ];
+  const lineItems = addFinalLinePriceToPartialLineItemsWithDiscountAllocations(
     partialCheckoutLineItems,
   );
   const items = getGoogleItemsFromShopifyCheckoutLineItems(lineItems);

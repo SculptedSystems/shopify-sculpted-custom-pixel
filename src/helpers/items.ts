@@ -2,12 +2,10 @@ import {
   GoogleItem,
   MetaContent,
   PartialCheckoutLineItem,
+  PartialCheckoutLineItemWithDiscountAllocations,
   PartialCheckoutLineItemWithFinalLinePrice,
 } from "@models";
-import {
-  CheckoutLineItem,
-  ProductVariant,
-} from "@sculptedsystems/shopify-web-pixels-api-types";
+import { ProductVariant } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { config } from "@config";
 
@@ -30,7 +28,7 @@ export function getItemIdFromShopifyProductVariant(
 }
 
 export function getGoogleItemsFromShopifyCheckoutLineItems(
-  lineItems: PartialCheckoutLineItem[],
+  lineItems: PartialCheckoutLineItemWithDiscountAllocations[],
 ): GoogleItem[] {
   const items: GoogleItem[] = [];
 
@@ -117,9 +115,9 @@ export function getGoogleItemsFromShopifyCheckoutLineItems(
   return items;
 }
 
-export function addFinalLinePriceToPartialLineItems(
-  partialLineItems: PartialCheckoutLineItem[],
-): PartialCheckoutLineItem[] {
+export function addFinalLinePriceToPartialLineItemsWithDiscountAllocations(
+  partialLineItems: PartialCheckoutLineItemWithDiscountAllocations[],
+): PartialCheckoutLineItemWithFinalLinePrice[] {
   const lineItems: PartialCheckoutLineItemWithFinalLinePrice[] = [];
 
   partialLineItems.forEach((obj) => {
@@ -135,7 +133,7 @@ export function addFinalLinePriceToPartialLineItems(
 }
 
 export function getContentIdsFromShopifyCheckoutLineItems(
-  lineItems: CheckoutLineItem[],
+  lineItems: PartialCheckoutLineItem[],
 ): string[] {
   const ids: string[] = [];
 
@@ -159,7 +157,7 @@ export function getContentIdsFromShopifyCheckoutLineItems(
 }
 
 export function getMetaContentsFromShopifyCheckoutLineItems(
-  lineItems: CheckoutLineItem[],
+  lineItems: PartialCheckoutLineItem[],
 ): MetaContent[] {
   const contents: MetaContent[] = [];
 
@@ -191,7 +189,7 @@ export function getMetaContentsFromShopifyCheckoutLineItems(
 }
 
 export function getNumItemsFromShopifyCheckoutLineItems(
-  lineItems: CheckoutLineItem[],
+  lineItems: PartialCheckoutLineItem[],
 ): number {
   let quantity = 0;
 

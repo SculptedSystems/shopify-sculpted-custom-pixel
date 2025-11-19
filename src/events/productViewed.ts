@@ -1,12 +1,15 @@
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/product_viewed
 
-import { PartialCheckoutLineItem, DataLayerMessage } from "@models";
+import {
+  PartialCheckoutLineItemWithDiscountAllocations,
+  DataLayerMessage,
+} from "@models";
 import { PixelEventsProductViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { config } from "@config";
 
 import {
-  addFinalLinePriceToPartialLineItems,
+  addFinalLinePriceToPartialLineItemsWithDiscountAllocations,
   getGoogleItemsFromShopifyCheckoutLineItems,
   getItemIdFromShopifyProductVariant,
 } from "@helpers/items";
@@ -32,14 +35,17 @@ function prepareGoogleProductViewed(
   const value = productVariant.price.amount;
 
   // parameter: items
-  const partialLineItems: PartialCheckoutLineItem[] = [
+  const partialLineItems: PartialCheckoutLineItemWithDiscountAllocations[] = [
     {
       discountAllocations: [],
       quantity: 1,
       variant: productVariant,
     },
   ];
-  const lineItems = addFinalLinePriceToPartialLineItems(partialLineItems);
+  const lineItems =
+    addFinalLinePriceToPartialLineItemsWithDiscountAllocations(
+      partialLineItems,
+    );
   const items = getGoogleItemsFromShopifyCheckoutLineItems(lineItems);
 
   message.google = {

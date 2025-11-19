@@ -134,7 +134,7 @@ export function addFinalLinePriceToPartialLineItems(
   return lineItems;
 }
 
-export function getMetaContentIdsFromShopifyCheckoutLineItems(
+export function getContentIdsFromShopifyCheckoutLineItems(
   lineItems: CheckoutLineItem[],
 ): string[] {
   const ids: string[] = [];
@@ -190,7 +190,7 @@ export function getMetaContentsFromShopifyCheckoutLineItems(
   return contents;
 }
 
-export function getMetaNumItemsFromShopifyCheckoutLineItems(
+export function getNumItemsFromShopifyCheckoutLineItems(
   lineItems: CheckoutLineItem[],
 ): number {
   let quantity = 0;

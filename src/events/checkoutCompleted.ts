@@ -5,7 +5,12 @@ import { PixelEventsCheckoutCompleted } from "@sculptedsystems/shopify-web-pixel
 
 import { config } from "@config";
 
-import { getGoogleItemsFromShopifyCheckoutLineItems } from "@helpers/items";
+import {
+  getContentIdsFromShopifyCheckoutLineItems,
+  getGoogleItemsFromShopifyCheckoutLineItems,
+  getMetaContentsFromShopifyCheckoutLineItems,
+  getNumItemsFromShopifyCheckoutLineItems,
+} from "@helpers/items";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -72,10 +77,98 @@ function prepareGoogleCheckoutCompleted(
   };
 }
 
+function prepareMetaCheckoutCompleted(
+  event: PixelEventsCheckoutCompleted,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.meta) {
+    return;
+  }
+
+  const eventData = event.data;
+  const checkout = eventData.checkout;
+
+  // parameter: content_ids
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: content_type
+  const content_type = "product_group";
+
+  // parameter: contents
+  const contents = getMetaContentsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
+
+  // parameter: num_items
+  const num_items = getNumItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount || 0;
+
+  message.meta = {
+    event: "Purchase",
+    content_ids: content_ids,
+    content_type: content_type,
+    contents: contents,
+    currency: currency,
+    num_items: num_items,
+    value: value,
+  };
+}
+
+function prepareTikTokCheckoutCompleted(
+  event: PixelEventsCheckoutCompleted,
+  message: DataLayerMessage,
+): void {
+  if (!config.platform.tiktok) {
+    return;
+  }
+
+  const eventData = event.data;
+  const checkout = eventData.checkout;
+
+  // parameter: content_type
+  const content_type = "product_group";
+
+  // parameter: quantity
+  const quantity = getNumItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+
+  // parameter: description
+  const description = "Completed Purchase";
+
+  // parameter: content_ids
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
+
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount || 0;
+
+  message.tiktok = {
+    event: "Purchase",
+    content_type: content_type,
+    quantity: quantity,
+    description: description,
+    content_ids: content_ids,
+    currency: currency,
+    value: value,
+  };
+}
+
 function handleCheckoutCompleted(event: PixelEventsCheckoutCompleted): void {
   const message: DataLayerMessage = { event: "shopify_checkout_completed" };
 
   prepareGoogleCheckoutCompleted(event, message);
+  prepareMetaCheckoutCompleted(event, message);
+  prepareTikTokCheckoutCompleted(event, message);
 
   dataLayerPush(message);
 }

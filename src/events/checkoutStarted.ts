@@ -7,9 +7,9 @@ import { config } from "@config";
 
 import {
   getGoogleItemsFromShopifyCheckoutLineItems,
-  getMetaContentIdsFromShopifyCheckoutLineItems,
+  getContentIdsFromShopifyCheckoutLineItems,
   getMetaContentsFromShopifyCheckoutLineItems,
-  getMetaNumItemsFromShopifyCheckoutLineItems,
+  getNumItemsFromShopifyCheckoutLineItems,
 } from "@helpers/items";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
@@ -64,7 +64,7 @@ function prepareMetaCheckoutStarted(
   const checkout = eventData.checkout;
 
   // parameter: content_ids
-  const content_ids = getMetaContentIdsFromShopifyCheckoutLineItems(
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
     checkout.lineItems,
   );
 
@@ -77,9 +77,7 @@ function prepareMetaCheckoutStarted(
   const currency = checkout.subtotalPrice?.currencyCode;
 
   // parameter: num_items
-  const num_items = getMetaNumItemsFromShopifyCheckoutLineItems(
-    checkout.lineItems,
-  );
+  const num_items = getNumItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   // parameter: value
   const value = checkout.subtotalPrice?.amount;

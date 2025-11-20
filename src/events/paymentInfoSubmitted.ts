@@ -3,7 +3,7 @@
 import { DataLayerMessage } from "@models";
 import { PixelEventsPaymentInfoSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
-import { config } from "@config";
+import { buildEventHandler } from "@utils/buildEventHandler";
 
 import {
   getContentIdsFromShopifyCheckoutLineItems,
@@ -15,11 +15,7 @@ import {
   getMetaUserDataFromCheckoutEvents,
   getTikTokUserDataFromCheckoutEvents,
 } from "@helpers/userData";
-import { getDataLayerEventMessage } from "@helpers/dataLayer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
-
-import { buildEventHandler } from "@utils/buildEventHandler";
-import { dataLayerPush } from "@utils/dataLayer";
 
 function prepareGooglePaymentInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
@@ -108,28 +104,14 @@ function prepareTikTokPaymentInfoSubmitted(
   };
 }
 
-function handlePaymentInfoSubmitted(
-  event: PixelEventsPaymentInfoSubmitted,
-): void {
-  const message = getDataLayerEventMessage("shopify_payment_info_submitted");
-  if (config.platform.google) {
-    message.data.google = prepareGooglePaymentInfoSubmitted(event);
-  }
-
-  if (config.platform.meta) {
-    message.data.meta = prepareMetaPaymentInfoSubmitted(event);
-  }
-
-  if (config.platform.tiktok) {
-    message.data.tiktok = prepareTikTokPaymentInfoSubmitted(event);
-  }
-
-  dataLayerPush(message);
-}
-
 export function registerPaymentInfoSubmitted(): void {
+  const event = "payment_info_submitted";
   analytics.subscribe(
-    "payment_info_submitted",
-    buildEventHandler(handlePaymentInfoSubmitted),
+    event,
+    buildEventHandler(event, {
+      google: prepareGooglePaymentInfoSubmitted,
+      meta: prepareMetaPaymentInfoSubmitted,
+      tiktok: prepareTikTokPaymentInfoSubmitted,
+    }),
   );
 }

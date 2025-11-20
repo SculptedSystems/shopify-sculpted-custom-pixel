@@ -3,17 +3,13 @@
 import { DataLayerMessage } from "@models";
 import { PixelEventsPageViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
 
-import { config } from "@config";
+import { buildEventHandler } from "@utils/buildEventHandler";
 
 import {
   getGoogleUserDataFromGenericEvent,
   getMetaUserDataFromGenericEvent,
   getTikTokUserDataFromGenericEvent,
 } from "@helpers/userData";
-import { getDataLayerEventMessage } from "@helpers/dataLayer";
-
-import { buildEventHandler } from "@utils/buildEventHandler";
-import { dataLayerPush } from "@utils/dataLayer";
 
 function prepareGooglePageViewed(
   event: PixelEventsPageViewed,
@@ -51,9 +47,11 @@ function prepareMetaPageViewed(event: PixelEventsPageViewed): DataLayerMessage {
   };
 }
 
-function prepareTikTokPageViewed(): DataLayerMessage {
+function prepareTikTokPageViewed(
+  event: PixelEventsPageViewed,
+): DataLayerMessage {
   // parameter: user_data
-  const user_data = getTikTokUserDataFromGenericEvent();
+  const user_data = getTikTokUserDataFromGenericEvent(event);
 
   return {
     event: "PageView",
@@ -61,22 +59,14 @@ function prepareTikTokPageViewed(): DataLayerMessage {
   };
 }
 
-function handlePageViewed(event: PixelEventsPageViewed): void {
-  const message = getDataLayerEventMessage("shopify_page_viewed");
-
-  if (config.platform.google) {
-    message.data.google = prepareGooglePageViewed(event);
-  }
-  if (config.platform.meta) {
-    message.data.meta = prepareMetaPageViewed(event);
-  }
-  if (config.platform.tiktok) {
-    message.data.tiktok = prepareTikTokPageViewed();
-  }
-
-  dataLayerPush(message);
-}
-
 export function registerPageViewed(): void {
-  analytics.subscribe("page_viewed", buildEventHandler(handlePageViewed));
+  const event = "page_viewed";
+  analytics.subscribe(
+    event,
+    buildEventHandler(event, {
+      google: prepareGooglePageViewed,
+      meta: prepareMetaPageViewed,
+      tiktok: prepareTikTokPageViewed,
+    }),
+  );
 }

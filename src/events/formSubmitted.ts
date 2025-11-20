@@ -3,17 +3,13 @@
 import { DataLayerMessage } from "@models";
 import { PixelEventsFormSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
-import { config } from "@config";
+import { buildEventHandler } from "@utils/buildEventHandler";
 
 import {
   getGoogleUserDataFromFormSubmittedEvents,
   getMetaUserDataFromFormSubmittedEvents,
   getTikTokUserDataFromFormSubmittedEvents,
 } from "@helpers/userData";
-import { getDataLayerEventMessage } from "@helpers/dataLayer";
-
-import { buildEventHandler } from "@utils/buildEventHandler";
-import { dataLayerPush } from "@utils/dataLayer";
 
 function prepareGoogleFormSubmitted(
   event: PixelEventsFormSubmitted,
@@ -69,23 +65,14 @@ function prepareTikTokFormSubmitted(
   };
 }
 
-function handleFormSubmitted(event: PixelEventsFormSubmitted): void {
-  const message = getDataLayerEventMessage("shopify_form_submitted");
-  if (config.platform.google) {
-    message.data.google = prepareGoogleFormSubmitted(event);
-  }
-
-  if (config.platform.meta) {
-    message.data.meta = prepareMetaFormSubmitted(event);
-  }
-
-  if (config.platform.tiktok) {
-    message.data.tiktok = prepareTikTokFormSubmitted(event);
-  }
-
-  dataLayerPush(message);
-}
-
 export function registerFormSubmitted(): void {
-  analytics.subscribe("form_submitted", buildEventHandler(handleFormSubmitted));
+  const event = "form_submitted";
+  analytics.subscribe(
+    event,
+    buildEventHandler(event, {
+      google: prepareGoogleFormSubmitted,
+      meta: prepareMetaFormSubmitted,
+      tiktok: prepareTikTokFormSubmitted,
+    }),
+  );
 }

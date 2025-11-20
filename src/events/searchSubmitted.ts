@@ -3,18 +3,14 @@
 import { DataLayerMessage, PartialCheckoutLineItem } from "@models";
 import { PixelEventsSearchSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
-import { config } from "@config";
+import { buildEventHandler } from "@utils/buildEventHandler";
 
+import { getContentIdsFromShopifyCheckoutLineItems } from "@helpers/items";
 import {
   getGoogleUserDataFromGenericEvent,
   getMetaUserDataFromGenericEvent,
   getTikTokUserDataFromGenericEvent,
 } from "@helpers/userData";
-import { getDataLayerEventMessage } from "@helpers/dataLayer";
-
-import { buildEventHandler } from "@utils/buildEventHandler";
-import { dataLayerPush } from "@utils/dataLayer";
-import { getContentIdsFromShopifyCheckoutLineItems } from "@helpers/items";
 
 function prepareGoogleSearchSubmitted(
   event: PixelEventsSearchSubmitted,
@@ -81,7 +77,7 @@ function prepareTikTokSearchSubmitted(
   const search_term = eventData.searchResult.query;
 
   // parameter: user_data
-  const user_data = getTikTokUserDataFromGenericEvent();
+  const user_data = getTikTokUserDataFromGenericEvent(event);
 
   return {
     event: "Search",
@@ -90,27 +86,14 @@ function prepareTikTokSearchSubmitted(
   };
 }
 
-function handleSearchSubmitted(event: PixelEventsSearchSubmitted): void {
-  const message = getDataLayerEventMessage("shopify_search_submitted");
-
-  if (config.platform.google) {
-    message.data.google = prepareGoogleSearchSubmitted(event);
-  }
-
-  if (config.platform.meta) {
-    message.data.meta = prepareMetaSearchSubmitted(event);
-  }
-
-  if (config.platform.tiktok) {
-    message.data.tiktok = prepareTikTokSearchSubmitted(event);
-  }
-
-  dataLayerPush(message);
-}
-
 export function registerSearchSubmitted(): void {
+  const event = "search_submitted";
   analytics.subscribe(
-    "search_submitted",
-    buildEventHandler(handleSearchSubmitted),
+    event,
+    buildEventHandler(event, {
+      google: prepareGoogleSearchSubmitted,
+      meta: prepareMetaSearchSubmitted,
+      tiktok: prepareTikTokSearchSubmitted,
+    }),
   );
 }

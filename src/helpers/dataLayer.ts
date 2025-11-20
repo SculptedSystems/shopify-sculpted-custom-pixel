@@ -12,5 +12,6 @@ export function getDataLayerEventMessage(
       sale_of_data: init.customerPrivacy.saleOfDataAllowed,
     },
     data: {},
+    user: {},
   };
 }

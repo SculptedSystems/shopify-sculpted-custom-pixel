@@ -9,12 +9,6 @@ export interface DataLayerMessage {
 
 export type DataLayer = DataLayerMessage[];
 
-interface DataLayerData {
-  google?: Record<string, unknown>;
-  meta?: Record<string, unknown>;
-  tiktok?: Record<string, unknown>;
-}
-
 interface DataLayerConsent {
   analytics_processing: boolean;
   marketing: boolean;
@@ -22,7 +16,14 @@ interface DataLayerConsent {
   sale_of_data: boolean;
 }
 
+interface DataLayerServices {
+  google?: Record<string, unknown>;
+  meta?: Record<string, unknown>;
+  tiktok?: Record<string, unknown>;
+}
+
 export interface DataLayerEventMessage extends DataLayerMessage {
-  data: DataLayerData;
   consent: DataLayerConsent;
+  data: DataLayerServices;
+  user: DataLayerServices;
 }

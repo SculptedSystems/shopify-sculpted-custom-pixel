@@ -5,3 +5,4 @@ export * from "./meta";
 export * from "./partialCheckoutLineItem";
 export * from "./shopify";
 export * from "./tiktok";
+export * from "./userData";

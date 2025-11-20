@@ -94,7 +94,7 @@ function getCustomer(): Customer | null {
   return init.data.customer;
 }
 
-export function getGoogleUserDataFromCustomer(): GoogleUserData | null {
+export function getGoogleUserDataFromCustomer(): GoogleUserData {
   const data: Partial<GoogleUserData> = {};
   const customer = getCustomer();
 
@@ -106,10 +106,10 @@ export function getGoogleUserDataFromCustomer(): GoogleUserData | null {
     data.phone_number = prepareGooglePhoneNumber(customer.phone);
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  return Object.keys(data).length > 0 ? data : {};
 }
 
-export function getMetaUserDataFromCustomer(): MetaUserData | null {
+export function getMetaUserDataFromCustomer(): MetaUserData {
   const data: Partial<MetaUserData> = {};
   const customer = getCustomer();
 
@@ -133,10 +133,10 @@ export function getMetaUserDataFromCustomer(): MetaUserData | null {
     data.external_id = customer.id;
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  return Object.keys(data).length > 0 ? data : {};
 }
 
-export function getTikTokUserDataFromCustomer(): TikTokUserData | null {
+export function getTikTokUserDataFromCustomer(): TikTokUserData {
   const data: Partial<TikTokUserData> = {};
   const customer = getCustomer();
 
@@ -148,20 +148,20 @@ export function getTikTokUserDataFromCustomer(): TikTokUserData | null {
     data.phone_number = prepareTikTokPhoneNumber(customer.phone);
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  return Object.keys(data).length > 0 ? data : {};
 }
 
 /**
  * Get User Data from Generic Events
  */
 
-export function getGoogleUserDataFromGenericEvent(): GoogleUserData | null {
+export function getGoogleUserDataFromGenericEvent(): GoogleUserData {
   return getGoogleUserDataFromCustomer();
 }
 
 export function getMetaUserDataFromGenericEvent(
   event: AnalyticsEvent,
-): MetaUserData | null {
+): MetaUserData {
   const customerUserData = getMetaUserDataFromCustomer();
 
   if (customerUserData) {
@@ -175,7 +175,7 @@ export function getMetaUserDataFromGenericEvent(
 
 export function getTikTokUserDataFromGenericEvent(
   _event: AnalyticsEvent,
-): TikTokUserData | null {
+): TikTokUserData {
   return getTikTokUserDataFromCustomer();
 }
 
@@ -197,7 +197,7 @@ function findFirstPhoneNumber(event: PixelEventsFormSubmitted): string | null {
 
 export function getGoogleUserDataFromFormSubmittedEvents(
   event: PixelEventsFormSubmitted,
-): GoogleUserData | null {
+): GoogleUserData {
   const customerUserData = getGoogleUserDataFromCustomer();
 
   if (customerUserData) {
@@ -216,12 +216,12 @@ export function getGoogleUserDataFromFormSubmittedEvents(
     data.phone_number = prepareGooglePhoneNumber(firstPhone);
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  return Object.keys(data).length > 0 ? data : {};
 }
 
 export function getMetaUserDataFromFormSubmittedEvents(
   event: PixelEventsFormSubmitted,
-): MetaUserData | null {
+): MetaUserData {
   const customerUserData = getMetaUserDataFromCustomer();
 
   if (customerUserData) {
@@ -240,12 +240,12 @@ export function getMetaUserDataFromFormSubmittedEvents(
     data.ph = prepareMetaPhoneNumber(firstPhone);
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  return Object.keys(data).length > 0 ? data : {};
 }
 
 export function getTikTokUserDataFromFormSubmittedEvents(
   event: PixelEventsFormSubmitted,
-): TikTokUserData | null {
+): TikTokUserData {
   const customerUserData = getTikTokUserDataFromCustomer();
 
   if (customerUserData) {
@@ -264,7 +264,7 @@ export function getTikTokUserDataFromFormSubmittedEvents(
     data.phone_number = prepareTikTokPhoneNumber(firstPhone);
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  return Object.keys(data).length > 0 ? data : {};
 }
 
 /**
@@ -414,7 +414,7 @@ export function getGoogleUserDataFromCheckoutEvents(
     | PixelEventsCheckoutShippingInfoSubmitted
     | PixelEventsPaymentInfoSubmitted
     | PixelEventsCheckoutCompleted,
-): GoogleUserData | null {
+): GoogleUserData {
   const customerUserData = getGoogleUserDataFromCustomer();
 
   if (customerUserData) {
@@ -482,7 +482,7 @@ export function getMetaUserDataFromCheckoutEvents(
     | PixelEventsCheckoutShippingInfoSubmitted
     | PixelEventsPaymentInfoSubmitted
     | PixelEventsCheckoutCompleted,
-): MetaUserData | null {
+): MetaUserData {
   const customerUserData = getMetaUserDataFromCustomer();
 
   if (customerUserData) {
@@ -543,7 +543,7 @@ export function getTikTokUserDataFromCheckoutEvents(
     | PixelEventsCheckoutShippingInfoSubmitted
     | PixelEventsPaymentInfoSubmitted
     | PixelEventsCheckoutCompleted,
-): TikTokUserData | null {
+): TikTokUserData {
   const customerUserData = getTikTokUserDataFromCustomer();
 
   if (customerUserData) {

@@ -41,9 +41,6 @@ function prepareGoogleCheckoutShippingInfoSubmitted(
   // parameter: items
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
-  // parameter: user_data
-  const user_data = getGoogleUserDataFromCheckoutEvents(event);
-
   return {
     event: "add_shipping_info",
     ecommerce: {
@@ -53,7 +50,6 @@ function prepareGoogleCheckoutShippingInfoSubmitted(
       shipping_tier: shipping_tier,
       items: items,
     },
-    user_data: user_data,
   };
 }
 
@@ -79,28 +75,20 @@ function prepareMetaCheckoutShippingInfoSubmitted(
   // parameter: value
   const value = checkout.subtotalPrice?.amount;
 
-  // parameter: user_data
-  const user_data = getMetaUserDataFromCheckoutEvents(event);
-
   return {
     event: "AddShippingInfo",
     content_ids: content_ids,
     contents: contents,
     currency: currency,
     value: value,
-    user_data: user_data,
   };
 }
 
 function prepareTikTokCheckoutShippingInfoSubmitted(
-  event: PixelEventsPaymentInfoSubmitted,
+  _event: PixelEventsPaymentInfoSubmitted,
 ): DataLayerMessage {
-  // parameter: user_data
-  const user_data = getTikTokUserDataFromCheckoutEvents(event);
-
   return {
     event: "AddShippingInfo",
-    user_data: user_data,
   };
 }
 
@@ -109,9 +97,18 @@ export function registerCheckoutShippingInfoSubmitted(): void {
   analytics.subscribe(
     event,
     buildEventHandler(event, {
-      google: prepareGoogleCheckoutShippingInfoSubmitted,
-      meta: prepareMetaCheckoutShippingInfoSubmitted,
-      tiktok: prepareTikTokCheckoutShippingInfoSubmitted,
+      google: {
+        dataHandler: prepareGoogleCheckoutShippingInfoSubmitted,
+        userHandler: getGoogleUserDataFromCheckoutEvents,
+      },
+      meta: {
+        dataHandler: prepareMetaCheckoutShippingInfoSubmitted,
+        userHandler: getMetaUserDataFromCheckoutEvents,
+      },
+      tiktok: {
+        dataHandler: prepareTikTokCheckoutShippingInfoSubmitted,
+        userHandler: getTikTokUserDataFromCheckoutEvents,
+      },
     }),
   );
 }

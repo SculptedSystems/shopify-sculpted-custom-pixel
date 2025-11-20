@@ -41,9 +41,6 @@ function prepareGooglePaymentInfoSubmitted(
   // parameter: items
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
-  // parameter: user_data
-  const user_data = getGoogleUserDataFromCheckoutEvents(event);
-
   return {
     event: "add_payment_info",
     ecommerce: {
@@ -53,7 +50,6 @@ function prepareGooglePaymentInfoSubmitted(
       payment_type: payment_type,
       items: items,
     },
-    user_data: user_data,
   };
 }
 
@@ -79,28 +75,20 @@ function prepareMetaPaymentInfoSubmitted(
   // parameter: value
   const value = checkout.subtotalPrice?.amount;
 
-  // parameter: user_data
-  const user_data = getMetaUserDataFromCheckoutEvents(event);
-
   return {
     event: "AddPaymentInfo",
     content_ids: content_ids,
     contents: contents,
     currency: currency,
     value: value,
-    user_data: user_data,
   };
 }
 
 function prepareTikTokPaymentInfoSubmitted(
-  event: PixelEventsPaymentInfoSubmitted,
+  _event: PixelEventsPaymentInfoSubmitted,
 ): DataLayerMessage {
-  // parameter: user_data
-  const user_data = getTikTokUserDataFromCheckoutEvents(event);
-
   return {
     event: "AddPaymentInfo",
-    user_data: user_data,
   };
 }
 
@@ -109,9 +97,18 @@ export function registerPaymentInfoSubmitted(): void {
   analytics.subscribe(
     event,
     buildEventHandler(event, {
-      google: prepareGooglePaymentInfoSubmitted,
-      meta: prepareMetaPaymentInfoSubmitted,
-      tiktok: prepareTikTokPaymentInfoSubmitted,
+      google: {
+        dataHandler: prepareGooglePaymentInfoSubmitted,
+        userHandler: getGoogleUserDataFromCheckoutEvents,
+      },
+      meta: {
+        dataHandler: prepareMetaPaymentInfoSubmitted,
+        userHandler: getMetaUserDataFromCheckoutEvents,
+      },
+      tiktok: {
+        dataHandler: prepareTikTokPaymentInfoSubmitted,
+        userHandler: getTikTokUserDataFromCheckoutEvents,
+      },
     }),
   );
 }

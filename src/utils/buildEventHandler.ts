@@ -19,16 +19,31 @@ function eventHandler<T extends AnalyticsEvent>(
 ): void {
   const message = getDataLayerEventMessage(`shopify_${eventName}`);
 
-  if (config.platform.google && serviceHandlers.google) {
-    message.data.google = serviceHandlers.google(event);
+  if (config.platform.google) {
+    if (serviceHandlers.google?.dataHandler) {
+      message.data.google = serviceHandlers.google.dataHandler(event);
+    }
+    if (serviceHandlers.google?.userHandler) {
+      message.user.google = serviceHandlers.google.userHandler(event);
+    }
   }
 
-  if (config.platform.meta && serviceHandlers.meta) {
-    message.data.meta = serviceHandlers.meta(event);
+  if (config.platform.meta) {
+    if (serviceHandlers.meta?.dataHandler) {
+      message.data.meta = serviceHandlers.meta.dataHandler(event);
+    }
+    if (serviceHandlers.meta?.userHandler) {
+      message.user.meta = serviceHandlers.meta.userHandler(event);
+    }
   }
 
-  if (config.platform.tiktok && serviceHandlers.tiktok) {
-    message.data.tiktok = serviceHandlers.tiktok(event);
+  if (config.platform.tiktok) {
+    if (serviceHandlers.tiktok?.dataHandler) {
+      message.data.tiktok = serviceHandlers.tiktok.dataHandler(event);
+    }
+    if (serviceHandlers.tiktok?.userHandler) {
+      message.user.tiktok = serviceHandlers.tiktok.userHandler(event);
+    }
   }
 
   dataLayerPush(message);

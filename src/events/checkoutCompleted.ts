@@ -57,9 +57,6 @@ function prepareGoogleCheckoutCompleted(
   // parameter: items
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
-  // parameter: user_data
-  const user_data = getGoogleUserDataFromCheckoutEvents(event);
-
   return {
     event: "purchase",
     ecommerce: {
@@ -74,7 +71,6 @@ function prepareGoogleCheckoutCompleted(
       payment_gateway: payment_gateway,
       items: items,
     },
-    user_data: user_data,
   };
 }
 
@@ -106,9 +102,6 @@ function prepareMetaCheckoutCompleted(
   // parameter: value
   const value = checkout.subtotalPrice?.amount || 0;
 
-  // parameter: user_data
-  const user_data = getMetaUserDataFromCheckoutEvents(event);
-
   return {
     event: "Purchase",
     content_ids: content_ids,
@@ -117,7 +110,6 @@ function prepareMetaCheckoutCompleted(
     currency: currency,
     num_items: num_items,
     value: value,
-    user_data: user_data,
   };
 }
 
@@ -147,9 +139,6 @@ function prepareTikTokCheckoutCompleted(
   // parameter: value
   const value = checkout.subtotalPrice?.amount || 0;
 
-  // parameter: user_data
-  const user_data = getTikTokUserDataFromCheckoutEvents(event);
-
   return {
     event: "Purchase",
     content_type: content_type,
@@ -158,7 +147,6 @@ function prepareTikTokCheckoutCompleted(
     content_ids: content_ids,
     currency: currency,
     value: value,
-    user_data: user_data,
   };
 }
 
@@ -167,9 +155,18 @@ export function registerCheckoutCompleted(): void {
   analytics.subscribe(
     event,
     buildEventHandler(event, {
-      google: prepareGoogleCheckoutCompleted,
-      meta: prepareMetaCheckoutCompleted,
-      tiktok: prepareTikTokCheckoutCompleted,
+      google: {
+        dataHandler: prepareGoogleCheckoutCompleted,
+        userHandler: getGoogleUserDataFromCheckoutEvents,
+      },
+      meta: {
+        dataHandler: prepareMetaCheckoutCompleted,
+        userHandler: getMetaUserDataFromCheckoutEvents,
+      },
+      tiktok: {
+        dataHandler: prepareTikTokCheckoutCompleted,
+        userHandler: getTikTokUserDataFromCheckoutEvents,
+      },
     }),
   );
 }

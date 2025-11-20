@@ -4,7 +4,7 @@
 
 export const config = {
   pixel: {
-    loglevel: "debug",
+    loglevel: "warn",
   },
 
   shopify: {
@@ -13,20 +13,12 @@ export const config = {
   },
 
   gtm: {
-    id: "GTM-TLM894NG",
+    id: "GTM-????????",
+  },
 
-    track: {
-      pageView: true,
-      formSubmit: true,
-      search: true,
-      viewItemList: true,
-      viewItem: true,
-      addToCart: true,
-      viewCart: true,
-      beginCheckout: true,
-      addShippingInfo: true,
-      addPaymentInfo: true,
-      purchase: true,
-    },
+  platform: {
+    google: true,
+    meta: true,
+    tiktok: true,
   },
 } as const;

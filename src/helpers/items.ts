@@ -1,8 +1,11 @@
 import {
-  Item,
+  GoogleItem,
+  MetaContent,
   PartialCheckoutLineItem,
+  PartialCheckoutLineItemWithDiscountAllocations,
   PartialCheckoutLineItemWithFinalLinePrice,
 } from "@models";
+import { ProductVariant } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { config } from "@config";
 
@@ -14,10 +17,20 @@ import {
 import { logger } from "@utils/logger";
 import { stringifyObject } from "@utils/stringify";
 
-export function createGA4ItemsFromShopifyCheckoutLineItems(
-  lineItems: PartialCheckoutLineItem[],
-): Item[] {
-  const items: Item[] = [];
+export function getItemIdFromShopifyProductVariant(
+  productVariant: ProductVariant,
+): string | null {
+  const productId = productVariant.id;
+  const productSku = productVariant.sku;
+  const item_id = config.shopify.useSku ? productSku : productId;
+
+  return item_id;
+}
+
+export function getGoogleItemsFromShopifyCheckoutLineItems(
+  lineItems: PartialCheckoutLineItemWithDiscountAllocations[],
+): GoogleItem[] {
+  const items: GoogleItem[] = [];
 
   lineItems.forEach((item, index_: number) => {
     if (!item.variant) {
@@ -25,9 +38,7 @@ export function createGA4ItemsFromShopifyCheckoutLineItems(
       return;
     }
     // parameter: item_id
-    const productId = item.variant.id;
-    const productSku = item.variant.sku;
-    const item_id = config.shopify.useSku ? productSku : productId;
+    const item_id = getItemIdFromShopifyProductVariant(item.variant);
     if (!item_id) {
       logger.debug(
         `item ${stringifyObject(item)} has neither variant.id nor variant.sku`,
@@ -104,9 +115,9 @@ export function createGA4ItemsFromShopifyCheckoutLineItems(
   return items;
 }
 
-export function addFinalLinePriceToPartialLineItems(
-  partialLineItems: PartialCheckoutLineItem[],
-): PartialCheckoutLineItem[] {
+export function addFinalLinePriceToPartialLineItemsWithDiscountAllocations(
+  partialLineItems: PartialCheckoutLineItemWithDiscountAllocations[],
+): PartialCheckoutLineItemWithFinalLinePrice[] {
   const lineItems: PartialCheckoutLineItemWithFinalLinePrice[] = [];
 
   partialLineItems.forEach((obj) => {
@@ -119,4 +130,72 @@ export function addFinalLinePriceToPartialLineItems(
   });
 
   return lineItems;
+}
+
+export function getContentIdsFromShopifyCheckoutLineItems(
+  lineItems: PartialCheckoutLineItem[],
+): string[] {
+  const ids: string[] = [];
+
+  lineItems.forEach((item) => {
+    if (!item.variant) {
+      return;
+    }
+
+    const id = getItemIdFromShopifyProductVariant(item.variant);
+    if (!id) {
+      logger.debug(
+        `item ${stringifyObject(item)} has neither variant.id nor variant.sku`,
+      );
+      return;
+    }
+
+    ids.push(id);
+  });
+
+  return ids;
+}
+
+export function getMetaContentsFromShopifyCheckoutLineItems(
+  lineItems: PartialCheckoutLineItem[],
+): MetaContent[] {
+  const contents: MetaContent[] = [];
+
+  lineItems.forEach((item) => {
+    if (!item.variant) {
+      logger.debug(`item ${stringifyObject(item)} has no variant`);
+      return;
+    }
+
+    // parameter: item_id
+    const id = getItemIdFromShopifyProductVariant(item.variant);
+    if (!id) {
+      logger.debug(
+        `item ${stringifyObject(item)} has neither variant.id nor variant.sku`,
+      );
+      return;
+    }
+
+    // parameter: quantity
+    const quantity = item.quantity;
+
+    contents.push({
+      id: id,
+      quantity: quantity,
+    });
+  });
+
+  return contents;
+}
+
+export function getNumItemsFromShopifyCheckoutLineItems(
+  lineItems: PartialCheckoutLineItem[],
+): number {
+  let quantity = 0;
+
+  lineItems.forEach((item) => {
+    quantity += item.quantity;
+  });
+
+  return quantity;
 }

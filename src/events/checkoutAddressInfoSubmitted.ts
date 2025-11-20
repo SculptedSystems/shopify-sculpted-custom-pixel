@@ -3,7 +3,7 @@
 import { DataLayerMessage } from "@models";
 import { PixelEventsCheckoutAddressInfoSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
-import { config } from "@config";
+import { buildEventHandler } from "@utils/buildEventHandler";
 
 import {
   getContentIdsFromShopifyCheckoutLineItems,
@@ -15,11 +15,7 @@ import {
   getMetaUserDataFromCheckoutEvents,
   getTikTokUserDataFromCheckoutEvents,
 } from "@helpers/userData";
-import { getDataLayerEventMessage } from "@helpers/dataLayer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
-
-import { buildEventHandler } from "@utils/buildEventHandler";
-import { dataLayerPush } from "@utils/dataLayer";
 
 function prepareGoogleCheckoutAddressInfoSubmitted(
   event: PixelEventsCheckoutAddressInfoSubmitted,
@@ -103,31 +99,14 @@ function prepareTikTokCheckoutAddressInfoSubmitted(
   };
 }
 
-function handleCheckoutAddressInfoSubmitted(
-  event: PixelEventsCheckoutAddressInfoSubmitted,
-): void {
-  const message = getDataLayerEventMessage(
-    "shopify_checkout_address_info_submitted",
-  );
-
-  if (config.platform.google) {
-    message.data.google = prepareGoogleCheckoutAddressInfoSubmitted(event);
-  }
-
-  if (config.platform.meta) {
-    message.data.meta = prepareMetaCheckoutAddressInfoSubmitted(event);
-  }
-
-  if (config.platform.tiktok) {
-    message.data.tiktok = prepareTikTokCheckoutAddressInfoSubmitted(event);
-  }
-
-  dataLayerPush(message);
-}
-
 export function registerCheckoutAddressInfoSubmitted(): void {
+  const event = "checkout_address_info_submitted";
   analytics.subscribe(
-    "checkout_address_info_submitted",
-    buildEventHandler(handleCheckoutAddressInfoSubmitted),
+    event,
+    buildEventHandler(event, {
+      google: prepareGoogleCheckoutAddressInfoSubmitted,
+      meta: prepareMetaCheckoutAddressInfoSubmitted,
+      tiktok: prepareTikTokCheckoutAddressInfoSubmitted,
+    }),
   );
 }

@@ -6,7 +6,7 @@ import {
 } from "@models";
 import { PixelEventsProductViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
 
-import { config } from "@config";
+import { buildEventHandler } from "@utils/buildEventHandler";
 
 import {
   addFinalLinePriceToPartialLineItemsWithDiscountAllocations,
@@ -18,10 +18,6 @@ import {
   getMetaUserDataFromGenericEvent,
   getTikTokUserDataFromGenericEvent,
 } from "@helpers/userData";
-import { getDataLayerEventMessage } from "@helpers/dataLayer";
-
-import { dataLayerPush } from "@utils/dataLayer";
-import { buildEventHandler } from "@utils/buildEventHandler";
 
 function prepareGoogleProductViewed(
   event: PixelEventsProductViewed,
@@ -130,7 +126,7 @@ function prepareTikTokProductViewed(
   const value = productVariant.price.amount;
 
   // parameter: user_data
-  const user_data = getTikTokUserDataFromGenericEvent();
+  const user_data = getTikTokUserDataFromGenericEvent(event);
 
   return {
     event: "ViewContent",
@@ -144,24 +140,14 @@ function prepareTikTokProductViewed(
   };
 }
 
-function handleProductViewed(event: PixelEventsProductViewed): void {
-  const message = getDataLayerEventMessage("shopify_product_viewed");
-
-  if (config.platform.google) {
-    message.data.google = prepareGoogleProductViewed(event);
-  }
-
-  if (config.platform.meta) {
-    message.data.meta = prepareMetaProductViewed(event);
-  }
-
-  if (config.platform.tiktok) {
-    message.data.tiktok = prepareTikTokProductViewed(event);
-  }
-
-  dataLayerPush(message);
-}
-
 export function registerProductViewed(): void {
-  analytics.subscribe("product_viewed", buildEventHandler(handleProductViewed));
+  const event = "product_viewed";
+  analytics.subscribe(
+    event,
+    buildEventHandler(event, {
+      google: prepareGoogleProductViewed,
+      meta: prepareMetaProductViewed,
+      tiktok: prepareTikTokProductViewed,
+    }),
+  );
 }

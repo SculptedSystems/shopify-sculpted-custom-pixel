@@ -173,7 +173,9 @@ export function getMetaUserDataFromGenericEvent(
   return data;
 }
 
-export function getTikTokUserDataFromGenericEvent(): TikTokUserData | null {
+export function getTikTokUserDataFromGenericEvent(
+  _event: AnalyticsEvent,
+): TikTokUserData | null {
   return getTikTokUserDataFromCustomer();
 }
 

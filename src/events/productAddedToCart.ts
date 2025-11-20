@@ -6,7 +6,8 @@ import {
 } from "@models";
 import { PixelEventsProductAddedToCart } from "@sculptedsystems/shopify-web-pixels-api-types";
 
-import { config } from "@config";
+import { buildEventHandler } from "@utils/buildEventHandler";
+import { logger } from "@utils/logger";
 
 import {
   addFinalLinePriceToPartialLineItemsWithDiscountAllocations,
@@ -18,11 +19,6 @@ import {
   getMetaUserDataFromGenericEvent,
   getTikTokUserDataFromGenericEvent,
 } from "@helpers/userData";
-import { getDataLayerEventMessage } from "@helpers/dataLayer";
-
-import { buildEventHandler } from "@utils/buildEventHandler";
-import { dataLayerPush } from "@utils/dataLayer";
-import { logger } from "@utils/logger";
 
 function prepareGoogleProductAddedToCart(
   event: PixelEventsProductAddedToCart,
@@ -150,7 +146,7 @@ function prepareTikTokProductAddedToCart(
   const value = cartLine.cost.totalAmount.amount;
 
   // parameter: user_data
-  const user_data = getTikTokUserDataFromGenericEvent();
+  const user_data = getTikTokUserDataFromGenericEvent(event);
 
   return {
     event: "AddToCart",
@@ -164,27 +160,14 @@ function prepareTikTokProductAddedToCart(
   };
 }
 
-function handleProductAddedToCart(event: PixelEventsProductAddedToCart): void {
-  const message = getDataLayerEventMessage("shopify_product_added_to_cart");
-
-  if (config.platform.google) {
-    message.data.google = prepareGoogleProductAddedToCart(event);
-  }
-
-  if (config.platform.meta) {
-    message.data.meta = prepareMetaProductAddedToCart(event);
-  }
-
-  if (config.platform.tiktok) {
-    message.data.tiktok = prepareTikTokProductAddedToCart(event);
-  }
-
-  dataLayerPush(message);
-}
-
 export function registerProductAddedToCart(): void {
+  const event = "product_added_to_cart";
   analytics.subscribe(
-    "product_added_to_cart",
-    buildEventHandler(handleProductAddedToCart),
+    event,
+    buildEventHandler(event, {
+      google: prepareGoogleProductAddedToCart,
+      meta: prepareMetaProductAddedToCart,
+      tiktok: prepareTikTokProductAddedToCart,
+    }),
   );
 }

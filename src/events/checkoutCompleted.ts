@@ -3,7 +3,7 @@
 import { DataLayerMessage } from "@models";
 import { PixelEventsCheckoutCompleted } from "@sculptedsystems/shopify-web-pixels-api-types";
 
-import { config } from "@config";
+import { buildEventHandler } from "@utils/buildEventHandler";
 
 import {
   getContentIdsFromShopifyCheckoutLineItems,
@@ -16,11 +16,7 @@ import {
   getMetaUserDataFromCheckoutEvents,
   getTikTokUserDataFromCheckoutEvents,
 } from "@helpers/userData";
-import { getDataLayerEventMessage } from "@helpers/dataLayer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
-
-import { buildEventHandler } from "@utils/buildEventHandler";
-import { dataLayerPush } from "@utils/dataLayer";
 
 function prepareGoogleCheckoutCompleted(
   event: PixelEventsCheckoutCompleted,
@@ -166,27 +162,14 @@ function prepareTikTokCheckoutCompleted(
   };
 }
 
-function handleCheckoutCompleted(event: PixelEventsCheckoutCompleted): void {
-  const message = getDataLayerEventMessage("shopify_checkout_completed");
-
-  if (config.platform.google) {
-    message.data.google = prepareGoogleCheckoutCompleted(event);
-  }
-
-  if (config.platform.meta) {
-    message.data.meta = prepareMetaCheckoutCompleted(event);
-  }
-
-  if (config.platform.tiktok) {
-    message.data.tiktok = prepareTikTokCheckoutCompleted(event);
-  }
-
-  dataLayerPush(message);
-}
-
 export function registerCheckoutCompleted(): void {
+  const event = "checkout_completed";
   analytics.subscribe(
-    "checkout_completed",
-    buildEventHandler(handleCheckoutCompleted),
+    event,
+    buildEventHandler(event, {
+      google: prepareGoogleCheckoutCompleted,
+      meta: prepareMetaCheckoutCompleted,
+      tiktok: prepareTikTokCheckoutCompleted,
+    }),
   );
 }

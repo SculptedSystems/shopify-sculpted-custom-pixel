@@ -1,9 +1,16 @@
-import { DataLayerMessage } from "@models";
-import { logger } from "@utils/logger";
-import { stringifyObject } from "@utils/stringify";
+import { DataLayerEventMessage } from "@models";
 
-export function dataLayerPush(message: DataLayerMessage): void {
-  logger.info(`Pushing Message to Data Layer -> ${stringifyObject(message)}`);
-
-  window.dataLayer.push(message);
+export function getDataLayerEventMessage(
+  eventName: string,
+): DataLayerEventMessage {
+  return {
+    event: eventName,
+    consent: {
+      analytics_processing: init.customerPrivacy.analyticsProcessingAllowed,
+      marketing: init.customerPrivacy.marketingAllowed,
+      preferences_processing: init.customerPrivacy.preferencesProcessingAllowed,
+      sale_of_data: init.customerPrivacy.saleOfDataAllowed,
+    },
+    data: {},
+  };
 }

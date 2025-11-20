@@ -15,6 +15,7 @@ import {
   getMetaUserDataFromCheckoutEvents,
   getTikTokUserDataFromCheckoutEvents,
 } from "@helpers/userData";
+import { getDataLayerEventMessage } from "@helpers/dataLayer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -22,12 +23,7 @@ import { dataLayerPush } from "@utils/dataLayer";
 
 function prepareGoogleCheckoutShippingInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.google) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -52,7 +48,7 @@ function prepareGoogleCheckoutShippingInfoSubmitted(
   // parameter: user_data
   const user_data = getGoogleUserDataFromCheckoutEvents(event);
 
-  message.google = {
+  return {
     event: "add_shipping_info",
     ecommerce: {
       currency: currency,
@@ -67,12 +63,7 @@ function prepareGoogleCheckoutShippingInfoSubmitted(
 
 function prepareMetaCheckoutShippingInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.meta) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -95,7 +86,7 @@ function prepareMetaCheckoutShippingInfoSubmitted(
   // parameter: user_data
   const user_data = getMetaUserDataFromCheckoutEvents(event);
 
-  message.meta = {
+  return {
     event: "AddShippingInfo",
     content_ids: content_ids,
     contents: contents,
@@ -107,16 +98,11 @@ function prepareMetaCheckoutShippingInfoSubmitted(
 
 function prepareTikTokCheckoutShippingInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.tiktok) {
-    return;
-  }
-
+): DataLayerMessage {
   // parameter: user_data
   const user_data = getTikTokUserDataFromCheckoutEvents(event);
 
-  message.tiktok = {
+  return {
     event: "AddShippingInfo",
     user_data: user_data,
   };
@@ -125,13 +111,21 @@ function prepareTikTokCheckoutShippingInfoSubmitted(
 function handleCheckoutShippingInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
 ): void {
-  const message: DataLayerMessage = {
-    event: "shopify_checkout_shipping_info_submitted",
-  };
+  const message = getDataLayerEventMessage(
+    "shopify_checkout_shipping_info_submitted",
+  );
 
-  prepareGoogleCheckoutShippingInfoSubmitted(event, message);
-  prepareMetaCheckoutShippingInfoSubmitted(event, message);
-  prepareTikTokCheckoutShippingInfoSubmitted(event, message);
+  if (config.platform.google) {
+    message.data.google = prepareGoogleCheckoutShippingInfoSubmitted(event);
+  }
+
+  if (config.platform.meta) {
+    message.data.meta = prepareMetaCheckoutShippingInfoSubmitted(event);
+  }
+
+  if (config.platform.tiktok) {
+    message.data.tiktok = prepareTikTokCheckoutShippingInfoSubmitted(event);
+  }
 
   dataLayerPush(message);
 }

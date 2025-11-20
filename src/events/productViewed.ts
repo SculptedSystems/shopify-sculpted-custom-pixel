@@ -18,18 +18,14 @@ import {
   getMetaUserDataFromGenericEvent,
   getTikTokUserDataFromGenericEvent,
 } from "@helpers/userData";
+import { getDataLayerEventMessage } from "@helpers/dataLayer";
 
 import { dataLayerPush } from "@utils/dataLayer";
 import { buildEventHandler } from "@utils/buildEventHandler";
 
 function prepareGoogleProductViewed(
   event: PixelEventsProductViewed,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.google) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const productVariant = eventData.productVariant;
 
@@ -56,7 +52,7 @@ function prepareGoogleProductViewed(
   // parameter: user_data
   const user_data = getGoogleUserDataFromGenericEvent();
 
-  message.google = {
+  return {
     event: "view_item",
     ecommerce: {
       currency: currency,
@@ -69,12 +65,7 @@ function prepareGoogleProductViewed(
 
 function prepareMetaProductViewed(
   event: PixelEventsProductViewed,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.meta) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const productVariant = eventData.productVariant;
 
@@ -103,7 +94,7 @@ function prepareMetaProductViewed(
   // parameter: user_data
   const user_data = getMetaUserDataFromGenericEvent(event);
 
-  message.meta = {
+  return {
     event: "ViewContent",
     content_ids: content_ids,
     content_type: content_type,
@@ -116,12 +107,7 @@ function prepareMetaProductViewed(
 
 function prepareTikTokProductViewed(
   event: PixelEventsProductViewed,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.tiktok) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const productVariant = eventData.productVariant;
 
@@ -146,7 +132,7 @@ function prepareTikTokProductViewed(
   // parameter: user_data
   const user_data = getTikTokUserDataFromGenericEvent();
 
-  message.tiktok = {
+  return {
     event: "ViewContent",
     content_type: content_type,
     quantity: quantity,
@@ -159,11 +145,19 @@ function prepareTikTokProductViewed(
 }
 
 function handleProductViewed(event: PixelEventsProductViewed): void {
-  const message: DataLayerMessage = { event: "shopify_product_viewed" };
+  const message = getDataLayerEventMessage("shopify_product_viewed");
 
-  prepareGoogleProductViewed(event, message);
-  prepareMetaProductViewed(event, message);
-  prepareTikTokProductViewed(event, message);
+  if (config.platform.google) {
+    message.data.google = prepareGoogleProductViewed(event);
+  }
+
+  if (config.platform.meta) {
+    message.data.meta = prepareMetaProductViewed(event);
+  }
+
+  if (config.platform.tiktok) {
+    message.data.tiktok = prepareTikTokProductViewed(event);
+  }
 
   dataLayerPush(message);
 }

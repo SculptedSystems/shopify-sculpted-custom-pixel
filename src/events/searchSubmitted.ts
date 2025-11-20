@@ -10,6 +10,7 @@ import {
   getMetaUserDataFromGenericEvent,
   getTikTokUserDataFromGenericEvent,
 } from "@helpers/userData";
+import { getDataLayerEventMessage } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
@@ -17,12 +18,7 @@ import { getContentIdsFromShopifyCheckoutLineItems } from "@helpers/items";
 
 function prepareGoogleSearchSubmitted(
   event: PixelEventsSearchSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.google) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
 
   // parameter: search_term
@@ -31,7 +27,7 @@ function prepareGoogleSearchSubmitted(
   // parameter: user_data
   const user_data = getGoogleUserDataFromGenericEvent();
 
-  message.google = {
+  return {
     event: "search",
     search_term: search_term,
     user_data: user_data,
@@ -40,12 +36,7 @@ function prepareGoogleSearchSubmitted(
 
 function prepareMetaSearchSubmitted(
   event: PixelEventsSearchSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.meta) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const searchResult = eventData.searchResult;
 
@@ -72,7 +63,7 @@ function prepareMetaSearchSubmitted(
   // parameter: user_data
   const user_data = getMetaUserDataFromGenericEvent(event);
 
-  message.meta = {
+  return {
     event: "Search",
     content_ids: content_ids,
     content_type: content_type,
@@ -83,12 +74,7 @@ function prepareMetaSearchSubmitted(
 
 function prepareTikTokSearchSubmitted(
   event: PixelEventsSearchSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.tiktok) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
 
   // parameter: search_term
@@ -97,7 +83,7 @@ function prepareTikTokSearchSubmitted(
   // parameter: user_data
   const user_data = getTikTokUserDataFromGenericEvent();
 
-  message.tiktok = {
+  return {
     event: "Search",
     search_term: search_term,
     user_data: user_data,
@@ -105,11 +91,19 @@ function prepareTikTokSearchSubmitted(
 }
 
 function handleSearchSubmitted(event: PixelEventsSearchSubmitted): void {
-  const message: DataLayerMessage = { event: "shopify_search_submitted" };
+  const message = getDataLayerEventMessage("shopify_search_submitted");
 
-  prepareGoogleSearchSubmitted(event, message);
-  prepareMetaSearchSubmitted(event, message);
-  prepareTikTokSearchSubmitted(event, message);
+  if (config.platform.google) {
+    message.data.google = prepareGoogleSearchSubmitted(event);
+  }
+
+  if (config.platform.meta) {
+    message.data.meta = prepareMetaSearchSubmitted(event);
+  }
+
+  if (config.platform.tiktok) {
+    message.data.tiktok = prepareTikTokSearchSubmitted(event);
+  }
 
   dataLayerPush(message);
 }

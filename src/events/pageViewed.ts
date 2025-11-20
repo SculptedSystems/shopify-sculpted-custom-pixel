@@ -10,18 +10,14 @@ import {
   getMetaUserDataFromGenericEvent,
   getTikTokUserDataFromGenericEvent,
 } from "@helpers/userData";
+import { getDataLayerEventMessage } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 
 function prepareGooglePageViewed(
   event: PixelEventsPageViewed,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.google) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventContext = event.context?.document;
 
   // parameter: page_location
@@ -36,7 +32,7 @@ function prepareGooglePageViewed(
   // parameter: user_data
   const user_data = getGoogleUserDataFromGenericEvent();
 
-  message.google = {
+  return {
     event: "page_view",
     page_location: page_location,
     page_referrer: page_referrer,
@@ -45,43 +41,38 @@ function prepareGooglePageViewed(
   };
 }
 
-function prepareMetaPageViewed(
-  event: PixelEventsPageViewed,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.meta) {
-    return;
-  }
-
+function prepareMetaPageViewed(event: PixelEventsPageViewed): DataLayerMessage {
   // parameter: user_data
   const user_data = getMetaUserDataFromGenericEvent(event);
 
-  message.meta = {
+  return {
     event: "PageView",
     user_data: user_data,
   };
 }
 
-function prepareTikTokPageViewed(message: DataLayerMessage): void {
-  if (!config.platform.tiktok) {
-    return;
-  }
-
+function prepareTikTokPageViewed(): DataLayerMessage {
   // parameter: user_data
   const user_data = getTikTokUserDataFromGenericEvent();
 
-  message.tiktok = {
+  return {
     event: "PageView",
     user_data: user_data,
   };
 }
 
 function handlePageViewed(event: PixelEventsPageViewed): void {
-  const message: DataLayerMessage = { event: "shopify_page_viewed" };
+  const message = getDataLayerEventMessage("shopify_page_viewed");
 
-  prepareGooglePageViewed(event, message);
-  prepareMetaPageViewed(event, message);
-  prepareTikTokPageViewed(message);
+  if (config.platform.google) {
+    message.data.google = prepareGooglePageViewed(event);
+  }
+  if (config.platform.meta) {
+    message.data.meta = prepareMetaPageViewed(event);
+  }
+  if (config.platform.tiktok) {
+    message.data.tiktok = prepareTikTokPageViewed();
+  }
 
   dataLayerPush(message);
 }

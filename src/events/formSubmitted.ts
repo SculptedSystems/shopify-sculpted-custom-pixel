@@ -10,18 +10,14 @@ import {
   getMetaUserDataFromFormSubmittedEvents,
   getTikTokUserDataFromFormSubmittedEvents,
 } from "@helpers/userData";
+import { getDataLayerEventMessage } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
 
 function prepareGoogleFormSubmitted(
   event: PixelEventsFormSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.google) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
 
   // parameter: form_id
@@ -30,7 +26,7 @@ function prepareGoogleFormSubmitted(
   // parameter: user_data
   const user_data = getGoogleUserDataFromFormSubmittedEvents(event);
 
-  message.google = {
+  return {
     event: "form_submit",
     form_id: form_id,
     user_data: user_data,
@@ -39,12 +35,7 @@ function prepareGoogleFormSubmitted(
 
 function prepareMetaFormSubmitted(
   event: PixelEventsFormSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.meta) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
 
   // parameter: form_id
@@ -53,7 +44,7 @@ function prepareMetaFormSubmitted(
   // parameter: user_data
   const user_data = getMetaUserDataFromFormSubmittedEvents(event);
 
-  message.meta = {
+  return {
     event: "FormSubmit",
     form_id: form_id,
     user_data: user_data,
@@ -62,12 +53,7 @@ function prepareMetaFormSubmitted(
 
 function prepareTikTokFormSubmitted(
   event: PixelEventsFormSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.tiktok) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
 
   // parameter: form_id
@@ -76,7 +62,7 @@ function prepareTikTokFormSubmitted(
   // parameter: user_data
   const user_data = getTikTokUserDataFromFormSubmittedEvents(event);
 
-  message.tiktok = {
+  return {
     event: "FormSubmit",
     form_id: form_id,
     user_data: user_data,
@@ -84,11 +70,18 @@ function prepareTikTokFormSubmitted(
 }
 
 function handleFormSubmitted(event: PixelEventsFormSubmitted): void {
-  const message: DataLayerMessage = { event: "shopify_form_submitted" };
+  const message = getDataLayerEventMessage("shopify_form_submitted");
+  if (config.platform.google) {
+    message.data.google = prepareGoogleFormSubmitted(event);
+  }
 
-  prepareGoogleFormSubmitted(event, message);
-  prepareMetaFormSubmitted(event, message);
-  prepareTikTokFormSubmitted(event, message);
+  if (config.platform.meta) {
+    message.data.meta = prepareMetaFormSubmitted(event);
+  }
+
+  if (config.platform.tiktok) {
+    message.data.tiktok = prepareTikTokFormSubmitted(event);
+  }
 
   dataLayerPush(message);
 }

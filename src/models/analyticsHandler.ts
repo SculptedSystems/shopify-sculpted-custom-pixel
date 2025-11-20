@@ -1,5 +1,4 @@
-import type { AnalyticsEvent, DataLayerMessage } from "@models";
-import { userData } from "./userData";
+import type { AnalyticsEvent, DataLayerMessage, UserData } from "@models";
 
 /**
  * A handler function for analytics events.
@@ -13,7 +12,7 @@ export type AnalyticsEventHandler<T extends AnalyticsEvent = AnalyticsEvent> = (
 
 interface ServiceHandler<T extends AnalyticsEvent = AnalyticsEvent> {
   dataHandler?: (event: T) => DataLayerMessage;
-  userHandler?: (event: T) => userData;
+  userHandler?: (event: T) => UserData;
 }
 
 export interface ServiceHandlers<T extends AnalyticsEvent = AnalyticsEvent> {

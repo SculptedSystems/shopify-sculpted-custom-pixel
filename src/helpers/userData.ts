@@ -3,6 +3,7 @@ import {
   GoogleUserData,
   MetaUserData,
   TikTokUserData,
+  UserData,
 } from "@models";
 import {
   Checkout,
@@ -94,6 +95,10 @@ function getCustomer(): Customer | null {
   return init.data.customer;
 }
 
+function userDataIsPopulated(userData: UserData): boolean {
+  return Object.keys(userData).length > 0;
+}
+
 export function getGoogleUserDataFromCustomer(): GoogleUserData {
   const data: Partial<GoogleUserData> = {};
   const customer = getCustomer();
@@ -106,7 +111,7 @@ export function getGoogleUserDataFromCustomer(): GoogleUserData {
     data.phone_number = prepareGooglePhoneNumber(customer.phone);
   }
 
-  return Object.keys(data).length > 0 ? data : {};
+  return userDataIsPopulated(data) ? data : {};
 }
 
 export function getMetaUserDataFromCustomer(): MetaUserData {
@@ -133,7 +138,7 @@ export function getMetaUserDataFromCustomer(): MetaUserData {
     data.external_id = customer.id;
   }
 
-  return Object.keys(data).length > 0 ? data : {};
+  return userDataIsPopulated(data) ? data : {};
 }
 
 export function getTikTokUserDataFromCustomer(): TikTokUserData {
@@ -148,7 +153,7 @@ export function getTikTokUserDataFromCustomer(): TikTokUserData {
     data.phone_number = prepareTikTokPhoneNumber(customer.phone);
   }
 
-  return Object.keys(data).length > 0 ? data : {};
+  return userDataIsPopulated(data) ? data : {};
 }
 
 /**
@@ -164,7 +169,7 @@ export function getMetaUserDataFromGenericEvent(
 ): MetaUserData {
   const customerUserData = getMetaUserDataFromCustomer();
 
-  if (customerUserData) {
+  if (userDataIsPopulated(customerUserData)) {
     return customerUserData;
   }
 
@@ -200,7 +205,7 @@ export function getGoogleUserDataFromFormSubmittedEvents(
 ): GoogleUserData {
   const customerUserData = getGoogleUserDataFromCustomer();
 
-  if (customerUserData) {
+  if (userDataIsPopulated(customerUserData)) {
     return customerUserData;
   }
 
@@ -216,7 +221,7 @@ export function getGoogleUserDataFromFormSubmittedEvents(
     data.phone_number = prepareGooglePhoneNumber(firstPhone);
   }
 
-  return Object.keys(data).length > 0 ? data : {};
+  return userDataIsPopulated(data) ? data : {};
 }
 
 export function getMetaUserDataFromFormSubmittedEvents(
@@ -224,7 +229,7 @@ export function getMetaUserDataFromFormSubmittedEvents(
 ): MetaUserData {
   const customerUserData = getMetaUserDataFromCustomer();
 
-  if (customerUserData) {
+  if (userDataIsPopulated(customerUserData)) {
     return customerUserData;
   }
 
@@ -240,7 +245,7 @@ export function getMetaUserDataFromFormSubmittedEvents(
     data.ph = prepareMetaPhoneNumber(firstPhone);
   }
 
-  return Object.keys(data).length > 0 ? data : {};
+  return userDataIsPopulated(data) ? data : {};
 }
 
 export function getTikTokUserDataFromFormSubmittedEvents(
@@ -248,7 +253,7 @@ export function getTikTokUserDataFromFormSubmittedEvents(
 ): TikTokUserData {
   const customerUserData = getTikTokUserDataFromCustomer();
 
-  if (customerUserData) {
+  if (userDataIsPopulated(customerUserData)) {
     return customerUserData;
   }
 
@@ -264,7 +269,7 @@ export function getTikTokUserDataFromFormSubmittedEvents(
     data.phone_number = prepareTikTokPhoneNumber(firstPhone);
   }
 
-  return Object.keys(data).length > 0 ? data : {};
+  return userDataIsPopulated(data) ? data : {};
 }
 
 /**
@@ -417,7 +422,7 @@ export function getGoogleUserDataFromCheckoutEvents(
 ): GoogleUserData {
   const customerUserData = getGoogleUserDataFromCustomer();
 
-  if (customerUserData) {
+  if (userDataIsPopulated(customerUserData)) {
     return customerUserData;
   }
 
@@ -485,7 +490,7 @@ export function getMetaUserDataFromCheckoutEvents(
 ): MetaUserData {
   const customerUserData = getMetaUserDataFromCustomer();
 
-  if (customerUserData) {
+  if (userDataIsPopulated(customerUserData)) {
     return customerUserData;
   }
 
@@ -546,7 +551,7 @@ export function getTikTokUserDataFromCheckoutEvents(
 ): TikTokUserData {
   const customerUserData = getTikTokUserDataFromCustomer();
 
-  if (customerUserData) {
+  if (userDataIsPopulated(customerUserData)) {
     return customerUserData;
   }
 

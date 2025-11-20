@@ -38,7 +38,7 @@ export interface GoogleItem {
  * Source: https://support.google.com/google-ads/answer/13262500?sjid=16791331635979733383-NA#zippy=%2Cidentify-and-define-your-enhanced-conversions-variables
  */
 
-export interface GoogleUserData {
+export interface GoogleUserData extends Record<string, unknown> {
   /**
    * User email address.
    * Example: "jdoe@example.com"

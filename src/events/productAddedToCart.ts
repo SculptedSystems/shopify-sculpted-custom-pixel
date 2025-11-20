@@ -53,9 +53,6 @@ function prepareGoogleProductAddedToCart(
   );
   const items = getGoogleItemsFromShopifyCheckoutLineItems(lineItems);
 
-  // parameter: user_data
-  const user_data = getGoogleUserDataFromGenericEvent();
-
   return {
     event: "add_to_cart",
     ecommerce: {
@@ -63,7 +60,6 @@ function prepareGoogleProductAddedToCart(
       value: value,
       items: items,
     },
-    user_data: user_data,
   };
 }
 
@@ -100,9 +96,6 @@ function prepareMetaProductAddedToCart(
   // paramater: value
   const value = cartLine.cost.totalAmount.amount;
 
-  // parameter: user_data
-  const user_data = getMetaUserDataFromGenericEvent(event);
-
   return {
     event: "AddToCart",
     content_ids: content_ids,
@@ -110,7 +103,6 @@ function prepareMetaProductAddedToCart(
     contents: contents,
     currency: currency,
     value: value,
-    user_data: user_data,
   };
 }
 
@@ -145,9 +137,6 @@ function prepareTikTokProductAddedToCart(
   // parameter: value
   const value = cartLine.cost.totalAmount.amount;
 
-  // parameter: user_data
-  const user_data = getTikTokUserDataFromGenericEvent(event);
-
   return {
     event: "AddToCart",
     content_type: content_type,
@@ -156,7 +145,6 @@ function prepareTikTokProductAddedToCart(
     content_ids: content_ids,
     currency: currency,
     value: value,
-    user_data: user_data,
   };
 }
 
@@ -165,9 +153,18 @@ export function registerProductAddedToCart(): void {
   analytics.subscribe(
     event,
     buildEventHandler(event, {
-      google: prepareGoogleProductAddedToCart,
-      meta: prepareMetaProductAddedToCart,
-      tiktok: prepareTikTokProductAddedToCart,
+      google: {
+        dataHandler: prepareGoogleProductAddedToCart,
+        userHandler: getGoogleUserDataFromGenericEvent,
+      },
+      meta: {
+        dataHandler: prepareMetaProductAddedToCart,
+        userHandler: getMetaUserDataFromGenericEvent,
+      },
+      tiktok: {
+        dataHandler: prepareTikTokProductAddedToCart,
+        userHandler: getTikTokUserDataFromGenericEvent,
+      },
     }),
   );
 }

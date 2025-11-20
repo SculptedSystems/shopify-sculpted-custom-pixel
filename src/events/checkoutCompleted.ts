@@ -16,6 +16,7 @@ import {
   getMetaUserDataFromCheckoutEvents,
   getTikTokUserDataFromCheckoutEvents,
 } from "@helpers/userData";
+import { getDataLayerEventMessage } from "@helpers/dataLayer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -23,12 +24,7 @@ import { dataLayerPush } from "@utils/dataLayer";
 
 function prepareGoogleCheckoutCompleted(
   event: PixelEventsCheckoutCompleted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.google) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -68,7 +64,7 @@ function prepareGoogleCheckoutCompleted(
   // parameter: user_data
   const user_data = getGoogleUserDataFromCheckoutEvents(event);
 
-  message.google = {
+  return {
     event: "purchase",
     ecommerce: {
       currency: currency,
@@ -88,12 +84,7 @@ function prepareGoogleCheckoutCompleted(
 
 function prepareMetaCheckoutCompleted(
   event: PixelEventsCheckoutCompleted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.meta) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -122,7 +113,7 @@ function prepareMetaCheckoutCompleted(
   // parameter: user_data
   const user_data = getMetaUserDataFromCheckoutEvents(event);
 
-  message.meta = {
+  return {
     event: "Purchase",
     content_ids: content_ids,
     content_type: content_type,
@@ -136,12 +127,7 @@ function prepareMetaCheckoutCompleted(
 
 function prepareTikTokCheckoutCompleted(
   event: PixelEventsCheckoutCompleted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.tiktok) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -168,7 +154,7 @@ function prepareTikTokCheckoutCompleted(
   // parameter: user_data
   const user_data = getTikTokUserDataFromCheckoutEvents(event);
 
-  message.tiktok = {
+  return {
     event: "Purchase",
     content_type: content_type,
     quantity: quantity,
@@ -181,11 +167,19 @@ function prepareTikTokCheckoutCompleted(
 }
 
 function handleCheckoutCompleted(event: PixelEventsCheckoutCompleted): void {
-  const message: DataLayerMessage = { event: "shopify_checkout_completed" };
+  const message = getDataLayerEventMessage("shopify_checkout_completed");
 
-  prepareGoogleCheckoutCompleted(event, message);
-  prepareMetaCheckoutCompleted(event, message);
-  prepareTikTokCheckoutCompleted(event, message);
+  if (config.platform.google) {
+    message.data.google = prepareGoogleCheckoutCompleted(event);
+  }
+
+  if (config.platform.meta) {
+    message.data.meta = prepareMetaCheckoutCompleted(event);
+  }
+
+  if (config.platform.tiktok) {
+    message.data.tiktok = prepareTikTokCheckoutCompleted(event);
+  }
 
   dataLayerPush(message);
 }

@@ -18,6 +18,7 @@ import {
   getMetaUserDataFromGenericEvent,
   getTikTokUserDataFromGenericEvent,
 } from "@helpers/userData";
+import { getDataLayerEventMessage } from "@helpers/dataLayer";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 import { dataLayerPush } from "@utils/dataLayer";
@@ -25,18 +26,13 @@ import { logger } from "@utils/logger";
 
 function prepareGoogleProductAddedToCart(
   event: PixelEventsProductAddedToCart,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.google) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const cartLine = eventData.cartLine;
 
   if (!cartLine) {
     logger.debug("cartLine is null. Not pushing event.");
-    return;
+    return { event: "" };
   }
 
   // parameter: currency
@@ -64,7 +60,7 @@ function prepareGoogleProductAddedToCart(
   // parameter: user_data
   const user_data = getGoogleUserDataFromGenericEvent();
 
-  message.google = {
+  return {
     event: "add_to_cart",
     ecommerce: {
       currency: currency,
@@ -77,18 +73,13 @@ function prepareGoogleProductAddedToCart(
 
 function prepareMetaProductAddedToCart(
   event: PixelEventsProductAddedToCart,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.meta) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const cartLine = eventData.cartLine;
 
   if (!cartLine) {
     logger.debug("cartLine is null. Not pushing event.");
-    return;
+    return { event: "" };
   }
 
   const item_id = getItemIdFromShopifyProductVariant(cartLine.merchandise);
@@ -116,7 +107,7 @@ function prepareMetaProductAddedToCart(
   // parameter: user_data
   const user_data = getMetaUserDataFromGenericEvent(event);
 
-  message.meta = {
+  return {
     event: "AddToCart",
     content_ids: content_ids,
     content_type: content_type,
@@ -129,18 +120,13 @@ function prepareMetaProductAddedToCart(
 
 function prepareTikTokProductAddedToCart(
   event: PixelEventsProductAddedToCart,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.tiktok) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const cartLine = eventData.cartLine;
 
   if (!cartLine) {
     logger.debug("cartLine is null. Not pushing event.");
-    return;
+    return { event: "" };
   }
 
   // parameter: content_type
@@ -166,7 +152,7 @@ function prepareTikTokProductAddedToCart(
   // parameter: user_data
   const user_data = getTikTokUserDataFromGenericEvent();
 
-  message.tiktok = {
+  return {
     event: "AddToCart",
     content_type: content_type,
     quantity: quantity,
@@ -179,11 +165,19 @@ function prepareTikTokProductAddedToCart(
 }
 
 function handleProductAddedToCart(event: PixelEventsProductAddedToCart): void {
-  const message: DataLayerMessage = { event: "shopify_product_added_to_cart" };
+  const message = getDataLayerEventMessage("shopify_product_added_to_cart");
 
-  prepareGoogleProductAddedToCart(event, message);
-  prepareMetaProductAddedToCart(event, message);
-  prepareTikTokProductAddedToCart(event, message);
+  if (config.platform.google) {
+    message.data.google = prepareGoogleProductAddedToCart(event);
+  }
+
+  if (config.platform.meta) {
+    message.data.meta = prepareMetaProductAddedToCart(event);
+  }
+
+  if (config.platform.tiktok) {
+    message.data.tiktok = prepareTikTokProductAddedToCart(event);
+  }
 
   dataLayerPush(message);
 }

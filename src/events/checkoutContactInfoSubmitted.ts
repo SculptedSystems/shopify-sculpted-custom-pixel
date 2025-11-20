@@ -15,6 +15,7 @@ import {
   getMetaUserDataFromCheckoutEvents,
   getTikTokUserDataFromCheckoutEvents,
 } from "@helpers/userData";
+import { getDataLayerEventMessage } from "@helpers/dataLayer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -22,12 +23,7 @@ import { dataLayerPush } from "@utils/dataLayer";
 
 function prepareGoogleCheckoutContactInfoSubmitted(
   event: PixelEventsCheckoutContactInfoSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.google) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -48,7 +44,7 @@ function prepareGoogleCheckoutContactInfoSubmitted(
   // parameter: user_data
   const user_data = getGoogleUserDataFromCheckoutEvents(event);
 
-  message.google = {
+  return {
     event: "add_contact_info",
     ecommerce: {
       currency: currency,
@@ -62,12 +58,7 @@ function prepareGoogleCheckoutContactInfoSubmitted(
 
 function prepareMetaCheckoutContactInfoSubmitted(
   event: PixelEventsCheckoutContactInfoSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.meta) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -90,7 +81,7 @@ function prepareMetaCheckoutContactInfoSubmitted(
   // parameter: user_data
   const user_data = getMetaUserDataFromCheckoutEvents(event);
 
-  message.meta = {
+  return {
     event: "AddContactInfo",
     content_ids: content_ids,
     contents: contents,
@@ -102,16 +93,11 @@ function prepareMetaCheckoutContactInfoSubmitted(
 
 function prepareTikTokCheckoutContactInfoSubmitted(
   event: PixelEventsCheckoutContactInfoSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.tiktok) {
-    return;
-  }
-
+): DataLayerMessage {
   // parameter: user_data
   const user_data = getTikTokUserDataFromCheckoutEvents(event);
 
-  message.tiktok = {
+  return {
     event: "AddContactInfo",
     user_data: user_data,
   };
@@ -120,13 +106,21 @@ function prepareTikTokCheckoutContactInfoSubmitted(
 function handleCheckoutContactInfoSubmitted(
   event: PixelEventsCheckoutContactInfoSubmitted,
 ): void {
-  const message: DataLayerMessage = {
-    event: "shopify_checkout_contact_info_submitted",
-  };
+  const message = getDataLayerEventMessage(
+    "shopify_checkout_contact_info_submitted",
+  );
 
-  prepareGoogleCheckoutContactInfoSubmitted(event, message);
-  prepareMetaCheckoutContactInfoSubmitted(event, message);
-  prepareTikTokCheckoutContactInfoSubmitted(event, message);
+  if (config.platform.google) {
+    message.data.google = prepareGoogleCheckoutContactInfoSubmitted(event);
+  }
+
+  if (config.platform.meta) {
+    message.data.meta = prepareMetaCheckoutContactInfoSubmitted(event);
+  }
+
+  if (config.platform.tiktok) {
+    message.data.tiktok = prepareTikTokCheckoutContactInfoSubmitted(event);
+  }
 
   dataLayerPush(message);
 }

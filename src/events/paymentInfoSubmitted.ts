@@ -15,6 +15,7 @@ import {
   getMetaUserDataFromCheckoutEvents,
   getTikTokUserDataFromCheckoutEvents,
 } from "@helpers/userData";
+import { getDataLayerEventMessage } from "@helpers/dataLayer";
 import { getWholeCartCouponFromDiscountApplications } from "@helpers/discount";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
@@ -22,12 +23,7 @@ import { dataLayerPush } from "@utils/dataLayer";
 
 function prepareGooglePaymentInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.google) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -52,7 +48,7 @@ function prepareGooglePaymentInfoSubmitted(
   // parameter: user_data
   const user_data = getGoogleUserDataFromCheckoutEvents(event);
 
-  message.google = {
+  return {
     event: "add_payment_info",
     ecommerce: {
       currency: currency,
@@ -67,12 +63,7 @@ function prepareGooglePaymentInfoSubmitted(
 
 function prepareMetaPaymentInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.meta) {
-    return;
-  }
-
+): DataLayerMessage {
   const eventData = event.data;
   const checkout = eventData.checkout;
 
@@ -95,7 +86,7 @@ function prepareMetaPaymentInfoSubmitted(
   // parameter: user_data
   const user_data = getMetaUserDataFromCheckoutEvents(event);
 
-  message.meta = {
+  return {
     event: "AddPaymentInfo",
     content_ids: content_ids,
     contents: contents,
@@ -107,16 +98,11 @@ function prepareMetaPaymentInfoSubmitted(
 
 function prepareTikTokPaymentInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
-  message: DataLayerMessage,
-): void {
-  if (!config.platform.tiktok) {
-    return;
-  }
-
+): DataLayerMessage {
   // parameter: user_data
   const user_data = getTikTokUserDataFromCheckoutEvents(event);
 
-  message.tiktok = {
+  return {
     event: "AddPaymentInfo",
     user_data: user_data,
   };
@@ -125,11 +111,18 @@ function prepareTikTokPaymentInfoSubmitted(
 function handlePaymentInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
 ): void {
-  const message: DataLayerMessage = { event: "shopify_payment_info_submitted" };
+  const message = getDataLayerEventMessage("shopify_payment_info_submitted");
+  if (config.platform.google) {
+    message.data.google = prepareGooglePaymentInfoSubmitted(event);
+  }
 
-  prepareGooglePaymentInfoSubmitted(event, message);
-  prepareMetaPaymentInfoSubmitted(event, message);
-  prepareTikTokPaymentInfoSubmitted(event, message);
+  if (config.platform.meta) {
+    message.data.meta = prepareMetaPaymentInfoSubmitted(event);
+  }
+
+  if (config.platform.tiktok) {
+    message.data.tiktok = prepareTikTokPaymentInfoSubmitted(event);
+  }
 
   dataLayerPush(message);
 }

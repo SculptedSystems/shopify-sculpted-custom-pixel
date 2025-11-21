@@ -13,7 +13,7 @@ export const config = {
   },
 
   gtm: {
-    id: "GTM-????????",
+    id: "GTM-XXXXXXXX",
   },
 
   platform: {

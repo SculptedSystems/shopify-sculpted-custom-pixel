@@ -10,9 +10,9 @@ export interface DataLayerMessage {
 export type DataLayer = DataLayerMessage[];
 
 interface DataLayerConsent {
-  analytics_processing: boolean;
+  analytics: boolean;
   marketing: boolean;
-  preferences_processing: boolean;
+  preferences: boolean;
   sale_of_data: boolean;
 }
 

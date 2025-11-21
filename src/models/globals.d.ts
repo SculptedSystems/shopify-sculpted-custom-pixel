@@ -9,8 +9,6 @@ import {
 
 import { DataLayer } from "@models";
 
-export {};
-
 declare global {
   // ============================
   // Shopify Web Pixels Runtime
@@ -28,3 +26,5 @@ declare global {
     dataLayer: DataLayer;
   }
 }
+
+export {};

@@ -1,5 +1,6 @@
 export * from "./analyticsHandler";
 export * from "./dataLayer";
+export * from "./globals";
 export * from "./google";
 export * from "./meta";
 export * from "./partialCheckoutLineItem";

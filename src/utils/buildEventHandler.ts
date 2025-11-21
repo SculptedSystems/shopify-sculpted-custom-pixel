@@ -1,6 +1,7 @@
 import {
   AnalyticsEvent,
   AnalyticsEventHandler,
+  DataLayerMessage,
   ServiceHandlers,
 } from "@models";
 
@@ -11,6 +12,14 @@ import { getDataLayerEventMessage } from "@helpers/dataLayer";
 import { dataLayerPush } from "@utils/dataLayer";
 import { logger } from "@utils/logger";
 import { stringifyObject } from "@utils/stringify";
+
+function prepareShopifyEvent(event: AnalyticsEvent): DataLayerMessage {
+  return {
+    event: event.name,
+    event_id: event.id,
+    data: event.data,
+  };
+}
 
 function eventHandler<T extends AnalyticsEvent>(
   event: T,
@@ -45,6 +54,14 @@ function eventHandler<T extends AnalyticsEvent>(
       message.user.tiktok = serviceHandlers.tiktok.userHandler(event);
     }
   }
+
+  if (config.platform.shopify) {
+    message.data.shopify = prepareShopifyEvent(event);
+  }
+
+  message.page_location = init.context.document.location.href;
+  message.page_referrer = init.context.document.referrer;
+  message.page_title = init.context.document.title;
 
   dataLayerPush(message);
 }

@@ -17,6 +17,7 @@ export const config = {
   },
 
   platform: {
+    shopify: true,
     google: true,
     meta: true,
     tiktok: true,

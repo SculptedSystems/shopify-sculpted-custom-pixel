@@ -1,7 +1,11 @@
 // ================================================
 //   Global Declarations
 // ================================================
-import { Init, Analytics } from "@sculptedsystems/shopify-web-pixels-api-types";
+import {
+  Analytics,
+  Browser,
+  Init,
+} from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { DataLayer } from "@models";
 
@@ -11,12 +15,15 @@ declare global {
   // ============================
   // Shopify Web Pixels Runtime
   // ============================
-  const init: Init;
+
   const analytics: Analytics;
+  const browser: Browser;
+  const init: Init;
 
   // ============================
   // Google Tag Manager Runtime
   // ============================
+
   interface Window {
     dataLayer: DataLayer;
   }

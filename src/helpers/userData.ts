@@ -75,20 +75,6 @@ function prepareTikTokPhoneNumber(phone_number: string): string {
  * Parse User Data Helpers
  */
 
-// Client ID
-
-function getClientId(event: AnalyticsEvent): string {
-  return event.clientId;
-}
-
-export function getMetaUserDataFromClientId(
-  event: AnalyticsEvent,
-): MetaUserData {
-  return {
-    external_id: getClientId(event),
-  };
-}
-
 // Customer
 
 function getCustomer(): Customer | null {
@@ -160,22 +146,16 @@ export function getTikTokUserDataFromCustomer(): TikTokUserData {
  * Get User Data from Generic Events
  */
 
-export function getGoogleUserDataFromGenericEvent(): GoogleUserData {
+export function getGoogleUserDataFromGenericEvent(
+  _event: AnalyticsEvent,
+): GoogleUserData {
   return getGoogleUserDataFromCustomer();
 }
 
 export function getMetaUserDataFromGenericEvent(
-  event: AnalyticsEvent,
+  _event: AnalyticsEvent,
 ): MetaUserData {
-  const customerUserData = getMetaUserDataFromCustomer();
-
-  if (userDataIsPopulated(customerUserData)) {
-    return customerUserData;
-  }
-
-  const data = getMetaUserDataFromClientId(event);
-
-  return data;
+  return getMetaUserDataFromCustomer();
 }
 
 export function getTikTokUserDataFromGenericEvent(
@@ -203,13 +183,11 @@ function findFirstPhoneNumber(event: PixelEventsFormSubmitted): string | null {
 export function getGoogleUserDataFromFormSubmittedEvents(
   event: PixelEventsFormSubmitted,
 ): GoogleUserData {
-  const customerUserData = getGoogleUserDataFromCustomer();
+  const data = getGoogleUserDataFromCustomer();
 
-  if (userDataIsPopulated(customerUserData)) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
-
-  const data: Partial<GoogleUserData> = {};
 
   const firstEmail = findFirstEmail(event);
   if (firstEmail) {
@@ -227,13 +205,11 @@ export function getGoogleUserDataFromFormSubmittedEvents(
 export function getMetaUserDataFromFormSubmittedEvents(
   event: PixelEventsFormSubmitted,
 ): MetaUserData {
-  const customerUserData = getMetaUserDataFromCustomer();
+  const data = getMetaUserDataFromCustomer();
 
-  if (userDataIsPopulated(customerUserData)) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
-
-  const data = getMetaUserDataFromClientId(event);
 
   const firstEmail = findFirstEmail(event);
   if (firstEmail) {
@@ -251,13 +227,11 @@ export function getMetaUserDataFromFormSubmittedEvents(
 export function getTikTokUserDataFromFormSubmittedEvents(
   event: PixelEventsFormSubmitted,
 ): TikTokUserData {
-  const customerUserData = getTikTokUserDataFromCustomer();
+  const data = getTikTokUserDataFromCustomer();
 
-  if (userDataIsPopulated(customerUserData)) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
-
-  const data: Partial<TikTokUserData> = {};
 
   const firstEmail = findFirstEmail(event);
   if (firstEmail) {
@@ -420,13 +394,12 @@ export function getGoogleUserDataFromCheckoutEvents(
     | PixelEventsPaymentInfoSubmitted
     | PixelEventsCheckoutCompleted,
 ): GoogleUserData {
-  const customerUserData = getGoogleUserDataFromCustomer();
+  const data = getGoogleUserDataFromCustomer();
 
-  if (userDataIsPopulated(customerUserData)) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
 
-  const data: Partial<GoogleUserData> = {};
   const checkout = event.data.checkout;
 
   const email = getEmailFromShopifyCheckout(checkout);
@@ -488,13 +461,12 @@ export function getMetaUserDataFromCheckoutEvents(
     | PixelEventsPaymentInfoSubmitted
     | PixelEventsCheckoutCompleted,
 ): MetaUserData {
-  const customerUserData = getMetaUserDataFromCustomer();
+  const data = getMetaUserDataFromCustomer();
 
-  if (userDataIsPopulated(customerUserData)) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
 
-  const data = getMetaUserDataFromClientId(event);
   const checkout = event.data.checkout;
 
   const email = getEmailFromShopifyCheckout(checkout);
@@ -549,13 +521,12 @@ export function getTikTokUserDataFromCheckoutEvents(
     | PixelEventsPaymentInfoSubmitted
     | PixelEventsCheckoutCompleted,
 ): TikTokUserData {
-  const customerUserData = getTikTokUserDataFromCustomer();
+  const data = getTikTokUserDataFromCustomer();
 
-  if (userDataIsPopulated(customerUserData)) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
 
-  const data: Partial<GoogleUserData> = {};
   const checkout = event.data.checkout;
 
   const email = getEmailFromShopifyCheckout(checkout);

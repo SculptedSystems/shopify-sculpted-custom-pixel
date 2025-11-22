@@ -127,15 +127,23 @@ function prepareTikTokProductAddedToCart(
   const description = cartLine.merchandise.product.title;
 
   // parameter: content_ids
-  const content_ids = [
-    getItemIdFromShopifyProductVariant(cartLine.merchandise),
-  ];
+  const content_id = getItemIdFromShopifyProductVariant(cartLine.merchandise);
+  const content_ids = [content_id];
 
   // parameter: currency
   const currency = cartLine.cost.totalAmount.currencyCode;
 
   // parameter: value
   const value = cartLine.cost.totalAmount.amount;
+
+  // parameter: contents
+  const contents = [
+    {
+      content_id: content_id,
+      price: value,
+      quantity: quantity,
+    },
+  ];
 
   return {
     event: "AddToCart",
@@ -145,6 +153,7 @@ function prepareTikTokProductAddedToCart(
     content_ids: content_ids,
     currency: currency,
     value: value,
+    contents: contents,
   };
 }
 

@@ -10,6 +10,7 @@ import {
   getContentIdsFromShopifyCheckoutLineItems,
   getMetaContentsFromShopifyCheckoutLineItems,
   getNumItemsFromShopifyCheckoutLineItems,
+  getTikTokContentsFromShopifyCheckoutLineItems,
 } from "@helpers/items";
 import {
   getGoogleUserDataFromCheckoutEvents,
@@ -85,10 +86,44 @@ function prepareMetaCheckoutStarted(
 }
 
 function prepareTikTokCheckoutStarted(
-  _event: PixelEventsCheckoutStarted,
+  event: PixelEventsCheckoutStarted,
 ): DataLayerMessage {
+  const eventData = event.data;
+  const checkout = eventData.checkout;
+
+  // parameter: content_type
+  const content_type = "product";
+
+  // parameter: quantity
+  const quantity = getNumItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+
+  // parameter: description
+  const description = "Completed Purchase";
+
+  // parameter: content_ids
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
+
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount || 0;
+
+  // parameter: contents
+  const contents = getTikTokContentsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
   return {
     event: "InitiateCheckout",
+    content_type: content_type,
+    quantity: quantity,
+    description: description,
+    content_ids: content_ids,
+    currency: currency,
+    value: value,
+    contents: contents,
   };
 }
 

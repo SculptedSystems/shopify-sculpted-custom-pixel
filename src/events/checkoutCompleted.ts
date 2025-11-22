@@ -10,6 +10,7 @@ import {
   getGoogleItemsFromShopifyCheckoutLineItems,
   getMetaContentsFromShopifyCheckoutLineItems,
   getNumItemsFromShopifyCheckoutLineItems,
+  getTikTokContentsFromShopifyCheckoutLineItems,
 } from "@helpers/items";
 import {
   getGoogleUserDataFromCheckoutEvents,
@@ -139,6 +140,11 @@ function prepareTikTokCheckoutCompleted(
   // parameter: value
   const value = checkout.subtotalPrice?.amount || 0;
 
+  // parameter: contents
+  const contents = getTikTokContentsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
   return {
     event: "Purchase",
     content_type: content_type,
@@ -147,6 +153,7 @@ function prepareTikTokCheckoutCompleted(
     content_ids: content_ids,
     currency: currency,
     value: value,
+    contents: contents,
   };
 }
 

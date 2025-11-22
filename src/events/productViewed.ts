@@ -109,13 +109,23 @@ function prepareTikTokProductViewed(
   const description = productVariant.product.title;
 
   // paramaeter: content_ids
-  const content_ids = [getItemIdFromShopifyProductVariant(productVariant)];
+  const item_id = getItemIdFromShopifyProductVariant(productVariant);
+  const content_ids = [item_id];
 
   // parameter: currency
   const currency = productVariant.price.currencyCode;
 
   // parameter: value
   const value = productVariant.price.amount;
+
+  // paramaeter: contents
+  const contents = [
+    {
+      content_id: item_id,
+      price: value,
+      quantity: quantity,
+    },
+  ];
 
   return {
     event: "ViewContent",
@@ -125,6 +135,7 @@ function prepareTikTokProductViewed(
     content_ids: content_ids,
     currency: currency,
     value: value,
+    contents: contents,
   };
 }
 

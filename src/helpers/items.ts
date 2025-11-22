@@ -1,6 +1,7 @@
 import {
   GoogleItem,
   MetaContent,
+  TikTokContent,
   PartialCheckoutLineItem,
   PartialCheckoutLineItemWithDiscountAllocations,
   PartialCheckoutLineItemWithFinalLinePrice,
@@ -181,6 +182,42 @@ export function getMetaContentsFromShopifyCheckoutLineItems(
 
     contents.push({
       id: id,
+      quantity: quantity,
+    });
+  });
+
+  return contents;
+}
+
+export function getTikTokContentsFromShopifyCheckoutLineItems(
+  lineItems: PartialCheckoutLineItem[],
+): TikTokContent[] {
+  const contents: TikTokContent[] = [];
+
+  lineItems.forEach((item) => {
+    if (!item.variant) {
+      logger.debug(`item ${stringifyObject(item)} has no variant`);
+      return;
+    }
+
+    // parameter: item_id
+    const id = getItemIdFromShopifyProductVariant(item.variant);
+    if (!id) {
+      logger.debug(
+        `item ${stringifyObject(item)} has neither variant.id nor variant.sku`,
+      );
+      return;
+    }
+
+    // parameter: price
+    const price = item.variant.price.amount;
+
+    // parameter: quantity
+    const quantity = item.quantity;
+
+    contents.push({
+      content_id: id,
+      price: price,
       quantity: quantity,
     });
   });

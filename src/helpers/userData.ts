@@ -139,6 +139,10 @@ export function getTikTokUserDataFromCustomer(): TikTokUserData {
     data.phone_number = prepareTikTokPhoneNumber(customer.phone);
   }
 
+  if (customer?.id) {
+    data.external_id = customer.id;
+  }
+
   return userDataIsPopulated(data) ? data : {};
 }
 

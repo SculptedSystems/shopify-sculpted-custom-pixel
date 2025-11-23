@@ -17,4 +17,5 @@ export interface TikTokContent {
 export interface TikTokUserData extends Record<string, unknown> {
   email?: string;
   phone_number?: string;
+  external_id?: string;
 }

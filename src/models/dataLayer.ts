@@ -24,6 +24,7 @@ interface DataLayerServices {
 }
 
 export interface DataLayerEventMessage extends DataLayerMessage {
+  event_id: string;
   consent: DataLayerConsent;
   data: DataLayerServices;
   user: DataLayerServices;

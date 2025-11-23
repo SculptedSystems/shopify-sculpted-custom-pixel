@@ -36,7 +36,15 @@ export function initializeGTM(): void {
     const dl = l !== "dataLayer" ? `&l=${l}` : "";
 
     gtmScript.async = true;
-    gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
+
+    // Use Stape?
+    if (config.gtm.stape.container.id && config.gtm.stape.container.url) {
+      gtmScript.src =
+        `${config.gtm.stape.container.url}/${config.gtm.stape.container.id}.js?` +
+        i;
+    } else {
+      gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
+    }
 
     firstScript.parentNode.insertBefore(gtmScript, firstScript);
   })(window, document, "script", "dataLayer", config.gtm.id);

@@ -13,7 +13,13 @@ export const config = {
   },
 
   gtm: {
-    id: "GTM-XXXXXXXX",
+    id: process.env["GTM_ID"] || "GTM-XXXXXXXX",
+    stape: {
+      container: {
+        id: process.env["STAPE_CONTAINER_ID"],
+        url: process.env["STAPE_CONTAINER_URL"],
+      },
+    },
   },
 
   platform: {

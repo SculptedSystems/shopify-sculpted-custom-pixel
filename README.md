@@ -32,11 +32,13 @@ into GTM for analytics and advertising workflows.
 
 ### Configure
 
-- edit `src/config.ts` to customize for your use case
+- copy `.env.example` to `.env`
+- edit `.env` to fit your needs
+- edit `src/config.ts` to fit your needs
 
 ### Compile
 
-- run `npm start`
+- run `npm run build`
 - copy the code from `dist/index.js`
 
 ### Publish

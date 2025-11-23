@@ -28,6 +28,9 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
+      - name: Copy env
+        run: cp .env.example .env
+
       - name: Install dependencies
         run: npm ci
 
@@ -102,6 +105,9 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
+      - name: Copy env
+        run: cp .env.example .env
+
       - name: Install dependencies
         run: npm ci
 
@@ -150,14 +156,12 @@ jobs:
             git push origin "$TAG"
           fi
 
-      # ⭐ COMBINED RELEASE + ASSET UPLOAD
+      # RELEASE
       - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
           name: Release v${{ steps.get_version.outputs.version }}
           generate_release_notes: true
-          files: |
-            dist/index.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

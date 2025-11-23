@@ -28,6 +28,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@sculptedsystems/shopify-web-pixels-api-types": "^0.0.4",
+    "@types/node": "^24.10.1",
     "@vitest/coverage-v8": "^4.0.7",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
@@ -39,5 +40,8 @@
     "typescript-eslint": "^8.46.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.7"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
   }
 }

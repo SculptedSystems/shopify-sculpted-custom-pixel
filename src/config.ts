@@ -14,11 +14,16 @@ export const config = {
 
   gtm: {
     id: process.env["GTM_ID"] ?? "GTM-XXXXXXXX",
-    stape: {
-      container: {
-        id: process.env["STAPE_CONTAINER_ID"],
-        url: process.env["STAPE_CONTAINER_URL"],
-      },
+  },
+
+  stape: {
+    enable: process.env["STAPE_ENABLE"]?.toLowerCase() === "true",
+    gtm: {
+      id: process.env["STAPE_GTM_ID"] ?? "XXXXXXXXX",
+    },
+    container: {
+      id: process.env["STAPE_CONTAINER_ID"],
+      domain: process.env["STAPE_CONTAINER_DOMAIN"],
     },
   },
 

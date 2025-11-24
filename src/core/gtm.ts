@@ -38,14 +38,19 @@ export function initializeGTM(): void {
     gtmScript.async = true;
 
     // Use Stape?
-    if (config.gtm.stape.container.id && config.gtm.stape.container.url) {
+    if (config.stape.enable) {
       gtmScript.src =
-        `${config.gtm.stape.container.url}/${config.gtm.stape.container.id}.js?` +
-        i;
+        `${config.stape.container.domain}/${config.stape.container.id}.js?` + i;
     } else {
       gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
     }
 
     firstScript.parentNode.insertBefore(gtmScript, firstScript);
-  })(window, document, "script", "dataLayer", config.gtm.id);
+  })(
+    window,
+    document,
+    "script",
+    "dataLayer",
+    config.stape.enable ? config.stape.gtm.id : config.gtm.id,
+  );
 }

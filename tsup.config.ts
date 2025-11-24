@@ -16,11 +16,13 @@ export default defineConfig({
   platform: "browser",
   define: {
     "process.env.GTM_ID": JSON.stringify(process.env.GTM_ID),
+    "process.env.STAPE_ENABLE": JSON.stringify(process.env.STAPE_ENABLE),
+    "process.env.STAPE_GTM_ID": JSON.stringify(process.env.STAPE_GTM_ID),
     "process.env.STAPE_CONTAINER_ID": JSON.stringify(
       process.env.STAPE_CONTAINER_ID,
     ),
-    "process.env.STAPE_CONTAINER_URL": JSON.stringify(
-      process.env.STAPE_CONTAINER_URL,
+    "process.env.STAPE_CONTAINER_DOMAIN": JSON.stringify(
+      process.env.STAPE_CONTAINER_DOMAIN,
     ),
   },
   banner: {

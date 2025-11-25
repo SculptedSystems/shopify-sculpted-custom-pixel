@@ -8,7 +8,7 @@ export const config = {
   },
 
   shopify: {
-    storeName: init.data.shop.name,
+    storeName: window.initContext.data.shop.name,
     useSku: true,
   },
 

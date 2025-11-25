@@ -89,7 +89,7 @@ function prepareTikTokCheckoutAddressInfoSubmitted(
 
 export function registerCheckoutAddressInfoSubmitted(): void {
   const event = "checkout_address_info_submitted";
-  analytics.subscribe(
+  window.analytics.subscribe(
     event,
     buildEventHandler(event, {
       google: {

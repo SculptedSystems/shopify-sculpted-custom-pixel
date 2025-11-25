@@ -159,7 +159,7 @@ function prepareTikTokProductAddedToCart(
 
 export function registerProductAddedToCart(): void {
   const event = "product_added_to_cart";
-  analytics.subscribe(
+  window.analytics.subscribe(
     event,
     buildEventHandler(event, {
       google: {

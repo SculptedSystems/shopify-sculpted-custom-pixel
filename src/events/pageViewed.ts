@@ -51,7 +51,7 @@ function prepareTikTokPageViewed(
 
 export function registerPageViewed(): void {
   const event = "page_viewed";
-  analytics.subscribe(
+  window.analytics.subscribe(
     event,
     buildEventHandler(event, {
       google: {

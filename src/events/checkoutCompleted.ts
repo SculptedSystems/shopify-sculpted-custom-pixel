@@ -159,7 +159,7 @@ function prepareTikTokCheckoutCompleted(
 
 export function registerCheckoutCompleted(): void {
   const event = "checkout_completed";
-  analytics.subscribe(
+  window.analytics.subscribe(
     event,
     buildEventHandler(event, {
       google: {

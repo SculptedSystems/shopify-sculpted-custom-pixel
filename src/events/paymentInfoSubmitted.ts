@@ -131,7 +131,7 @@ function prepareTikTokPaymentInfoSubmitted(
 
 export function registerPaymentInfoSubmitted(): void {
   const event = "payment_info_submitted";
-  analytics.subscribe(
+  window.analytics.subscribe(
     event,
     buildEventHandler(event, {
       google: {

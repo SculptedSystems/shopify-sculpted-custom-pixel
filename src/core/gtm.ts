@@ -6,11 +6,24 @@ import { config } from "@config";
 import { logger } from "@utils/logger";
 
 export function initializeGTM(): void {
-  // Initialize Data Layer
-  if (!window.dataLayer) {
-    window.dataLayer = [];
+  initializeDataLayer();
+
+  // Load GTM Container
+  if (config.stape.enable) {
+    loadStapeGTM();
+  } else {
+    loadVanillaGTM();
   }
 
+  return;
+}
+
+function initializeDataLayer(): void {
+  window.dataLayer = window.dataLayer || [];
+  return;
+}
+
+function loadVanillaGTM(): void {
   (function (
     w: Window,
     d: Document,
@@ -37,25 +50,35 @@ export function initializeGTM(): void {
 
     gtmScript.async = true;
 
-    // Use Stape?
-    if (config.stape.enable) {
-      const path = init.context.document.location.pathname;
-      const isCheckout = path.startsWith("/checkouts/");
-      if (!isCheckout) {
-        return;
-      }
-      gtmScript.src =
-        `${config.stape.container.domain}/${config.stape.container.id}.js?` + i;
-    } else {
-      gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
-    }
+    gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
 
     firstScript.parentNode.insertBefore(gtmScript, firstScript);
-  })(
-    window,
-    document,
-    "script",
-    "dataLayer",
-    config.stape.enable ? config.stape.gtm.id : config.gtm.id,
-  );
+  })(window, document, "script", "dataLayer", config.gtm.id);
+}
+
+function loadStapeGTM(): void {
+  (function (w: Window, d: Document, s: string, i: string): void {
+    // Initialize GTM event
+    w.dataLayer.push({
+      "gtm.start": new Date().getTime(),
+      event: "gtm.js",
+    });
+
+    // Grab the first <script> tag
+    const firstScript = d.getElementsByTagName(s)[0];
+    if (!firstScript?.parentNode) {
+      logger.warn("No script tag found to insert before.");
+      return;
+    }
+
+    // Create and insert the GTM script
+    const gtmScript = d.createElement(s) as HTMLScriptElement;
+
+    gtmScript.async = true;
+
+    gtmScript.src =
+      `${config.stape.container.domain}/${config.stape.container.id}.js?` + i;
+
+    firstScript.parentNode.insertBefore(gtmScript, firstScript);
+  })(window, document, "script", config.stape.gtm.id);
 }

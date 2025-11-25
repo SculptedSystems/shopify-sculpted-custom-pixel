@@ -55,7 +55,7 @@ function prepareTikTokFormSubmitted(
 
 export function registerFormSubmitted(): void {
   const event = "form_submitted";
-  analytics.subscribe(
+  window.analytics.subscribe(
     event,
     buildEventHandler(event, {
       google: {

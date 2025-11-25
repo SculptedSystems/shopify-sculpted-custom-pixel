@@ -59,9 +59,9 @@ function eventHandler<T extends AnalyticsEvent>(
     message.data.shopify = prepareShopifyEvent(event);
   }
 
-  message.page_location = init.context.document.location.href;
-  message.page_referrer = init.context.document.referrer;
-  message.page_title = init.context.document.title;
+  message.page_location = window.initContext.context.document.location.href;
+  message.page_referrer = window.initContext.context.document.referrer;
+  message.page_title = window.initContext.context.document.title;
 
   dataLayerPush(message);
 }

@@ -94,7 +94,7 @@ function prepareTikTokCheckoutShippingInfoSubmitted(
 
 export function registerCheckoutShippingInfoSubmitted(): void {
   const event = "checkout_shipping_info_submitted";
-  analytics.subscribe(
+  window.analytics.subscribe(
     event,
     buildEventHandler(event, {
       google: {

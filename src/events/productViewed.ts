@@ -141,7 +141,7 @@ function prepareTikTokProductViewed(
 
 export function registerProductViewed(): void {
   const event = "product_viewed";
-  analytics.subscribe(
+  window.analytics.subscribe(
     event,
     buildEventHandler(event, {
       google: {

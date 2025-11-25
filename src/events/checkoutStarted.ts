@@ -129,7 +129,7 @@ function prepareTikTokCheckoutStarted(
 
 export function registerCheckoutStarted(): void {
   const event = "checkout_started";
-  analytics.subscribe(
+  window.analytics.subscribe(
     event,
     buildEventHandler(event, {
       google: {

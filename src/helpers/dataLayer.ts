@@ -8,10 +8,11 @@ export function getDataLayerEventMessage(
     event: eventName,
     event_id: eventId,
     consent: {
-      analytics: init.customerPrivacy.analyticsProcessingAllowed,
-      marketing: init.customerPrivacy.marketingAllowed,
-      preferences: init.customerPrivacy.preferencesProcessingAllowed,
-      sale_of_data: init.customerPrivacy.saleOfDataAllowed,
+      analytics: window.initContext.customerPrivacy.analyticsProcessingAllowed,
+      marketing: window.initContext.customerPrivacy.marketingAllowed,
+      preferences:
+        window.initContext.customerPrivacy.preferencesProcessingAllowed,
+      sale_of_data: window.initContext.customerPrivacy.saleOfDataAllowed,
     },
     data: {},
     user: {},

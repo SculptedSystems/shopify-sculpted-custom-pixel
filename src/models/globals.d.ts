@@ -23,6 +23,9 @@ declare global {
   // ============================
 
   interface Window {
+    analytics: Analytics;
+    browser: Browser;
+    initContext: Init;
     dataLayer: DataLayer;
   }
 }

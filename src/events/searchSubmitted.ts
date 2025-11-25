@@ -76,7 +76,7 @@ function prepareTikTokSearchSubmitted(
 
 export function registerSearchSubmitted(): void {
   const event = "search_submitted";
-  analytics.subscribe(
+  window.analytics.subscribe(
     event,
     buildEventHandler(event, {
       google: {

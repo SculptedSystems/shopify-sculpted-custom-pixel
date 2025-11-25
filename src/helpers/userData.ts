@@ -78,7 +78,7 @@ function prepareTikTokPhoneNumber(phone_number: string): string {
 // Customer
 
 function getCustomer(): Customer | null {
-  return init.data.customer;
+  return window.initContext.data.customer;
 }
 
 function userDataIsPopulated(userData: UserData): boolean {

@@ -36,8 +36,26 @@ export function initializeGTM(): void {
     const dl = l !== "dataLayer" ? `&l=${l}` : "";
 
     gtmScript.async = true;
-    gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
+
+    // Use Stape?
+    if (config.stape.enable) {
+      const path = init.context.document.location.pathname;
+      const isCheckout = path.startsWith("/checkouts/");
+      if (!isCheckout) {
+        return;
+      }
+      gtmScript.src =
+        `${config.stape.container.domain}/${config.stape.container.id}.js?` + i;
+    } else {
+      gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
+    }
 
     firstScript.parentNode.insertBefore(gtmScript, firstScript);
-  })(window, document, "script", "dataLayer", config.gtm.id);
+  })(
+    window,
+    document,
+    "script",
+    "dataLayer",
+    config.stape.enable ? config.stape.gtm.id : config.gtm.id,
+  );
 }

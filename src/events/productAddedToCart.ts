@@ -53,9 +53,6 @@ function prepareGoogleProductAddedToCart(
   );
   const items = getGoogleItemsFromShopifyCheckoutLineItems(lineItems);
 
-  // parameter: user_data
-  const user_data = getGoogleUserDataFromGenericEvent();
-
   return {
     event: "add_to_cart",
     ecommerce: {
@@ -63,7 +60,6 @@ function prepareGoogleProductAddedToCart(
       value: value,
       items: items,
     },
-    user_data: user_data,
   };
 }
 
@@ -100,9 +96,6 @@ function prepareMetaProductAddedToCart(
   // paramater: value
   const value = cartLine.cost.totalAmount.amount;
 
-  // parameter: user_data
-  const user_data = getMetaUserDataFromGenericEvent(event);
-
   return {
     event: "AddToCart",
     content_ids: content_ids,
@@ -110,7 +103,6 @@ function prepareMetaProductAddedToCart(
     contents: contents,
     currency: currency,
     value: value,
-    user_data: user_data,
   };
 }
 
@@ -135,9 +127,8 @@ function prepareTikTokProductAddedToCart(
   const description = cartLine.merchandise.product.title;
 
   // parameter: content_ids
-  const content_ids = [
-    getItemIdFromShopifyProductVariant(cartLine.merchandise),
-  ];
+  const content_id = getItemIdFromShopifyProductVariant(cartLine.merchandise);
+  const content_ids = [content_id];
 
   // parameter: currency
   const currency = cartLine.cost.totalAmount.currencyCode;
@@ -145,8 +136,14 @@ function prepareTikTokProductAddedToCart(
   // parameter: value
   const value = cartLine.cost.totalAmount.amount;
 
-  // parameter: user_data
-  const user_data = getTikTokUserDataFromGenericEvent(event);
+  // parameter: contents
+  const contents = [
+    {
+      content_id: content_id,
+      price: value,
+      quantity: quantity,
+    },
+  ];
 
   return {
     event: "AddToCart",
@@ -156,7 +153,7 @@ function prepareTikTokProductAddedToCart(
     content_ids: content_ids,
     currency: currency,
     value: value,
-    user_data: user_data,
+    contents: contents,
   };
 }
 
@@ -165,9 +162,18 @@ export function registerProductAddedToCart(): void {
   analytics.subscribe(
     event,
     buildEventHandler(event, {
-      google: prepareGoogleProductAddedToCart,
-      meta: prepareMetaProductAddedToCart,
-      tiktok: prepareTikTokProductAddedToCart,
+      google: {
+        dataHandler: prepareGoogleProductAddedToCart,
+        userHandler: getGoogleUserDataFromGenericEvent,
+      },
+      meta: {
+        dataHandler: prepareMetaProductAddedToCart,
+        userHandler: getMetaUserDataFromGenericEvent,
+      },
+      tiktok: {
+        dataHandler: prepareTikTokProductAddedToCart,
+        userHandler: getTikTokUserDataFromGenericEvent,
+      },
     }),
   );
 }

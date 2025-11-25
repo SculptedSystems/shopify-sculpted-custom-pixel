@@ -20,13 +20,9 @@ function prepareGoogleSearchSubmitted(
   // parameter: search_term
   const search_term = eventData.searchResult.query;
 
-  // parameter: user_data
-  const user_data = getGoogleUserDataFromGenericEvent();
-
   return {
     event: "search",
     search_term: search_term,
-    user_data: user_data,
   };
 }
 
@@ -56,15 +52,11 @@ function prepareMetaSearchSubmitted(
   // parameter: search_term
   const search_string = searchResult.query;
 
-  // parameter: user_data
-  const user_data = getMetaUserDataFromGenericEvent(event);
-
   return {
     event: "Search",
     content_ids: content_ids,
     content_type: content_type,
     search_term: search_string,
-    user_data: user_data,
   };
 }
 
@@ -76,13 +68,9 @@ function prepareTikTokSearchSubmitted(
   // parameter: search_term
   const search_term = eventData.searchResult.query;
 
-  // parameter: user_data
-  const user_data = getTikTokUserDataFromGenericEvent(event);
-
   return {
     event: "Search",
     search_term: search_term,
-    user_data: user_data,
   };
 }
 
@@ -91,9 +79,18 @@ export function registerSearchSubmitted(): void {
   analytics.subscribe(
     event,
     buildEventHandler(event, {
-      google: prepareGoogleSearchSubmitted,
-      meta: prepareMetaSearchSubmitted,
-      tiktok: prepareTikTokSearchSubmitted,
+      google: {
+        dataHandler: prepareGoogleSearchSubmitted,
+        userHandler: getGoogleUserDataFromGenericEvent,
+      },
+      meta: {
+        dataHandler: prepareMetaSearchSubmitted,
+        userHandler: getMetaUserDataFromGenericEvent,
+      },
+      tiktok: {
+        dataHandler: prepareTikTokSearchSubmitted,
+        userHandler: getTikTokUserDataFromGenericEvent,
+      },
     }),
   );
 }

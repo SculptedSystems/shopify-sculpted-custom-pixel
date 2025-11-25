@@ -9,6 +9,8 @@ import {
   getContentIdsFromShopifyCheckoutLineItems,
   getGoogleItemsFromShopifyCheckoutLineItems,
   getMetaContentsFromShopifyCheckoutLineItems,
+  getNumItemsFromShopifyCheckoutLineItems,
+  getTikTokContentsFromShopifyCheckoutLineItems,
 } from "@helpers/items";
 import {
   getGoogleUserDataFromCheckoutEvents,
@@ -41,9 +43,6 @@ function prepareGooglePaymentInfoSubmitted(
   // parameter: items
   const items = getGoogleItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
-  // parameter: user_data
-  const user_data = getGoogleUserDataFromCheckoutEvents(event);
-
   return {
     event: "add_payment_info",
     ecommerce: {
@@ -53,7 +52,6 @@ function prepareGooglePaymentInfoSubmitted(
       payment_type: payment_type,
       items: items,
     },
-    user_data: user_data,
   };
 }
 
@@ -79,28 +77,55 @@ function prepareMetaPaymentInfoSubmitted(
   // parameter: value
   const value = checkout.subtotalPrice?.amount;
 
-  // parameter: user_data
-  const user_data = getMetaUserDataFromCheckoutEvents(event);
-
   return {
     event: "AddPaymentInfo",
     content_ids: content_ids,
     contents: contents,
     currency: currency,
     value: value,
-    user_data: user_data,
   };
 }
 
 function prepareTikTokPaymentInfoSubmitted(
   event: PixelEventsPaymentInfoSubmitted,
 ): DataLayerMessage {
-  // parameter: user_data
-  const user_data = getTikTokUserDataFromCheckoutEvents(event);
+  const eventData = event.data;
+  const checkout = eventData.checkout;
+
+  // parameter: content_type
+  const content_type = "product";
+
+  // parameter: quantity
+  const quantity = getNumItemsFromShopifyCheckoutLineItems(checkout.lineItems);
+
+  // parameter: description
+  const description = "Completed Purchase";
+
+  // parameter: content_ids
+  const content_ids = getContentIdsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
+
+  // parameter: currency
+  const currency = checkout.subtotalPrice?.currencyCode;
+
+  // parameter: value
+  const value = checkout.subtotalPrice?.amount || 0;
+
+  // parameter: contents
+  const contents = getTikTokContentsFromShopifyCheckoutLineItems(
+    checkout.lineItems,
+  );
 
   return {
     event: "AddPaymentInfo",
-    user_data: user_data,
+    content_type: content_type,
+    quantity: quantity,
+    description: description,
+    content_ids: content_ids,
+    currency: currency,
+    value: value,
+    contents: contents,
   };
 }
 
@@ -109,9 +134,18 @@ export function registerPaymentInfoSubmitted(): void {
   analytics.subscribe(
     event,
     buildEventHandler(event, {
-      google: prepareGooglePaymentInfoSubmitted,
-      meta: prepareMetaPaymentInfoSubmitted,
-      tiktok: prepareTikTokPaymentInfoSubmitted,
+      google: {
+        dataHandler: prepareGooglePaymentInfoSubmitted,
+        userHandler: getGoogleUserDataFromCheckoutEvents,
+      },
+      meta: {
+        dataHandler: prepareMetaPaymentInfoSubmitted,
+        userHandler: getMetaUserDataFromCheckoutEvents,
+      },
+      tiktok: {
+        dataHandler: prepareTikTokPaymentInfoSubmitted,
+        userHandler: getTikTokUserDataFromCheckoutEvents,
+      },
     }),
   );
 }

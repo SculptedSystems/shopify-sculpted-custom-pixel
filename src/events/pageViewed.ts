@@ -25,37 +25,27 @@ function prepareGooglePageViewed(
   // parameter: page_title
   const page_title = eventContext?.title;
 
-  // parameter: user_data
-  const user_data = getGoogleUserDataFromGenericEvent();
-
   return {
     event: "page_view",
     page_location: page_location,
     page_referrer: page_referrer,
     page_title: page_title,
-    user_data: user_data,
   };
 }
 
-function prepareMetaPageViewed(event: PixelEventsPageViewed): DataLayerMessage {
-  // parameter: user_data
-  const user_data = getMetaUserDataFromGenericEvent(event);
-
+function prepareMetaPageViewed(
+  _event: PixelEventsPageViewed,
+): DataLayerMessage {
   return {
     event: "PageView",
-    user_data: user_data,
   };
 }
 
 function prepareTikTokPageViewed(
-  event: PixelEventsPageViewed,
+  _event: PixelEventsPageViewed,
 ): DataLayerMessage {
-  // parameter: user_data
-  const user_data = getTikTokUserDataFromGenericEvent(event);
-
   return {
     event: "PageView",
-    user_data: user_data,
   };
 }
 
@@ -64,9 +54,18 @@ export function registerPageViewed(): void {
   analytics.subscribe(
     event,
     buildEventHandler(event, {
-      google: prepareGooglePageViewed,
-      meta: prepareMetaPageViewed,
-      tiktok: prepareTikTokPageViewed,
+      google: {
+        dataHandler: prepareGooglePageViewed,
+        userHandler: getGoogleUserDataFromGenericEvent,
+      },
+      meta: {
+        dataHandler: prepareMetaPageViewed,
+        userHandler: getMetaUserDataFromGenericEvent,
+      },
+      tiktok: {
+        dataHandler: prepareTikTokPageViewed,
+        userHandler: getTikTokUserDataFromGenericEvent,
+      },
     }),
   );
 }

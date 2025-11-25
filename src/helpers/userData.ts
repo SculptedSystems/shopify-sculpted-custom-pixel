@@ -3,6 +3,7 @@ import {
   GoogleUserData,
   MetaUserData,
   TikTokUserData,
+  UserData,
 } from "@models";
 import {
   Checkout,
@@ -74,27 +75,17 @@ function prepareTikTokPhoneNumber(phone_number: string): string {
  * Parse User Data Helpers
  */
 
-// Client ID
-
-function getClientId(event: AnalyticsEvent): string {
-  return event.clientId;
-}
-
-export function getMetaUserDataFromClientId(
-  event: AnalyticsEvent,
-): MetaUserData {
-  return {
-    external_id: getClientId(event),
-  };
-}
-
 // Customer
 
 function getCustomer(): Customer | null {
   return init.data.customer;
 }
 
-export function getGoogleUserDataFromCustomer(): GoogleUserData | null {
+function userDataIsPopulated(userData: UserData): boolean {
+  return Object.keys(userData).length > 0;
+}
+
+export function getGoogleUserDataFromCustomer(): GoogleUserData {
   const data: Partial<GoogleUserData> = {};
   const customer = getCustomer();
 
@@ -106,10 +97,10 @@ export function getGoogleUserDataFromCustomer(): GoogleUserData | null {
     data.phone_number = prepareGooglePhoneNumber(customer.phone);
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  return userDataIsPopulated(data) ? data : {};
 }
 
-export function getMetaUserDataFromCustomer(): MetaUserData | null {
+export function getMetaUserDataFromCustomer(): MetaUserData {
   const data: Partial<MetaUserData> = {};
   const customer = getCustomer();
 
@@ -133,10 +124,10 @@ export function getMetaUserDataFromCustomer(): MetaUserData | null {
     data.external_id = customer.id;
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  return userDataIsPopulated(data) ? data : {};
 }
 
-export function getTikTokUserDataFromCustomer(): TikTokUserData | null {
+export function getTikTokUserDataFromCustomer(): TikTokUserData {
   const data: Partial<TikTokUserData> = {};
   const customer = getCustomer();
 
@@ -148,34 +139,32 @@ export function getTikTokUserDataFromCustomer(): TikTokUserData | null {
     data.phone_number = prepareTikTokPhoneNumber(customer.phone);
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  if (customer?.id) {
+    data.external_id = customer.id;
+  }
+
+  return userDataIsPopulated(data) ? data : {};
 }
 
 /**
  * Get User Data from Generic Events
  */
 
-export function getGoogleUserDataFromGenericEvent(): GoogleUserData | null {
+export function getGoogleUserDataFromGenericEvent(
+  _event: AnalyticsEvent,
+): GoogleUserData {
   return getGoogleUserDataFromCustomer();
 }
 
 export function getMetaUserDataFromGenericEvent(
-  event: AnalyticsEvent,
-): MetaUserData | null {
-  const customerUserData = getMetaUserDataFromCustomer();
-
-  if (customerUserData) {
-    return customerUserData;
-  }
-
-  const data = getMetaUserDataFromClientId(event);
-
-  return data;
+  _event: AnalyticsEvent,
+): MetaUserData {
+  return getMetaUserDataFromCustomer();
 }
 
 export function getTikTokUserDataFromGenericEvent(
   _event: AnalyticsEvent,
-): TikTokUserData | null {
+): TikTokUserData {
   return getTikTokUserDataFromCustomer();
 }
 
@@ -197,14 +186,12 @@ function findFirstPhoneNumber(event: PixelEventsFormSubmitted): string | null {
 
 export function getGoogleUserDataFromFormSubmittedEvents(
   event: PixelEventsFormSubmitted,
-): GoogleUserData | null {
-  const customerUserData = getGoogleUserDataFromCustomer();
+): GoogleUserData {
+  const data = getGoogleUserDataFromCustomer();
 
-  if (customerUserData) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
-
-  const data: Partial<GoogleUserData> = {};
 
   const firstEmail = findFirstEmail(event);
   if (firstEmail) {
@@ -216,19 +203,17 @@ export function getGoogleUserDataFromFormSubmittedEvents(
     data.phone_number = prepareGooglePhoneNumber(firstPhone);
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  return userDataIsPopulated(data) ? data : {};
 }
 
 export function getMetaUserDataFromFormSubmittedEvents(
   event: PixelEventsFormSubmitted,
-): MetaUserData | null {
-  const customerUserData = getMetaUserDataFromCustomer();
+): MetaUserData {
+  const data = getMetaUserDataFromCustomer();
 
-  if (customerUserData) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
-
-  const data = getMetaUserDataFromClientId(event);
 
   const firstEmail = findFirstEmail(event);
   if (firstEmail) {
@@ -240,19 +225,17 @@ export function getMetaUserDataFromFormSubmittedEvents(
     data.ph = prepareMetaPhoneNumber(firstPhone);
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  return userDataIsPopulated(data) ? data : {};
 }
 
 export function getTikTokUserDataFromFormSubmittedEvents(
   event: PixelEventsFormSubmitted,
-): TikTokUserData | null {
-  const customerUserData = getTikTokUserDataFromCustomer();
+): TikTokUserData {
+  const data = getTikTokUserDataFromCustomer();
 
-  if (customerUserData) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
-
-  const data: Partial<TikTokUserData> = {};
 
   const firstEmail = findFirstEmail(event);
   if (firstEmail) {
@@ -264,7 +247,7 @@ export function getTikTokUserDataFromFormSubmittedEvents(
     data.phone_number = prepareTikTokPhoneNumber(firstPhone);
   }
 
-  return Object.keys(data).length > 0 ? data : null;
+  return userDataIsPopulated(data) ? data : {};
 }
 
 /**
@@ -414,14 +397,13 @@ export function getGoogleUserDataFromCheckoutEvents(
     | PixelEventsCheckoutShippingInfoSubmitted
     | PixelEventsPaymentInfoSubmitted
     | PixelEventsCheckoutCompleted,
-): GoogleUserData | null {
-  const customerUserData = getGoogleUserDataFromCustomer();
+): GoogleUserData {
+  const data = getGoogleUserDataFromCustomer();
 
-  if (customerUserData) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
 
-  const data: Partial<GoogleUserData> = {};
   const checkout = event.data.checkout;
 
   const email = getEmailFromShopifyCheckout(checkout);
@@ -482,14 +464,13 @@ export function getMetaUserDataFromCheckoutEvents(
     | PixelEventsCheckoutShippingInfoSubmitted
     | PixelEventsPaymentInfoSubmitted
     | PixelEventsCheckoutCompleted,
-): MetaUserData | null {
-  const customerUserData = getMetaUserDataFromCustomer();
+): MetaUserData {
+  const data = getMetaUserDataFromCustomer();
 
-  if (customerUserData) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
 
-  const data = getMetaUserDataFromClientId(event);
   const checkout = event.data.checkout;
 
   const email = getEmailFromShopifyCheckout(checkout);
@@ -543,14 +524,13 @@ export function getTikTokUserDataFromCheckoutEvents(
     | PixelEventsCheckoutShippingInfoSubmitted
     | PixelEventsPaymentInfoSubmitted
     | PixelEventsCheckoutCompleted,
-): TikTokUserData | null {
-  const customerUserData = getTikTokUserDataFromCustomer();
+): TikTokUserData {
+  const data = getTikTokUserDataFromCustomer();
 
-  if (customerUserData) {
-    return customerUserData;
+  if (userDataIsPopulated(data)) {
+    return data;
   }
 
-  const data: Partial<GoogleUserData> = {};
   const checkout = event.data.checkout;
 
   const email = getEmailFromShopifyCheckout(checkout);

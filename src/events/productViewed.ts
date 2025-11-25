@@ -45,9 +45,6 @@ function prepareGoogleProductViewed(
     );
   const items = getGoogleItemsFromShopifyCheckoutLineItems(lineItems);
 
-  // parameter: user_data
-  const user_data = getGoogleUserDataFromGenericEvent();
-
   return {
     event: "view_item",
     ecommerce: {
@@ -55,7 +52,6 @@ function prepareGoogleProductViewed(
       value: value,
       items: items,
     },
-    user_data: user_data,
   };
 }
 
@@ -87,9 +83,6 @@ function prepareMetaProductViewed(
   // parameter: value
   const value = productVariant.price.amount;
 
-  // parameter: user_data
-  const user_data = getMetaUserDataFromGenericEvent(event);
-
   return {
     event: "ViewContent",
     content_ids: content_ids,
@@ -97,7 +90,6 @@ function prepareMetaProductViewed(
     contents: contents,
     currency: currency,
     value: value,
-    user_data: user_data,
   };
 }
 
@@ -117,7 +109,8 @@ function prepareTikTokProductViewed(
   const description = productVariant.product.title;
 
   // paramaeter: content_ids
-  const content_ids = [getItemIdFromShopifyProductVariant(productVariant)];
+  const item_id = getItemIdFromShopifyProductVariant(productVariant);
+  const content_ids = [item_id];
 
   // parameter: currency
   const currency = productVariant.price.currencyCode;
@@ -125,8 +118,14 @@ function prepareTikTokProductViewed(
   // parameter: value
   const value = productVariant.price.amount;
 
-  // parameter: user_data
-  const user_data = getTikTokUserDataFromGenericEvent(event);
+  // paramaeter: contents
+  const contents = [
+    {
+      content_id: item_id,
+      price: value,
+      quantity: quantity,
+    },
+  ];
 
   return {
     event: "ViewContent",
@@ -136,7 +135,7 @@ function prepareTikTokProductViewed(
     content_ids: content_ids,
     currency: currency,
     value: value,
-    user_data: user_data,
+    contents: contents,
   };
 }
 
@@ -145,9 +144,18 @@ export function registerProductViewed(): void {
   analytics.subscribe(
     event,
     buildEventHandler(event, {
-      google: prepareGoogleProductViewed,
-      meta: prepareMetaProductViewed,
-      tiktok: prepareTikTokProductViewed,
+      google: {
+        dataHandler: prepareGoogleProductViewed,
+        userHandler: getGoogleUserDataFromGenericEvent,
+      },
+      meta: {
+        dataHandler: prepareMetaProductViewed,
+        userHandler: getMetaUserDataFromGenericEvent,
+      },
+      tiktok: {
+        dataHandler: prepareTikTokProductViewed,
+        userHandler: getTikTokUserDataFromGenericEvent,
+      },
     }),
   );
 }

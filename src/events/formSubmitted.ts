@@ -19,13 +19,9 @@ function prepareGoogleFormSubmitted(
   // parameter: form_id
   const form_id = eventData.element.id;
 
-  // parameter: user_data
-  const user_data = getGoogleUserDataFromFormSubmittedEvents(event);
-
   return {
     event: "form_submit",
     form_id: form_id,
-    user_data: user_data,
   };
 }
 
@@ -37,13 +33,9 @@ function prepareMetaFormSubmitted(
   // parameter: form_id
   const form_id = eventData.element.id;
 
-  // parameter: user_data
-  const user_data = getMetaUserDataFromFormSubmittedEvents(event);
-
   return {
     event: "FormSubmit",
     form_id: form_id,
-    user_data: user_data,
   };
 }
 
@@ -55,13 +47,9 @@ function prepareTikTokFormSubmitted(
   // parameter: form_id
   const form_id = eventData.element.id;
 
-  // parameter: user_data
-  const user_data = getTikTokUserDataFromFormSubmittedEvents(event);
-
   return {
     event: "FormSubmit",
     form_id: form_id,
-    user_data: user_data,
   };
 }
 
@@ -70,9 +58,18 @@ export function registerFormSubmitted(): void {
   analytics.subscribe(
     event,
     buildEventHandler(event, {
-      google: prepareGoogleFormSubmitted,
-      meta: prepareMetaFormSubmitted,
-      tiktok: prepareTikTokFormSubmitted,
+      google: {
+        dataHandler: prepareGoogleFormSubmitted,
+        userHandler: getGoogleUserDataFromFormSubmittedEvents,
+      },
+      meta: {
+        dataHandler: prepareMetaFormSubmitted,
+        userHandler: getMetaUserDataFromFormSubmittedEvents,
+      },
+      tiktok: {
+        dataHandler: prepareTikTokFormSubmitted,
+        userHandler: getTikTokUserDataFromFormSubmittedEvents,
+      },
     }),
   );
 }

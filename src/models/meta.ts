@@ -13,7 +13,7 @@ export interface MetaContent {
  * Source: https://developers.facebook.com/docs/meta-pixel/advanced/advanced-matching
  */
 
-export interface MetaUserData {
+export interface MetaUserData extends Record<string, unknown> {
   /**
    * Email — unhashed (lowercase) or SHA-256 hashed.
    * Example: "jsmith@example.com" or

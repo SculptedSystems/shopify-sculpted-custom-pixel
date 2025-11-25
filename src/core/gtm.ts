@@ -39,6 +39,11 @@ export function initializeGTM(): void {
 
     // Use Stape?
     if (config.stape.enable) {
+      const path = init.context.document.location.pathname;
+      const isCheckout = path.startsWith("/checkouts/");
+      if (!isCheckout) {
+        return;
+      }
       gtmScript.src =
         `${config.stape.container.domain}/${config.stape.container.id}.js?` + i;
     } else {

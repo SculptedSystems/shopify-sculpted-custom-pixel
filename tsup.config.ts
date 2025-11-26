@@ -18,7 +18,7 @@ export default defineConfig({
     js: `
 /*
 //
-// Shopify Customer Events Custom Web Pixel
+// Sculpted Customer Events Custom Web Pixel
 // v${process.env.npm_package_version}
 // Compiled @ ${new Date().toISOString()}
 //

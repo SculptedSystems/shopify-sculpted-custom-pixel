@@ -26,7 +26,7 @@ export default defineConfig({
   },
   define: {
     // Pixel //
-    /* */
+
     "process.env.PIXEL_LOGLEVEL": JSON.stringify(process.env.PIXEL_LOGLEVEL),
 
     // Shopify //
@@ -36,6 +36,13 @@ export default defineConfig({
     // GTM //
 
     "process.env.GTM_ID": JSON.stringify(process.env.GTM_ID),
+
+    "process.env.GTM_EVENT_PREFIX": JSON.stringify(
+      process.env.GTM_EVENT_PREFIX,
+    ),
+    "process.env.GTM_EVENT_POSTFIX": JSON.stringify(
+      process.env.GTM_EVENT_POSTFIX,
+    ),
 
     // Stape //
 

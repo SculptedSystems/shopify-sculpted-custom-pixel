@@ -10,6 +10,10 @@ export const config = {
 
   gtm: {
     id: process.env["GTM_ID"] ?? "GTM-XXXXXXXX",
+    event: {
+      prefix: process.env["GTM_EVENT_PREFIX"],
+      postfix: process.env["GTM_EVENT_POSTFIX"],
+    },
   },
 
   stape: {
@@ -30,7 +34,7 @@ export const config = {
     tiktok: process.env["PLATFORM_TIKTOK"]?.toLowerCase() === "true",
   },
 
-  events: {
+  event: {
     checkoutAddressInfoSubmitted:
       process.env["EVENT_CHECKOUTADDRESSINFOSUBMITTED"]?.toLowerCase() ===
       "true",

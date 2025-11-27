@@ -26,7 +26,10 @@ function eventHandler<T extends AnalyticsEvent>(
   eventName: string,
   serviceHandlers: ServiceHandlers<T>,
 ): void {
-  const message = getDataLayerEventMessage(`shopify_${eventName}`, event.id);
+  const message = getDataLayerEventMessage(
+    `${config.gtm.event.prefix}${eventName}${config.gtm.event.postfix}`,
+    event.id,
+  );
 
   if (config.platform.google) {
     if (serviceHandlers.google?.dataHandler) {

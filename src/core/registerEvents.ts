@@ -13,37 +13,37 @@ import { registerProductViewed } from "@events/productViewed";
 import { registerSearchSubmitted } from "@events/searchSubmitted";
 
 export function registerEvents(): void {
-  if (config.events.checkoutAddressInfoSubmitted) {
+  if (config.event.checkoutAddressInfoSubmitted) {
     registerCheckoutAddressInfoSubmitted();
   }
-  if (config.events.checkoutCompleted) {
+  if (config.event.checkoutCompleted) {
     registerCheckoutCompleted();
   }
-  if (config.events.checkoutContactInfoSubmitted) {
+  if (config.event.checkoutContactInfoSubmitted) {
     registerCheckoutContactInfoSubmitted();
   }
-  if (config.events.checkoutShippingInfoSubmitted) {
+  if (config.event.checkoutShippingInfoSubmitted) {
     registerCheckoutShippingInfoSubmitted();
   }
-  if (config.events.checkoutStarted) {
+  if (config.event.checkoutStarted) {
     registerCheckoutStarted();
   }
-  if (config.events.formSubmitted) {
+  if (config.event.formSubmitted) {
     registerFormSubmitted();
   }
-  if (config.events.pageViewed) {
+  if (config.event.pageViewed) {
     registerPageViewed();
   }
-  if (config.events.paymentInfoSubmitted) {
+  if (config.event.paymentInfoSubmitted) {
     registerPaymentInfoSubmitted();
   }
-  if (config.events.productAddedToCart) {
+  if (config.event.productAddedToCart) {
     registerProductAddedToCart();
   }
-  if (config.events.productViewed) {
+  if (config.event.productViewed) {
     registerProductViewed();
   }
-  if (config.events.searchSubmitted) {
+  if (config.event.searchSubmitted) {
     registerSearchSubmitted();
   }
 }

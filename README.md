@@ -34,7 +34,6 @@ into GTM for analytics and advertising workflows.
 
 - copy `.env.example` to `.env`
 - edit `.env` to fit your needs
-- edit `src/config.ts` to fit your needs
 
 ### Compile
 

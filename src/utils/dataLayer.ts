@@ -5,5 +5,6 @@ import { stringifyObject } from "@utils/stringify";
 export function dataLayerPush(message: DataLayerMessage): void {
   logger.info(`Pushing Message to Data Layer -> ${stringifyObject(message)}`);
 
-  window.dataLayer.push(message);
+  //window.dataLayer.push(message);
+  window.parent.postMessage(message, init.context.document.location.href);
 }

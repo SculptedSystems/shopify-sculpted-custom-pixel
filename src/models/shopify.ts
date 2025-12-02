@@ -28,7 +28,7 @@ import type {
   PixelEventsAdvancedDomScrolled,
   PixelEventsAdvancedDomSelectionChanged,
   PixelEventsAdvancedDomWindowResized,
-} from "@sculptedsystems/shopify-web-pixels-api-types";
+} from "@shopify/web-pixels-extension";
 
 export type AnalyticsEvent =
   | PixelEventsPageViewed

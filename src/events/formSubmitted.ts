@@ -1,7 +1,7 @@
 // https://shopify.dev/docs/api/web-pixels-api/dom-events/form_submitted
 
 import { DataLayerMessage } from "@models";
-import { PixelEventsFormSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
+import { PixelEventsFormSubmitted } from "@shopify/web-pixels-extension";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 

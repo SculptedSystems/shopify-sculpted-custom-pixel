@@ -1,11 +1,7 @@
 // ================================================
 //   Global Declarations
 // ================================================
-import {
-  Analytics,
-  Browser,
-  Init,
-} from "@sculptedsystems/shopify-web-pixels-api-types";
+import { Analytics, Browser, Init } from "@shopify/web-pixels-extension";
 
 import { DataLayer } from "@models";
 

@@ -2,7 +2,7 @@ import {
   CheckoutLineItem,
   DiscountAllocation,
   MoneyV2,
-} from "@sculptedsystems/shopify-web-pixels-api-types";
+} from "@shopify/web-pixels-extension";
 
 export type PartialCheckoutLineItem = Pick<
   CheckoutLineItem,

@@ -68,6 +68,10 @@ export default defineConfig({
 
     // Events //
 
+    "process.env.EVENT_VISITORCONSENTCOLLECTED": JSON.stringify(
+      process.env.EVENT_VISITORCONSENTCOLLECTED,
+    ),
+
     "process.env.EVENT_PAGEVIEWED": JSON.stringify(
       process.env.EVENT_PAGEVIEWED,
     ),

@@ -2,7 +2,7 @@ import { DataLayerEventMessage } from "@models";
 
 export function getDataLayerEventMessage(
   eventName: string,
-  eventId: string,
+  eventId: string | undefined,
 ): DataLayerEventMessage {
   return {
     event: eventName,

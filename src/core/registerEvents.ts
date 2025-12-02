@@ -11,8 +11,12 @@ import { registerPaymentInfoSubmitted } from "@events/paymentInfoSubmitted";
 import { registerProductAddedToCart } from "@events/productAddedToCart";
 import { registerProductViewed } from "@events/productViewed";
 import { registerSearchSubmitted } from "@events/searchSubmitted";
+import { registerVisitorConsentCollected } from "@events/visitorConsentCollected";
 
 export function registerEvents(): void {
+  if (config.event.visitorConsentCollected) {
+    registerVisitorConsentCollected();
+  }
   if (config.event.checkoutAddressInfoSubmitted) {
     registerCheckoutAddressInfoSubmitted();
   }

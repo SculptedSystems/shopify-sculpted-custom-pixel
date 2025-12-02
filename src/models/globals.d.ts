@@ -1,7 +1,12 @@
 // ================================================
 //   Global Declarations
 // ================================================
-import { Analytics, Browser, Init } from "@shopify/web-pixels-extension";
+import {
+  Analytics,
+  Browser,
+  CustomerPrivacyEventBus,
+  Init,
+} from "@shopify/web-pixels-extension";
 
 import { DataLayer } from "@models";
 
@@ -12,6 +17,7 @@ declare global {
 
   const analytics: Analytics;
   const browser: Browser;
+  const customerPrivacy: CustomerPrivacyEventBus = api.customerPrivacy;
   const init: Init;
 
   // ============================

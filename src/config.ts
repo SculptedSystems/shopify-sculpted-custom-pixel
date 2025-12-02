@@ -35,6 +35,8 @@ export const config = {
   },
 
   event: {
+    visitorConsentCollected:
+      process.env["EVENT_VISITORCONSENTCOLLECTED"]?.toLowerCase() === "true",
     checkoutAddressInfoSubmitted:
       process.env["EVENT_CHECKOUTADDRESSINFOSUBMITTED"]?.toLowerCase() ===
       "true",

@@ -4,7 +4,7 @@ import {
   PartialCheckoutLineItemWithDiscountAllocations,
   DataLayerMessage,
 } from "@models";
-import { PixelEventsProductViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
+import { PixelEventsProductViewed } from "@shopify/web-pixels-extension";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 

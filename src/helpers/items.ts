@@ -6,7 +6,7 @@ import {
   PartialCheckoutLineItemWithDiscountAllocations,
   PartialCheckoutLineItemWithFinalLinePrice,
 } from "@models";
-import { ProductVariant } from "@sculptedsystems/shopify-web-pixels-api-types";
+import { ProductVariant } from "@shopify/web-pixels-extension";
 
 import { config } from "@config";
 

@@ -1,7 +1,7 @@
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/page_viewed
 
 import { DataLayerMessage } from "@models";
-import { PixelEventsPageViewed } from "@sculptedsystems/shopify-web-pixels-api-types";
+import { PixelEventsPageViewed } from "@shopify/web-pixels-extension";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 

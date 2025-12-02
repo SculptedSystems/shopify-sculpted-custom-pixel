@@ -15,7 +15,7 @@ import {
   PixelEventsCheckoutStarted,
   PixelEventsFormSubmitted,
   PixelEventsPaymentInfoSubmitted,
-} from "@sculptedsystems/shopify-web-pixels-api-types";
+} from "@shopify/web-pixels-extension";
 
 /**
  * Format Parsed User Data

@@ -1,7 +1,7 @@
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/search_submitted
 
 import { DataLayerMessage, PartialCheckoutLineItem } from "@models";
-import { PixelEventsSearchSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
+import { PixelEventsSearchSubmitted } from "@shopify/web-pixels-extension";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 

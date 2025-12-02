@@ -1,6 +1,6 @@
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_contact_info_submitted
 
-import { PixelEventsCheckoutContactInfoSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
+import { PixelEventsCheckoutContactInfoSubmitted } from "@shopify/web-pixels-extension";
 import { DataLayerMessage } from "@models";
 
 import { buildEventHandler } from "@utils/buildEventHandler";

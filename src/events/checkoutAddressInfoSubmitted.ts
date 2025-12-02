@@ -1,7 +1,7 @@
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_address_info_submitted
 
 import { DataLayerMessage } from "@models";
-import { PixelEventsCheckoutAddressInfoSubmitted } from "@sculptedsystems/shopify-web-pixels-api-types";
+import { PixelEventsCheckoutAddressInfoSubmitted } from "@shopify/web-pixels-extension";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 

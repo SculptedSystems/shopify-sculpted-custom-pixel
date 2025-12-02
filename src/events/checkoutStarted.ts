@@ -1,7 +1,7 @@
 // https://shopify.dev/docs/api/web-pixels-api/standard-events/checkout_started
 
 import { DataLayerMessage } from "@models";
-import { PixelEventsCheckoutStarted } from "@sculptedsystems/shopify-web-pixels-api-types";
+import { PixelEventsCheckoutStarted } from "@shopify/web-pixels-extension";
 
 import { buildEventHandler } from "@utils/buildEventHandler";
 

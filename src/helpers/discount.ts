@@ -1,7 +1,7 @@
 import {
   DiscountAllocation,
   DiscountApplication,
-} from "@sculptedsystems/shopify-web-pixels-api-types";
+} from "@shopify/web-pixels-extension";
 
 function discountApplicationIsWholeCart(
   discountApplication: DiscountApplication,

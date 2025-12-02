@@ -1,6 +1,6 @@
 {
   "name": "shopify-gtm-custom-pixel",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "Apache-2.0",
   "author": "Sculpted Systems LLC",
   "main": "dist/index.js",
@@ -17,17 +17,17 @@
     "test:coverage": "vitest run --config ./vitest.config.ts --coverage",
     "build": "tsup"
   },
-  "homepage": "https://github.com/SculptedSystems/shopify-custom-pixels#readme",
+  "homepage": "https://github.com/SculptedSystems/shopify-custom-pixel#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SculptedSystems/shopify-custom-pixels.git"
+    "url": "git+https://github.com/SculptedSystems/shopify-custom-pixel.git"
   },
   "bugs": {
-    "url": "https://github.com/SculptedSystems/shopify-custom-pixels/issues"
+    "url": "https://github.com/SculptedSystems/shopify-custom-pixel/issues"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
-    "@sculptedsystems/shopify-web-pixels-api-types": "^0.0.4",
+    "@shopify/web-pixels-extension": "^2.18.0",
     "@types/node": "^24.10.1",
     "@vitest/coverage-v8": "^4.0.7",
     "eslint": "^9.39.1",

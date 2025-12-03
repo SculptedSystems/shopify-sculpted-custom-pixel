@@ -3,9 +3,15 @@
 // ============================
 
 import { config } from "@config";
+import { isCheckout } from "@utils/isCheckout";
 import { logger } from "@utils/logger";
 
 export function initializeGTM(): void {
+  // Skip initialize on non-checkout pages
+  if (!isCheckout()) {
+    return;
+  }
+
   // Initialize Data Layer
   if (!window.dataLayer) {
     window.dataLayer = [];

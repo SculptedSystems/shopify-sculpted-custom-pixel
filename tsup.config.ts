@@ -18,7 +18,7 @@ export default defineConfig({
     js: `
 /*
 //
-// Sculpted Customer Events Custom Web Pixel
+// Sculpted Custom Pixel
 // v${process.env.npm_package_version}
 // Compiled @ ${new Date().toISOString()}
 //

@@ -1,10 +1,10 @@
-# Shopify GTM Custom Pixel for Customer Events
+# Shopify Sculpted Custom Pixel
 
 ## Background
 
 ### Purpose
 
-This project provides a Custom Pixel for Shopify's Customer Events.
+This project provides a Custom Pixel for tracking Shopify's Customer Events.
 
 The Pixel captures store events in the browser and sends them to Google Tag Manager (GTM).
 
@@ -26,8 +26,8 @@ into GTM for analytics and advertising workflows.
 
 ### Set Up
 
-- run `git clone https://github.com/SculptedSystems/shopify-gtm-custom-pixel`
-- run `cd shopify-gtm-custom-pixel`
+- run `git clone https://github.com/SculptedSystems/shopify-sculpted-custom-pixel`
+- run `cd shopify-sculpted-custom-pixel`
 - run `npm install`
 
 ### Configure

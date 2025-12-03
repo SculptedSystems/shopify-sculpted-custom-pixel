@@ -46,7 +46,8 @@ export function initializeGTM(): void {
     // Use Stape?
     if (config.stape.enable) {
       gtmScript.src =
-        `${config.stape.container.domain}/${config.stape.container.id}.js?` + i;
+        `https://${config.stape.container.domain}/${config.stape.container.id}.js?` +
+        i;
     } else {
       gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
     }

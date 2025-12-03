@@ -3,9 +3,15 @@
 // ============================
 
 import { config } from "@config";
+import { isCheckout } from "@utils/isCheckout";
 import { logger } from "@utils/logger";
 
 export function initializeGTM(): void {
+  // Skip initialize on non-checkout pages
+  if (!isCheckout()) {
+    return;
+  }
+
   // Initialize Data Layer
   if (!window.dataLayer) {
     window.dataLayer = [];
@@ -40,7 +46,8 @@ export function initializeGTM(): void {
     // Use Stape?
     if (config.stape.enable) {
       gtmScript.src =
-        `${config.stape.container.domain}/${config.stape.container.id}.js?` + i;
+        `https://${config.stape.container.domain}/${config.stape.container.id}.js?` +
+        i;
     } else {
       gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
     }

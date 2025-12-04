@@ -1,7 +1,7 @@
-export function getEnvString(varName: string, fallback = ""): string {
-  return process.env[varName] ?? fallback;
+export function getEnvString(val: string): string {
+  return val;
 }
 
-export function getEnvBoolean(varName: string): boolean {
-  return process.env[varName]?.toLowerCase() === "true";
+export function getEnvBoolean(val: string): boolean {
+  return val.toLowerCase() === "true";
 }

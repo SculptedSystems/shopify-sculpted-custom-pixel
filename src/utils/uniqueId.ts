@@ -1,4 +1,4 @@
 export function getUniqueID(): string {
-  return "";
+  const uuid = crypto.randomUUID();
+  return `sc-${uuid}`;
 }
-// TODO:

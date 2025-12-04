@@ -12,7 +12,7 @@ import { getDataLayerEventMessage } from "@helpers/dataLayer";
 export function registerVisitorConsentCollected(): void {
   const event = "visitorConsentCollected";
 
-  customerPrivacy.subscribe(event, (event: CustomerPrivacyPayload) => {
+  api.customerPrivacy.subscribe(event, (event: CustomerPrivacyPayload) => {
     const eventName = `${config.gtm.event.prefix}visitor_consent_collected${config.gtm.event.postfix}`;
     const eventId = getUniqueID();
 

@@ -8,16 +8,22 @@ import { dataLayerPush } from "@utils/dataLayer";
 import { getUniqueID } from "@utils/uniqueId";
 
 import { getDataLayerEventMessage } from "@helpers/dataLayer";
+import { isCheckout } from "@utils/isCheckout";
 
 export function registerVisitorConsentCollected(): void {
+  const eventName = `${config.gtm.event.prefix}visitor_consent_collected${config.gtm.event.postfix}`;
+  const eventId = getUniqueID();
+  const message = getDataLayerEventMessage(eventName, eventId);
+
+  if (isCheckout()) {
+    // Shopify doesn't emit "visitorConsentCollected" on checkout pages
+    // so we are pushing this event manually as a work-around
+    dataLayerPush(message);
+    return;
+  }
+
   const event = "visitorConsentCollected";
-
   api.customerPrivacy.subscribe(event, (event: CustomerPrivacyPayload) => {
-    const eventName = `${config.gtm.event.prefix}visitor_consent_collected${config.gtm.event.postfix}`;
-    const eventId = getUniqueID();
-
-    const message = getDataLayerEventMessage(eventName, eventId);
-
     message.consent = {
       analytics: event.customerPrivacy.analyticsProcessingAllowed,
       marketing: event.customerPrivacy.marketingAllowed,

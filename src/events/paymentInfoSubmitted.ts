@@ -99,7 +99,7 @@ function prepareTikTokPaymentInfoSubmitted(
   const quantity = getNumItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   // parameter: description
-  const description = "Completed Purchase";
+  const description = "Add Payment Info";
 
   // parameter: content_ids
   const content_ids = getContentIdsFromShopifyCheckoutLineItems(

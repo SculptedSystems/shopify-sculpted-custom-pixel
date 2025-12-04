@@ -98,7 +98,7 @@ function prepareTikTokCheckoutStarted(
   const quantity = getNumItemsFromShopifyCheckoutLineItems(checkout.lineItems);
 
   // parameter: description
-  const description = "Completed Purchase";
+  const description = "Start Checkout";
 
   // parameter: content_ids
   const content_ids = getContentIdsFromShopifyCheckoutLineItems(

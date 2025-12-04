@@ -68,14 +68,15 @@ export default defineConfig({
 
     // Events //
 
+    "process.env.EVENT_VISITORCONSENTCOLLECTED": JSON.stringify(
+      process.env.EVENT_VISITORCONSENTCOLLECTED,
+    ),
     "process.env.EVENT_PAGEVIEWED": JSON.stringify(
       process.env.EVENT_PAGEVIEWED,
     ),
-
     "process.env.EVENT_FORMSUBMITTED": JSON.stringify(
       process.env.EVENT_FORMSUBMITTED,
     ),
-
     "process.env.EVENT_SEARCHSUBMITTED": JSON.stringify(
       process.env.EVENT_SEARCHSUBMITTED,
     ),
@@ -85,11 +86,9 @@ export default defineConfig({
     "process.env.EVENT_PRODUCTADDEDTOCART": JSON.stringify(
       process.env.EVENT_PRODUCTADDEDTOCART,
     ),
-
     "process.env.EVENT_CHECKOUTSTARTED": JSON.stringify(
       process.env.EVENT_CHECKOUTSTARTED,
     ),
-
     "process.env.EVENT_CHECKOUTCONTACTINFOSUBMITTED": JSON.stringify(
       process.env.EVENT_CHECKOUTCONTACTINFOSUBMITTED,
     ),
@@ -102,7 +101,6 @@ export default defineConfig({
     "process.env.EVENT_PAYMENTINFOSUBMITTED": JSON.stringify(
       process.env.EVENT_PAYMENTINFOSUBMITTED,
     ),
-
     "process.env.EVENT_CHECKOUTCOMPLETED": JSON.stringify(
       process.env.EVENT_CHECKOUTCOMPLETED,
     ),

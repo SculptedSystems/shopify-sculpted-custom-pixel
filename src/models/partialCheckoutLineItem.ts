@@ -9,12 +9,10 @@ export type PartialCheckoutLineItem = Pick<
   "quantity" | "variant"
 >;
 
-export interface PartialCheckoutLineItemWithDiscountAllocations
-  extends PartialCheckoutLineItem {
+export interface PartialCheckoutLineItemWithDiscountAllocations extends PartialCheckoutLineItem {
   discountAllocations: DiscountAllocation[];
 }
 
-export interface PartialCheckoutLineItemWithFinalLinePrice
-  extends PartialCheckoutLineItemWithDiscountAllocations {
+export interface PartialCheckoutLineItemWithFinalLinePrice extends PartialCheckoutLineItemWithDiscountAllocations {
   finalLinePrice: MoneyV2 | null;
 }

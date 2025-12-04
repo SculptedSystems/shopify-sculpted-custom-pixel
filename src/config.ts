@@ -2,58 +2,58 @@ import { getEnvBoolean, getEnvString } from "@utils/env";
 
 export const config = {
   pixel: {
-    loglevel: getEnvString("PIXEL_LOGLEVEL"),
+    loglevel: getEnvString(__PIXEL_LOGLEVEL__),
   },
 
   shopify: {
     storeName: init.data.shop.name,
-    useSku: getEnvBoolean("SHOPIFY_USESKU"),
+    useSku: getEnvBoolean(__SHOPIFY_USESKU__),
   },
 
   gtm: {
-    id: getEnvString("GTM_ID", "GTM-XXXXXXXX"),
+    id: getEnvString(__GTM_ID__),
     event: {
-      prefix: getEnvString("GTM_EVENT_PREFIX"),
-      postfix: getEnvString("GTM_EVENT_POSTFIX"),
+      prefix: getEnvString(__GTM_EVENT_PREFIX__),
+      postfix: getEnvString(__GTM_EVENT_POSTFIX__),
     },
   },
 
   stape: {
-    enable: getEnvBoolean("STAPE_ENABLE"),
+    enable: getEnvBoolean(__STAPE_ENABLE__),
     gtm: {
-      id: getEnvString("STAPE_GTM_ID", "XXXXXXXXX"),
+      id: getEnvString(__STAPE_GTM_ID__),
     },
     container: {
-      id: getEnvString("STAPE_CONTAINER_ID"),
-      domain: getEnvString("STAPE_CONTAINER_DOMAIN"),
+      id: getEnvString(__STAPE_CONTAINER_ID__),
+      domain: getEnvString(__STAPE_CONTAINER_DOMAIN__),
     },
   },
 
   platform: {
-    shopify: getEnvBoolean("PLATFORM_SHOPIFY"),
-    google: getEnvBoolean("PLATFORM_GOOGLE"),
-    meta: getEnvBoolean("PLATFORM_META"),
-    tiktok: getEnvBoolean("PLATFORM_TIKTOK"),
+    shopify: getEnvBoolean(__PLATFORM_SHOPIFY__),
+    google: getEnvBoolean(__PLATFORM_GOOGLE__),
+    meta: getEnvBoolean(__PLATFORM_META__),
+    tiktok: getEnvBoolean(__PLATFORM_TIKTOK__),
   },
 
   event: {
-    visitorConsentCollected: getEnvBoolean("EVENT_VISITORCONSENTCOLLECTED"),
-    pageViewed: getEnvBoolean("EVENT_PAGEVIEWED"),
-    formSubmitted: getEnvBoolean("EVENT_FORMSUBMITTED"),
-    searchSubmitted: getEnvBoolean("EVENT_SEARCHSUBMITTED"),
-    productViewed: getEnvBoolean("EVENT_PRODUCTVIEWED"),
-    productAddedToCart: getEnvBoolean("EVENT_PRODUCTADDEDTOCART"),
-    checkoutStarted: getEnvBoolean("EVENT_CHECKOUTSTARTED"),
+    visitorConsentCollected: getEnvBoolean(__EVENT_VISITORCONSENTCOLLECTED__),
+    pageViewed: getEnvBoolean(__EVENT_PAGEVIEWED__),
+    formSubmitted: getEnvBoolean(__EVENT_FORMSUBMITTED__),
+    searchSubmitted: getEnvBoolean(__EVENT_SEARCHSUBMITTED__),
+    productViewed: getEnvBoolean(__EVENT_PRODUCTVIEWED__),
+    productAddedToCart: getEnvBoolean(__EVENT_PRODUCTADDEDTOCART__),
+    checkoutStarted: getEnvBoolean(__EVENT_CHECKOUTSTARTED__),
     checkoutContactInfoSubmitted: getEnvBoolean(
-      "EVENT_CHECKOUTCONTACTINFOSUBMITTED",
+      __EVENT_CHECKOUTCONTACTINFOSUBMITTED__,
     ),
     checkoutAddressInfoSubmitted: getEnvBoolean(
-      "EVENT_CHECKOUTADDRESSINFOSUBMITTED",
+      __EVENT_CHECKOUTADDRESSINFOSUBMITTED__,
     ),
     checkoutShippingInfoSubmitted: getEnvBoolean(
-      "EVENT_CHECKOUTSHIPPINGINFOSUBMITTED",
+      __EVENT_CHECKOUTSHIPPINGINFOSUBMITTED__,
     ),
-    paymentInfoSubmitted: getEnvBoolean("EVENT_PAYMENTINFOSUBMITTED"),
-    checkoutCompleted: getEnvBoolean("EVENT_CHECKOUTCOMPLETED"),
+    paymentInfoSubmitted: getEnvBoolean(__EVENT_PAYMENTINFOSUBMITTED__),
+    checkoutCompleted: getEnvBoolean(__EVENT_CHECKOUTCOMPLETED__),
   },
 } as const;

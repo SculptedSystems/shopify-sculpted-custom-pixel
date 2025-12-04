@@ -35,27 +35,29 @@ export const config = {
   },
 
   event: {
-    checkoutAddressInfoSubmitted:
-      process.env["EVENT_CHECKOUTADDRESSINFOSUBMITTED"]?.toLowerCase() ===
-      "true",
-    checkoutCompleted:
-      process.env["EVENT_CHECKOUTCOMPLETED"]?.toLowerCase() === "true",
+    visitorConsentCollected:
+      process.env["EVENT_VISITORCONSENTCOLLECTED"]?.toLowerCase() === "true",
+    pageViewed: process.env["EVENT_PAGEVIEWED"]?.toLowerCase() === "true",
+    formSubmitted: process.env["EVENT_FORMSUBMITTED"]?.toLowerCase() === "true",
+    searchSubmitted:
+      process.env["EVENT_SEARCHSUBMITTED"]?.toLowerCase() === "true",
+    productViewed: process.env["EVENT_PRODUCTVIEWED"]?.toLowerCase() === "true",
+    productAddedToCart:
+      process.env["EVENT_PRODUCTADDEDTOCART"]?.toLowerCase() === "true",
+    checkoutStarted:
+      process.env["EVENT_CHECKOUTSTARTED"]?.toLowerCase() === "true",
     checkoutContactInfoSubmitted:
       process.env["EVENT_CHECKOUTCONTACTINFOSUBMITTED"]?.toLowerCase() ===
+      "true",
+    checkoutAddressInfoSubmitted:
+      process.env["EVENT_CHECKOUTADDRESSINFOSUBMITTED"]?.toLowerCase() ===
       "true",
     checkoutShippingInfoSubmitted:
       process.env["EVENT_CHECKOUTSHIPPINGINFOSUBMITTED"]?.toLowerCase() ===
       "true",
-    checkoutStarted:
-      process.env["EVENT_CHECKOUTSTARTED"]?.toLowerCase() === "true",
-    formSubmitted: process.env["EVENT_FORMSUBMITTED"]?.toLowerCase() === "true",
-    pageViewed: process.env["EVENT_PAGEVIEWED"]?.toLowerCase() === "true",
     paymentInfoSubmitted:
       process.env["EVENT_PAYMENTINFOSUBMITTED"]?.toLowerCase() === "true",
-    productAddedToCart:
-      process.env["EVENT_PRODUCTADDEDTOCART"]?.toLowerCase() === "true",
-    productViewed: process.env["EVENT_PRODUCTVIEWED"]?.toLowerCase() === "true",
-    searchSubmitted:
-      process.env["EVENT_SEARCHSUBMITTED"]?.toLowerCase() === "true",
+    checkoutCompleted:
+      process.env["EVENT_CHECKOUTCOMPLETED"]?.toLowerCase() === "true",
   },
 } as const;

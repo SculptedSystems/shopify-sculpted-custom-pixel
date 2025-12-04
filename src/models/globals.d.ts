@@ -1,9 +1,11 @@
 import { Analytics, Browser, Init } from "@shopify/web-pixels-extension";
+
 import { DataLayer } from "@models";
 
 declare global {
   // Shopify Web Pixels Runtime
 
+  const api;
   const analytics: Analytics;
   const browser: Browser;
   const init: Init;

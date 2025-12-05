@@ -128,7 +128,7 @@ export function getGoogleUserDataFromCustomer(): GoogleUserData {
     data.phone_number = prepareGooglePhoneNumber(customer.phone);
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 export function getMetaUserDataFromCustomer(): MetaUserData {
@@ -155,7 +155,7 @@ export function getMetaUserDataFromCustomer(): MetaUserData {
     data.external_id = customer.id;
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 export function getTikTokUserDataFromCustomer(): TikTokUserData {
@@ -174,7 +174,7 @@ export function getTikTokUserDataFromCustomer(): TikTokUserData {
     data.external_id = customer.id;
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 /**
@@ -234,7 +234,7 @@ export function getGoogleUserDataFromFormSubmittedEvents(
     data.phone_number = prepareGooglePhoneNumber(firstPhone);
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 export function getMetaUserDataFromFormSubmittedEvents(
@@ -256,7 +256,7 @@ export function getMetaUserDataFromFormSubmittedEvents(
     data.ph = prepareMetaPhoneNumber(firstPhone);
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 export function getTikTokUserDataFromFormSubmittedEvents(
@@ -278,7 +278,7 @@ export function getTikTokUserDataFromFormSubmittedEvents(
     data.phone_number = prepareTikTokPhoneNumber(firstPhone);
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 /**

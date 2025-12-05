@@ -24,11 +24,10 @@ interface DataLayerServices {
 }
 
 export interface DataLayerEventMessage extends DataLayerMessage {
-  event_id: string | undefined;
   consent: DataLayerConsent;
   data: DataLayerServices;
   user: DataLayerServices;
-  page_location?: string;
-  page_referrer?: string;
-  page_title?: string;
+  page_location: string;
+  page_referrer: string;
+  page_title: string;
 }

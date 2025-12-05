@@ -1,4 +1,6 @@
-import { Analytics, Browser, Init } from "@shopify/web-pixels-extension";
+import { Analytics, Browser } from "@shopify/web-pixels-extension";
+
+import { Init } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { DataLayer } from "@models";
 
@@ -47,6 +49,11 @@ declare global {
 
   const __STAPE_CONTAINER_ID__;
   const __STAPE_CONTAINER_DOMAIN__;
+
+  // Platform //
+
+  const __CONSENT_PUSHINIT_FRONTEND__;
+  const __CONSENT_PUSHINIT_CHECKOUT__;
 
   // Platform //
 

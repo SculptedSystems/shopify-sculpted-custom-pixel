@@ -29,6 +29,13 @@ export const config = {
     },
   },
 
+  consent: {
+    pushInit: {
+      frontend: getEnvBoolean(__CONSENT_PUSHINIT_FRONTEND__),
+      checkout: getEnvBoolean(__CONSENT_PUSHINIT_CHECKOUT__),
+    },
+  },
+
   platform: {
     shopify: getEnvBoolean(__PLATFORM_SHOPIFY__),
     google: getEnvBoolean(__PLATFORM_GOOGLE__),

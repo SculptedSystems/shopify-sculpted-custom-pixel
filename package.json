@@ -1,6 +1,6 @@
 {
   "name": "shopify-sculpted-custom-pixel",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "license": "Apache-2.0",
   "author": "Sculpted Systems LLC",
   "main": "dist/index.js",
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@sculptedsystems/shopify-web-pixels-api-types": "^0.0.4",
     "@shopify/web-pixels-extension": "^2.18.0",
     "@types/node": "^24.10.1",
     "@vitest/coverage-v8": "^4.0.7",

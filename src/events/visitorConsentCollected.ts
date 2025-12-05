@@ -13,11 +13,12 @@ export function registerVisitorConsentCollected(): void {
   const eventName = `${config.gtm.event.prefix}visitor_consent_collected${config.gtm.event.postfix}`;
   const message = getDataLayerEventMessage(eventName);
 
-  if (isCheckout()) {
-    // Shopify doesn't emit "visitorConsentCollected" on checkout pages
-    // so we are pushing this event manually on registration as a work-around
+  if (config.consent.pushInit.frontend && !isCheckout()) {
     dataLayerPush(message);
-    return;
+  }
+
+  if (config.consent.pushInit.checkout && isCheckout()) {
+    dataLayerPush(message);
   }
 
   const event = "visitorConsentCollected";

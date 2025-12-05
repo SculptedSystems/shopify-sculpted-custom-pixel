@@ -52,6 +52,11 @@ declare global {
 
   // Platform //
 
+  const __CONSENT_PUSHINIT_FRONTEND__;
+  const __CONSENT_PUSHINIT_CHECKOUT__;
+
+  // Platform //
+
   const __PLATFORM_SHOPIFY__;
   const __PLATFORM_GOOGLE__;
   const __PLATFORM_META__;

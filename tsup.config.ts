@@ -51,6 +51,15 @@ export default defineConfig({
       process.env.STAPE_CONTAINER_DOMAIN,
     ),
 
+    // Consent //
+
+    __CONSENT_PUSHINIT_FRONTEND__: JSON.stringify(
+      process.env.CONSENT_PUSHINIT_FRONTEND,
+    ),
+    __CONSENT_PUSHINIT_CHECKOUT__: JSON.stringify(
+      process.env.CONSENT_PUSHINIT_CHECKOUT,
+    ),
+
     // Platform //
 
     __PLATFORM_SHOPIFY__: JSON.stringify(process.env.PLATFORM_SHOPIFY),

@@ -2,11 +2,9 @@ import { DataLayerEventMessage } from "@models";
 
 export function getDataLayerEventMessage(
   eventName: string,
-  eventId: string | undefined,
 ): DataLayerEventMessage {
   return {
     event: eventName,
-    event_id: eventId,
     consent: {
       analytics: init.customerPrivacy.analyticsProcessingAllowed,
       marketing: init.customerPrivacy.marketingAllowed,
@@ -15,5 +13,8 @@ export function getDataLayerEventMessage(
     },
     data: {},
     user: {},
+    page_location: init.context.document.location.href,
+    page_referrer: init.context.document.referrer,
+    page_title: init.context.document.title,
   };
 }

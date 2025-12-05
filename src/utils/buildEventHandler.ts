@@ -12,11 +12,12 @@ import { getDataLayerEventMessage } from "@helpers/dataLayer";
 import { dataLayerPush } from "@utils/dataLayer";
 import { logger } from "@utils/logger";
 import { stringifyObject } from "@utils/stringify";
+import { getShopifyUserDataFromCustomer } from "@helpers/userData";
 
-function prepareShopifyEvent(event: AnalyticsEvent): DataLayerMessage {
+function prepareShopifyEventData(event: AnalyticsEvent): DataLayerMessage {
   return {
+    id: event.id,
     event: event.name,
-    event_id: event.id,
     data: event.data,
   };
 }
@@ -28,7 +29,6 @@ function eventHandler<T extends AnalyticsEvent>(
 ): void {
   const message = getDataLayerEventMessage(
     `${config.gtm.event.prefix}${eventName}${config.gtm.event.postfix}`,
-    event.id,
   );
 
   if (config.platform.google) {
@@ -59,12 +59,9 @@ function eventHandler<T extends AnalyticsEvent>(
   }
 
   if (config.platform.shopify) {
-    message.data.shopify = prepareShopifyEvent(event);
+    message.data.shopify = prepareShopifyEventData(event);
+    message.user.shopify = getShopifyUserDataFromCustomer();
   }
-
-  message.page_location = init.context.document.location.href;
-  message.page_referrer = init.context.document.referrer;
-  message.page_title = init.context.document.title;
 
   dataLayerPush(message);
 }

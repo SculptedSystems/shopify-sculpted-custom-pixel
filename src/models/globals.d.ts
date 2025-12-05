@@ -1,4 +1,6 @@
-import { Analytics, Browser, Init } from "@shopify/web-pixels-extension";
+import { Analytics, Browser } from "@shopify/web-pixels-extension";
+
+import { Init } from "@sculptedsystems/shopify-web-pixels-api-types";
 
 import { DataLayer } from "@models";
 

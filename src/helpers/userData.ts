@@ -2,6 +2,7 @@ import {
   AnalyticsEvent,
   GoogleUserData,
   MetaUserData,
+  ShopifyUserData,
   TikTokUserData,
   UserData,
 } from "@models";
@@ -83,6 +84,36 @@ function getCustomer(): Customer | null {
 
 function userDataIsPopulated(userData: UserData): boolean {
   return Object.keys(userData).length > 0;
+}
+
+export function getShopifyUserDataFromCustomer(): ShopifyUserData {
+  const data: Partial<ShopifyUserData> = {};
+  const customer = getCustomer();
+
+  if (customer?.id) {
+    data.id = customer?.id;
+  }
+
+  if (customer?.firstName) {
+    data.firstName = customer?.firstName;
+  }
+  if (customer?.lastName) {
+    data.lastName = customer?.lastName;
+  }
+
+  if (customer?.email) {
+    data.email = customer?.email;
+  }
+
+  if (customer?.phone) {
+    data.phone = customer?.phone;
+  }
+
+  if (customer?.ordersCount) {
+    data.ordersCount = customer?.ordersCount;
+  }
+
+  return data;
 }
 
 export function getGoogleUserDataFromCustomer(): GoogleUserData {

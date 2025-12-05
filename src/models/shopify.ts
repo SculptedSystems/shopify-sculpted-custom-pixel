@@ -30,6 +30,15 @@ import type {
   PixelEventsAdvancedDomWindowResized,
 } from "@shopify/web-pixels-extension";
 
+export interface ShopifyUserData extends Record<string, unknown> {
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  ordersCount?: number;
+}
+
 export type AnalyticsEvent =
   | PixelEventsPageViewed
   | PixelEventsCartViewed

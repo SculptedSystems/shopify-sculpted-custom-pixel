@@ -2,6 +2,7 @@ import {
   AnalyticsEvent,
   GoogleUserData,
   MetaUserData,
+  ShopifyUserData,
   TikTokUserData,
   UserData,
 } from "@models";
@@ -85,6 +86,36 @@ function userDataIsPopulated(userData: UserData): boolean {
   return Object.keys(userData).length > 0;
 }
 
+export function getShopifyUserDataFromCustomer(): ShopifyUserData {
+  const data: Partial<ShopifyUserData> = {};
+  const customer = getCustomer();
+
+  if (customer?.id) {
+    data.id = customer?.id;
+  }
+
+  if (customer?.firstName) {
+    data.firstName = customer?.firstName;
+  }
+  if (customer?.lastName) {
+    data.lastName = customer?.lastName;
+  }
+
+  if (customer?.email) {
+    data.email = customer?.email;
+  }
+
+  if (customer?.phone) {
+    data.phone = customer?.phone;
+  }
+
+  if (customer?.ordersCount) {
+    data.ordersCount = customer?.ordersCount;
+  }
+
+  return data;
+}
+
 export function getGoogleUserDataFromCustomer(): GoogleUserData {
   const data: Partial<GoogleUserData> = {};
   const customer = getCustomer();
@@ -97,7 +128,7 @@ export function getGoogleUserDataFromCustomer(): GoogleUserData {
     data.phone_number = prepareGooglePhoneNumber(customer.phone);
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 export function getMetaUserDataFromCustomer(): MetaUserData {
@@ -124,7 +155,7 @@ export function getMetaUserDataFromCustomer(): MetaUserData {
     data.external_id = customer.id;
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 export function getTikTokUserDataFromCustomer(): TikTokUserData {
@@ -143,7 +174,7 @@ export function getTikTokUserDataFromCustomer(): TikTokUserData {
     data.external_id = customer.id;
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 /**
@@ -203,7 +234,7 @@ export function getGoogleUserDataFromFormSubmittedEvents(
     data.phone_number = prepareGooglePhoneNumber(firstPhone);
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 export function getMetaUserDataFromFormSubmittedEvents(
@@ -225,7 +256,7 @@ export function getMetaUserDataFromFormSubmittedEvents(
     data.ph = prepareMetaPhoneNumber(firstPhone);
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 export function getTikTokUserDataFromFormSubmittedEvents(
@@ -247,7 +278,7 @@ export function getTikTokUserDataFromFormSubmittedEvents(
     data.phone_number = prepareTikTokPhoneNumber(firstPhone);
   }
 
-  return userDataIsPopulated(data) ? data : {};
+  return data;
 }
 
 /**

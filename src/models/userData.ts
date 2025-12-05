@@ -1,3 +1,12 @@
-import { GoogleUserData, MetaUserData, TikTokUserData } from "@models";
+import {
+  GoogleUserData,
+  MetaUserData,
+  ShopifyUserData,
+  TikTokUserData,
+} from "@models";
 
-export type UserData = GoogleUserData | MetaUserData | TikTokUserData;
+export type UserData =
+  | ShopifyUserData
+  | GoogleUserData
+  | MetaUserData
+  | TikTokUserData;

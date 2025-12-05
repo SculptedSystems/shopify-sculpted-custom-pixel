@@ -1,3 +1,4 @@
+import { CustomerPrivacyData } from "@sculptedsystems/shopify-web-pixels-api-types";
 import type {
   PixelEventsPageViewed,
   PixelEventsCartViewed,
@@ -30,6 +31,10 @@ import type {
   PixelEventsAdvancedDomWindowResized,
 } from "@shopify/web-pixels-extension";
 
+/**
+ * Shopify Web Pixels API - User Data
+ */
+
 export interface ShopifyUserData extends Record<string, unknown> {
   id?: string;
   firstName?: string;
@@ -38,6 +43,31 @@ export interface ShopifyUserData extends Record<string, unknown> {
   phone?: string;
   ordersCount?: number;
 }
+
+/**
+ * Shopify Web Pixels API - Customer Privacy
+ * Source: https://shopify.dev/docs/api/web-pixels-api/standard-api/customerprivacy
+ */
+
+export interface CustomerPrivacy extends Record<string, unknown> {
+  analyticsProcessingAllowed: boolean;
+  marketingAllowed: boolean;
+  preferencesProcessingAllowed: boolean;
+  saleOfDataAllowed: boolean;
+}
+
+export interface PixelEventsVisitorConsentCollected
+  extends Partial<AnalyticsEvent> {
+  id?: string;
+  event?: string;
+  data?: Record<string, unknown>;
+  customerPrivacy: CustomerPrivacyData;
+}
+
+/**
+ * Shopify Web Pixels API - Analytics
+ * Source: https://shopify.dev/docs/api/web-pixels-api/standard-api/analytics
+ */
 
 export type AnalyticsEvent =
   | PixelEventsPageViewed
@@ -70,26 +100,9 @@ export type AnalyticsEvent =
   | PixelEventsAdvancedDomSelectionChanged
   | PixelEventsAdvancedDomWindowResized;
 
-/**
- * Shopify Web Pixels API - Analytics
- * Source: https://shopify.dev/docs/api/web-pixels-api/standard-api/analytics
- */
-
 export interface Analytics {
   subscribe(
     eventName: string,
     event_callback: (event: AnalyticsEvent) => void,
-  ): Promise<void>;
-}
-
-/**
- * Shopify Web Pixels API - Customer Privacy Interface
- * Source: https://shopify.dev/docs/api/web-pixels-api/standard-api/customerprivacy
- */
-
-export interface CustomerPrivacy {
-  subscribe(
-    eventName: string,
-    event_callback: (event: Event) => void,
   ): Promise<void>;
 }

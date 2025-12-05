@@ -1,6 +1,7 @@
 import {
   AnalyticsEvent,
   AnalyticsEventHandler,
+  CustomerPrivacy,
   DataLayerMessage,
   ServiceHandlers,
 } from "@models";
@@ -8,11 +9,11 @@ import {
 import { config } from "@config";
 
 import { getDataLayerEventMessage } from "@helpers/dataLayer";
+import { getShopifyeUserDataFromGenericEvent } from "@helpers/userData";
 
 import { dataLayerPush } from "@utils/dataLayer";
 import { logger } from "@utils/logger";
 import { stringifyObject } from "@utils/stringify";
-import { getShopifyUserDataFromCustomer } from "@helpers/userData";
 
 function prepareShopifyEventData(event: AnalyticsEvent): DataLayerMessage {
   return {
@@ -29,6 +30,7 @@ function eventHandler<T extends AnalyticsEvent>(
 ): void {
   const message = getDataLayerEventMessage(
     `${config.gtm.event.prefix}${eventName}${config.gtm.event.postfix}`,
+    event.customerPrivacy ?? event.customerPrivacy,
   );
 
   if (config.platform.google) {
@@ -60,7 +62,7 @@ function eventHandler<T extends AnalyticsEvent>(
 
   if (config.platform.shopify) {
     message.data.shopify = prepareShopifyEventData(event);
-    message.user.shopify = getShopifyUserDataFromCustomer();
+    message.user.shopify = getShopifyeUserDataFromGenericEvent(event);
   }
 
   dataLayerPush(message);

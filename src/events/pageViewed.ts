@@ -11,7 +11,7 @@ import {
   getTikTokUserDataFromGenericEvent,
 } from "@helpers/userData";
 
-function prepareGooglePageViewed(
+export function prepareGooglePageViewed(
   event: PixelEventsPageViewed,
 ): DataLayerMessage {
   const eventContext = event.context?.document;
@@ -33,7 +33,7 @@ function prepareGooglePageViewed(
   };
 }
 
-function prepareMetaPageViewed(
+export function prepareMetaPageViewed(
   _event: PixelEventsPageViewed,
 ): DataLayerMessage {
   return {
@@ -41,7 +41,7 @@ function prepareMetaPageViewed(
   };
 }
 
-function prepareTikTokPageViewed(
+export function prepareTikTokPageViewed(
   _event: PixelEventsPageViewed,
 ): DataLayerMessage {
   return {

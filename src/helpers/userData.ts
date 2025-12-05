@@ -16,6 +16,7 @@ import {
   PixelEventsCheckoutStarted,
   PixelEventsFormSubmitted,
   PixelEventsPaymentInfoSubmitted,
+  Shop,
 } from "@shopify/web-pixels-extension";
 
 /**
@@ -180,6 +181,12 @@ export function getTikTokUserDataFromCustomer(): TikTokUserData {
 /**
  * Get User Data from Generic Events
  */
+
+export function getShopifyeUserDataFromGenericEvent(
+  _event: AnalyticsEvent,
+): ShopifyUserData {
+  return getShopifyUserDataFromCustomer();
+}
 
 export function getGoogleUserDataFromGenericEvent(
   _event: AnalyticsEvent,

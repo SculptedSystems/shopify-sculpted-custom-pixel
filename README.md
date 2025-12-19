@@ -42,17 +42,17 @@ into GTM for analytics and advertising workflows.
 - copy and paste the following code directly under the web container code
 
 ```html
-    <!--- Begin Sculpted Pixel --->
-    <script>
-      window.dataLayer = window.dataLayer || [];
-  
-      window.addEventListener("message", (event) => {
-        if (event.data?.event) {
-         window.dataLayer.push(event.data);
-        }
-      });
-    </script>
-    <!--- End Sculpted Pixel --->
+<!--- Begin Sculpted Pixel --->
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  window.addEventListener("message", (event) => {
+    if (event.data?.event) {
+      window.dataLayer.push(event.data);
+    }
+  });
+</script>
+<!--- End Sculpted Pixel --->
 ```
 
 ### Customer Events

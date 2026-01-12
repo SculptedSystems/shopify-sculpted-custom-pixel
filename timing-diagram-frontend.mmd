@@ -1,0 +1,66 @@
+---
+config:
+  theme: 'base'
+  themeVariables:
+    darkMode: true
+    background: '#272E33'
+
+    fontFamily: verdana
+    fontSize: 16px
+
+    primaryColor: '#272E33'
+    primaryTextColor: '#A7C080'
+    primaryBorderColor: '#56635F'
+    
+    signalColor: '#56635F'
+    signalTextColor: '#BDC3AF'
+---
+
+sequenceDiagram
+
+actor A1 as User
+participant P0 as Browser
+participant P1 as Shopify
+participant P2 as Consent Management Platform
+participant P11 as Shopify Theme
+participant P3 as Sculpted Pixel
+participant P4 as Data Layer
+participant P5 as Client-Side GTM
+participant P6 as Server-Side GTM
+participant P7 as Stape
+participant P8 as Google
+participant P9 as Meta
+participant P10 as TikTok
+
+A1->>P0: Visit Store Page
+P0->>P1: Request Store Page
+P1->>P11: Load Shopify Theme
+P11->>P7: Load Client-Side GTM
+P7->>P8: Load Client-Side GTM
+P8-->>P0: Load Client-Side GTM
+P5->>P5: Set Consent Defaults
+P11->>P4: Load Data Layer
+P4-->>P0: Load Data Layer
+P1->>P3: Load Sculpted Pixel
+P3-->>P0: Load Sculpted Pixel
+P1->>P2: Load Consent Banner
+P2-->>P0: Load Consent Banner
+A1->>P0: Consent to Tracking
+P0->>P2: Update Consent Preferences
+P2-->>P1: Alert Consent Change
+P1->>P3: Emit User Consent Event
+P3->>P4: Push sculpted_visitor_consent_collected
+P4->>P5: Trigger Consent Update Tag
+P5->>P5: Update Consent Values
+P5->>P4: Push consent_update_signal
+A1->>P0: User Event
+P0->>P1: Send User Event
+P1->>P3: Emit User Event
+P3->>P4: Push User Event
+P4->>P5: Trigger User Event Tags
+P5->>P9: Push Event Data
+P5->>P10: Push Event Data
+P5->>P6: Push Event to Server-Side GTM
+P6->>P8: Push Event Data
+P6->>P9: Push Event Data
+P6->>P10: Push Event Data

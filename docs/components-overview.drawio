@@ -1,0 +1,126 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.3.0">
+  <diagram name="Components-Overview" id="CShmHRCEEVSK43YHtceK">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1920" pageHeight="1080" background="light-dark(#FFFFFF,#272E33)" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="HohgmLtdGHSUcqJvWq7j-1" connectable="0" parent="1" style="group;fontSize=14;fontColor=light-dark(#000000,#A7C080);" value="" vertex="1">
+          <mxGeometry height="917.58" width="1709.47" x="105" y="-999" as="geometry" />
+        </mxCell>
+        <mxCell id="2eSeC_j8VWP0Y65U5GtM-4" parent="HohgmLtdGHSUcqJvWq7j-1" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=1;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;User&#39;s Browser&lt;/span&gt;" vertex="1">
+          <mxGeometry height="917.58" width="817.0261029411765" as="geometry">
+            <mxRectangle height="30" width="120" x="70" y="190" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2eSeC_j8VWP0Y65U5GtM-5" parent="2eSeC_j8VWP0Y65U5GtM-4" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;font&gt;Shopify Store&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="842.1624657534247" width="766.747573529412" x="25.139264705882354" y="50.27835616438357" as="geometry">
+            <mxRectangle height="30" width="110" x="10" y="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2eSeC_j8VWP0Y65U5GtM-9" parent="2eSeC_j8VWP0Y65U5GtM-5" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;Shopify Theme Code&lt;/span&gt;" vertex="1">
+          <mxGeometry height="540.4923287671234" width="326.81044117647065" x="25.139264705882354" y="276.53095890410964" as="geometry">
+            <mxRectangle height="30" width="120" x="10" y="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2eSeC_j8VWP0Y65U5GtM-12" parent="2eSeC_j8VWP0Y65U5GtM-9" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Shopify Frontend&lt;div&gt;Data Layer&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="50.27852941176471" y="62.847945205479455" as="geometry" />
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-7" parent="2eSeC_j8VWP0Y65U5GtM-9" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;div style=&quot;line-height: 100%;&quot;&gt;&lt;font&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;font style=&quot;line-height: 100%;&quot;&gt;Shopify-Frontend&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; font-weight: normal; line-height: 100%;&quot;&gt;GTM Container&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="351.9484931506849" width="267.1046875" x="29.852876838235296" y="163.40465753424658" as="geometry">
+            <mxRectangle height="30" width="230" x="15" y="130" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-8" parent="SPhDwsTGIAFhkpQn96iU-7" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Client-Side&lt;div&gt;GTM Data Tags&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="20.425652573529415" y="50.27835616438357" as="geometry" />
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-9" parent="SPhDwsTGIAFhkpQn96iU-7" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Client-Side&lt;div&gt;Meta Tags&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="20.425652573529415" y="150.8350684931507" as="geometry" />
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-10" parent="SPhDwsTGIAFhkpQn96iU-7" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Client-Side&lt;div&gt;TikTok Tags&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="20.425652573529415" y="251.39178082191782" as="geometry" />
+        </mxCell>
+        <mxCell id="2eSeC_j8VWP0Y65U5GtM-13" parent="2eSeC_j8VWP0Y65U5GtM-5" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;font&gt;Shopify Customer Events Pixels&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="766.7449315068494" width="364.5193382352942" x="377.0889705882354" y="50.27835616438357" as="geometry">
+            <mxRectangle height="30" width="120" x="10" y="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2eSeC_j8VWP0Y65U5GtM-23" parent="2eSeC_j8VWP0Y65U5GtM-13" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;Sculpted Pixel&lt;/span&gt;" vertex="1">
+          <mxGeometry height="691.327397260274" width="314.24080882352945" x="25.139264705882354" y="50.27835616438357" as="geometry" />
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-20" parent="2eSeC_j8VWP0Y65U5GtM-23" style="swimlane;whiteSpace=wrap;html=1;strokeColor=light-dark(#000000,#56635F);perimeterSpacing=0;swimlaneLine=1;fillColor=none;fontColor=light-dark(#000000,#A7C080);strokeWidth=1;rounded=0;glass=0;shadow=1;fontSize=14;" value="&lt;div style=&quot;line-height: 90%;&quot;&gt;&lt;font style=&quot;line-height: 100%;&quot;&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;font&gt;Shopify-Checkout&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; font-weight: normal;&quot;&gt;GTM Container&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="351.9484931506849" width="267.1046875" x="23.56806066176471" y="314.2397260273973" as="geometry">
+            <mxRectangle height="30" width="230" x="15" y="130" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-21" parent="SPhDwsTGIAFhkpQn96iU-20" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Client-Side&lt;div&gt;GTM&amp;nbsp;&lt;span style=&quot;background-color: transparent;&quot;&gt;Data Tags&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="20.425652573529415" y="50.27835616438357" as="geometry" />
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-22" parent="SPhDwsTGIAFhkpQn96iU-20" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Client-Side&lt;div&gt;Meta Tags&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="20.425652573529415" y="150.8350684931507" as="geometry" />
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-23" parent="SPhDwsTGIAFhkpQn96iU-20" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Client-Side&lt;div&gt;TikTok Tags&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="20.425652573529415" y="251.39178082191782" as="geometry" />
+        </mxCell>
+        <mxCell id="2eSeC_j8VWP0Y65U5GtM-24" parent="2eSeC_j8VWP0Y65U5GtM-23" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Shopify Checkout&lt;div&gt;Data Layer&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="43.99371323529412" y="188.54383561643837" as="geometry" />
+        </mxCell>
+        <mxCell id="2eSeC_j8VWP0Y65U5GtM-26" parent="2eSeC_j8VWP0Y65U5GtM-23" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Shopify User&lt;div&gt;Events Listener&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="43.99371323529412" y="75.41753424657534" as="geometry" />
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-1" parent="2eSeC_j8VWP0Y65U5GtM-5" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;font&gt;Shopify Customer Privacy&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="201.11342465753427" width="326.81044117647065" x="25.139264705882354" y="50.27835616438357" as="geometry" />
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-3" parent="SPhDwsTGIAFhkpQn96iU-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;div&gt;&lt;font&gt;Optional Consent&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;Management&amp;nbsp;&lt;span style=&quot;background-color: transparent;&quot;&gt;Platform&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="50.27852941176471" y="75.41753424657534" as="geometry" />
+        </mxCell>
+        <mxCell id="2eSeC_j8VWP0Y65U5GtM-16" parent="HohgmLtdGHSUcqJvWq7j-1" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;Stape.io Servers&lt;/span&gt;" vertex="1">
+          <mxGeometry height="666.19" width="355" x="895" as="geometry" />
+        </mxCell>
+        <mxCell id="2eSeC_j8VWP0Y65U5GtM-17" parent="2eSeC_j8VWP0Y65U5GtM-16" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;Server-Side GTM Container&lt;/span&gt;" vertex="1">
+          <mxGeometry height="452.50520547945206" width="301.6711764705883" x="26.669264705882355" y="188.54383561643837" as="geometry">
+            <mxRectangle height="30" width="110" x="10" y="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-26" parent="2eSeC_j8VWP0Y65U5GtM-17" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Server-Side&lt;div&gt;Google Analytics Tags&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="37.70889705882354" y="50.27835616438357" as="geometry" />
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-27" parent="2eSeC_j8VWP0Y65U5GtM-17" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Server-Side&lt;div&gt;Google Ads&amp;nbsp;&lt;span style=&quot;background-color: transparent;&quot;&gt;Tags&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="37.70889705882354" y="150.8350684931507" as="geometry" />
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-28" parent="2eSeC_j8VWP0Y65U5GtM-17" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Server-Side&lt;div&gt;Tiktok Events API Tags&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="37.70889705882354" y="351.9484931506849" as="geometry" />
+        </mxCell>
+        <mxCell id="SPhDwsTGIAFhkpQn96iU-29" parent="2eSeC_j8VWP0Y65U5GtM-17" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Server-Side&lt;div&gt;Meta Conversion API Tags&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="37.70889705882354" y="251.39178082191782" as="geometry" />
+        </mxCell>
+        <mxCell id="9hDW7NFw5V-hLOcafRcZ-1" parent="2eSeC_j8VWP0Y65U5GtM-16" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Client-Side GTM&lt;div&gt;Proxy&amp;nbsp;&lt;span style=&quot;background-color: transparent;&quot;&gt;Server&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="64.3781617647059" y="75.41753424657534" as="geometry" />
+        </mxCell>
+        <mxCell id="9hDW7NFw5V-hLOcafRcZ-2" parent="HohgmLtdGHSUcqJvWq7j-1" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;Google Servers&lt;/span&gt;" vertex="1">
+          <mxGeometry height="427.36602739726027" width="351.949705882353" x="1335.0002941176474" as="geometry" />
+        </mxCell>
+        <mxCell id="9hDW7NFw5V-hLOcafRcZ-8" parent="9hDW7NFw5V-hLOcafRcZ-2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Client-Side GTM&lt;div&gt;Container Server&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="62.84816176470589" y="75.41753424657534" as="geometry" />
+        </mxCell>
+        <mxCell id="9hDW7NFw5V-hLOcafRcZ-9" parent="9hDW7NFw5V-hLOcafRcZ-2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Google Ads" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="62.84816176470589" y="188.54383561643837" as="geometry" />
+        </mxCell>
+        <mxCell id="9hDW7NFw5V-hLOcafRcZ-10" parent="9hDW7NFw5V-hLOcafRcZ-2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Google Analytics" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="62.84816176470589" y="301.6701369863014" as="geometry" />
+        </mxCell>
+        <mxCell id="9hDW7NFw5V-hLOcafRcZ-11" parent="HohgmLtdGHSUcqJvWq7j-1" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;Meta Servers&lt;/span&gt;" vertex="1">
+          <mxGeometry height="201.11342465753427" width="351.949705882353" x="1335.0002941176474" y="471.3595890410959" as="geometry" />
+        </mxCell>
+        <mxCell id="9hDW7NFw5V-hLOcafRcZ-14" parent="9hDW7NFw5V-hLOcafRcZ-11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="Meta Ads" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="62.84816176470589" y="75.41753424657534" as="geometry" />
+        </mxCell>
+        <mxCell id="9hDW7NFw5V-hLOcafRcZ-15" parent="HohgmLtdGHSUcqJvWq7j-1" style="swimlane;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;rounded=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;TikTok Servers&lt;/span&gt;" vertex="1">
+          <mxGeometry height="201.11342465753427" width="351.949705882353" x="1335.0002941176474" y="716.4665753424657" as="geometry" />
+        </mxCell>
+        <mxCell id="9hDW7NFw5V-hLOcafRcZ-16" parent="9hDW7NFw5V-hLOcafRcZ-15" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#000000,#56635F);fontColor=light-dark(#000000,#A7C080);strokeWidth=1;perimeterSpacing=0;swimlaneLine=1;glass=0;shadow=1;fontSize=14;" value="TikTok Ads" vertex="1">
+          <mxGeometry height="75.41753424657534" width="226.2533823529412" x="62.84816176470589" y="75.41753424657534" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
